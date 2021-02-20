@@ -152,7 +152,8 @@ async function initFn()
             nextTS=thisTS;
         }
     }
-
+    console.log("File version:",new Date(nextTS));
+    localStorage.setItem('lastUpdate',nextTS);
 /*    console.log("Update JSON",updateJSON);
     for(var key in updateJSON["updated_files"])
     {
