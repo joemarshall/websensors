@@ -81,7 +81,8 @@ async function initFn()
     let loaders=await import("./pyodide_loaders.js");
     // need to request permissions on ios right when the button is clicked so 
     // we do it here rather than via python
-    let accel_request_permissions=await import("./accel_sensor.js").requestPermissions;
+    let mod_accel=await import("./accel_sensor.js");
+    let accel_request_permissions=mod_accel.requestPermissions;
     cons.setConsoleDiv(document.getElementById("consoleDiv"));
     
     
