@@ -58,6 +58,11 @@ export async function startAudioProcessor(callback)
         console.log("Error loading sound:",e);
         return;
     }
+    
+    var AudioContext = window.AudioContext // Default
+        || window.webkitAudioContext // Safari and old versions of Chrome
+        || false;     
+    
     var audioContext = new AudioContext() // Default
     || new webkitAudioContext() // Safari and old versions of Chrome
     || false; 

@@ -39,77 +39,6 @@ title: Knocktest 1 - front matter to make it build with jekyll
 </style>
 <script>
 window.languagePluginUrl="./pyodide/";
-let oldFetch=fetch;
-function wrapResponse(response)
-{
-    let oldGetReader=response.getReader;
-    response.getReader=function()  { 
-        console.log("Get reader",response);
-    };
-    response.blob=null;
-    response.getReader=null;
-//    response.text=null;
-    response.body.getReader=null;
-    response.body.pipeTo=null;
-    response.url=null;
-    console.log("RESP:"+response.bodyUsed,response,response.headers.get('Content-Length'));
-    return response;
-    }
-
-async function newFetch(url)
-{
-/*    if(url.indexOf("pyodide.asm.js")>=0 || url.indexOf("pyodide.asm.wasm")>=0)
-    {
-        // get gzipped version instead
-        let splitURL=url.split("/");
-        let fname=splitURL[splitURL.length-1];
-        const params = new URLSearchParams();
-        params.append("loadFile",fname);
-        splitURL[splitURL.length-1]="loadpyodide.php?"+params.toString();
-        url = splitURL.join("/");
-    }    */
-//    console.log("FETCH:",arguments);
-    response=await oldFetch.apply(window,arguments);
-//    console.log("Response",response,response.body);
-    if(url.indexOf("loadpyodide.php")>=0)
-    {
-        console.log("WOO");
-        var loaded=0;
-        let progressReader=new ReadableStream({
-          start(controller) {
-            const reader = response.body.getReader();
-
-            read();
-            function read() {
-              reader.read().then(({done, value}) => {
-                if (done) {
-                  controller.close();
-                  return; 
-                }
-                loaded += value.byteLength;
-                console.log(loaded);
-//                progress({loaded, total})
-                controller.enqueue(value);
-                read();
-              }).catch(error => {
-                console.error(error);
-                controller.error(error)                  
-              })
-            }
-          }
-        });
-        newResponse=new Response(progressReader);
-        newResponse.headers.set("Content-Type","application/wasm");
-        return newResponse;
-    }else
-    {
-        return response;
-    }
-        
-};
-
-window.fetch=newFetch;
-
 </script>
 
 <script src="pyodide/pyodide.js" language="javascript"></script>
@@ -121,10 +50,7 @@ location.href = "https:" + window.location.href.substring( window.location.proto
 </script>
 
 <script src="audioworklet-polyfill.js"></script>
-
-
 <script type="module">
-
 
 async function initFn()
 {
