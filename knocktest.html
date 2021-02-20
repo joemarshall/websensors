@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, user_scalable=no" />
+<style>
+        #canvas {
+            margin-left: auto;
+            margin-right: auto;
+            width:90vw;
+            display: block;
+            background-color: black;
+            height: 25vh;
+        }
+        #consoleDiv {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            background-color: white;
+            width:90vw;
+            height:50vh;
+            overflow-y: scroll; 
+            font-family:monospace;
+            white-space:pre;
+        }
+        #buttonDiv
+        {
+            margin-left: auto;
+            margin-right: auto;
+            width:90vw;
+            display: block;
+            padding:0;
+        }
+        #startButton,#runPython
+        {
+            width:45%;height:5vh;margin-left:2%;margin-right:2%;padding:0;
+        }
+</style>
+<script>
+window.languagePluginUrl="./pyodide/";
+let oldFetch=fetch;
+function wrapResponse(response)
+{
+    let oldGetReader=response.getReader;
+    response.getReader=function()  { 
+        console.log("Get reader",response);
+    };
+    response.blob=null;
+    response.getReader=null;
+//    response.text=null;
+    response.body.getReader=null;
+    response.body.pipeTo=null;
+    response.url=null;
+    console.log("RESP:"+response.bodyUsed,response,response.headers.get('Content-Length'));
+    return response;
+    }
+
+async function newFetch(url)
+{
+    if(url.indexOf("pyodide.asm.js")>=0 || url.indexOf("pyodide.asm.wasm")>=0)
+    {
+        // get gzipped version instead
+        let splitURL=url.split("/");
+        let fname=splitURL[splitURL.length-1];
+        const params = new URLSearchParams();
+        params.append("loadFile",fname);
+        splitURL[splitURL.length-1]="loadpyodide.php?"+params.toString();
+        url = splitURL.join("/");
+    }    
+//    console.log("FETCH:",arguments);
+    response=await oldFetch.apply(window,arguments);
+//    console.log("Response",response,response.body);
+    if(url.indexOf("loadpyodide.php")>=0)
+    {
+        console.log("WOO");
+        var loaded=0;
+        let progressReader=new ReadableStream({
+          start(controller) {
+            const reader = response.body.getReader();
+
+            read();
+            function read() {
+              reader.read().then(({done, value}) => {
+                if (done) {
+                  controller.close();
+                  return; 
+                }
+                loaded += value.byteLength;
+                console.log(loaded);
+//                progress({loaded, total})
+                controller.enqueue(value);
+                read();
+              }).catch(error => {
+                console.error(error);
+                controller.error(error)                  
+              })
+            }
+          }
+        });
+        newResponse=new Response(progressReader);
+        newResponse.headers.set("Content-Type","application/wasm");
+        return newResponse;
+    }else
+    {
+        return response;
+    }
+        
+};
+
+window.fetch=newFetch;
+
+</script>
+
+<script src="pyodide/pyodide.js" language="javascript"></script>
+<script language="javascript">
+// because we use mic and accelerometer, we only work from https pages
+if ( location.protocol != "https:" ) {
+location.href = "https:" + window.location.href.substring( window.location.protocol.length );
+}
+</script>
+
+<script src="audioworklet-polyfill.js"></script>
+
+
+<script type="module">
+
+async function initFn()
+{
+    // reload any script files that have updated since last reload
+    const lastTS=localStorage.getItem('lastUpdate');
+    let updateJSON="";
+    if(!lastTS)
+    {
+        updateJSON=await (await fetch(`https://www.cs.nott.ac.uk/~pszjm2/audiotest/changed_files.php`,{cache:'reload'})).json();
+    }else
+    {
+        updateJSON=await (await fetch(`https://www.cs.nott.ac.uk/~pszjm2/audiotest/changed_files.php?timestamp=${lastTS}`,{cache:'reload'})).json();
+    }
+
+    console.log("Update JSON",updateJSON);
+    for(var key in updateJSON["updated_files"])
+    {
+        const changedFile=updateJSON["updated_files"][key];
+        if(changedFile.endsWith(".js") || changedFile.endsWith(".py"))
+        {
+            console.log("Reloading:",changedFile);
+            await fetch(changedFile,{cache:'reload'});
+        }
+    }
+    localStorage.setItem('lastUpdate',updateJSON["time_now"]);
+        
+    
+    await languagePluginLoader;
+    let cons=await import("./console_override.js");
+    let loaders=await import("./pyodide_loaders.js");
+    cons.setConsoleDiv(document.getElementById("consoleDiv"));
+    
+    
+    let sensors=await loaders.loadAsModule("sensors","sensors.py");
+    await loaders.loadAsModule("print_pyodide","print_pyodide.py");
+    await loaders.loadAsModule("async_pyodide","async_pyodide.py");
+    await loaders.loadAsModule("graphs","graphs.py");
+    pyodide.runPython("import graphs")
+    pyodide.globals.graphs.setCanvas(document.getElementById("canvas"))
+    document.getElementById("runPython").addEventListener('click',async () => {await loaders.runScriptFromFile("knocktest1.py");})
+    document.getElementById("startButton").addEventListener('click',(evt)=>{sensors.startAll();});
+    console.log("Python initialized");
+}
+
+window.addEventListener('load',initFn);
+
+</script>
+</head>
+<body>
+<canvas id="canvas" width="512" height="256" ></canvas>
+<div id="buttonDiv">
+<button id="startButton">Start Sensors</button>
+<button id="runPython">Run Python test</button>
+</div>
+<div id="consoleDiv" >
+Loading...
+</div>
+</body>
+</html>
