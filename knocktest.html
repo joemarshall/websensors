@@ -129,43 +129,17 @@ location.href = "https:" + window.location.href.substring( window.location.proto
 async function initFn()
 {
     // reload any script files that have updated since last reload    
-    const lastTS=localStorage.getItem('lastUpdate');
-    let allFileList={
-{% for file in site.static_files %}
-    "{{ file.path }}":"{{file.modified_time}}",
-{% endfor %}};
-//    console.log(fileList);    
-    var nextTS=lastTS||0;
-    for(var fname in allFileList)
+    // this is the github checkin we're looking at
+    let currentRevision="{{ site.github.build_revision }}";
+    const lastRevision=localStorage.getItem('lastRevision');
+    if (lastRevision && lastRevision!=currentRevision)
     {
-        let thisTS=Date.parse(allFileList[fname]);
-        if(lastTS && thisTS>lastTS)
-        {
-            if(fname.endsWith(".js") || fname.endsWith(".py"))
-            {
-                console.log("Reloading:",fname);
-                await fetch(fname,{cache:'reload'});
-            }
-        }
-        if(thisTS>nextTS)
-        {
-            nextTS=thisTS;
-        }
-    }
-    console.log("File version:",new Date(nextTS));
-    localStorage.setItem('lastUpdate',nextTS);
-/*    console.log("Update JSON",updateJSON);
-    for(var key in updateJSON["updated_files"])
-    {
-        const changedFile=updateJSON["updated_files"][key];
-        if(changedFile.endsWith(".js") || changedFile.endsWith(".py"))
-        {
-            console.log("Reloading:",changedFile);
-            await fetch(changedFile,{cache:'reload'});
-        }
-    }
-    localStorage.setItem('lastUpdate',updateJSON["time_now"]);*/
-        
+        // 
+        let compareURL="{{site.github.api_url}}/repos/{{site.github.owner_name}}/{{site.github.repository_name}}/compare/"+lastRevision+"..."+currentRevision;
+        let compareJSON=await (await fetch(compareURL)).json();
+        console.log(compareJSON);
+        //localStorage.setItem('lastRevision','currentRevision');
+    }        
     
     await languagePluginLoader;
     let cons=await import("./console_override.js");
