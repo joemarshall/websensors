@@ -46,7 +46,6 @@ class high_pass:
 
 
 async def main_fn():
-    print("WOO")
     hp_mag= high_pass(0.1)
     hp_snd = high_pass(0.1)
     lp_mag= low_pass(0.5)

@@ -164,6 +164,8 @@ async function initFn()
     pyodide.globals.graphs.setCanvas(document.getElementById("canvas"))
     document.getElementById("runPython").addEventListener('click',async () => {await loaders.runScriptFromFile("knocktest1.py");})
     document.getElementById("startButton").addEventListener('click',(evt)=>{sensors.startAll();});
+    document.getElementById("runPython").disabled=false;
+    document.getElementById("startButton").disabled=false;
     console.log("Python initialized");
 }
 
@@ -174,8 +176,8 @@ window.addEventListener('load',initFn);
 <body>
 <canvas id="canvas" width="512" height="256" ></canvas>
 <div id="buttonDiv">
-<button id="startButton">Start Sensors</button>
-<button id="runPython">Run Python test</button>
+<button id="startButton" disabled>Start Sensors</button>
+<button id="runPython" disabled> Run Python test</button>
 </div>
 <div id="consoleDiv" >
 Loading...
