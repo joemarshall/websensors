@@ -79,6 +79,9 @@ async function initFn()
     await languagePluginLoader;
     let cons=await import("./console_override.js");
     let loaders=await import("./pyodide_loaders.js");
+    // need to request permissions on ios right when the button is clicked so 
+    // we do it here rather than via python
+    let accel_request_permissions=await import("./accel_sensor.js").requestPermissions;
     cons.setConsoleDiv(document.getElementById("consoleDiv"));
     
     
@@ -89,7 +92,10 @@ async function initFn()
     pyodide.runPython("import graphs")
     pyodide.globals.graphs.setCanvas(document.getElementById("canvas"))
     document.getElementById("runPython").addEventListener('click',async () => {await loaders.runScriptFromFile("knocktest1.py");})
-    document.getElementById("startButton").addEventListener('click',(evt)=>{sensors.startAll();});
+    document.getElementById("startButton").addEventListener('click',async function (evt){
+        await accel_request_permissions();
+        sensors.startAll();
+        });
     document.getElementById("runPython").disabled=false;
     document.getElementById("startButton").disabled=false;
     console.log("Python initialized");
