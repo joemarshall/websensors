@@ -8,7 +8,7 @@ export async function requestPermissions()
     if(window.DeviceMotionEvent  != undefined)
     {
      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        state=await DeviceMotionEvent.requestPermission();
+        let state=await DeviceMotionEvent.requestPermission();
         if(state!='granted')
         {
             console.log("Motionevent permission not granted");
@@ -23,7 +23,7 @@ export async function requestPermissions()
     if(window.DeviceOrientationEvent)
     {
      if (typeof  DeviceOrientationEvent.requestPermission === 'function') {
-        req=await DeviceOrientationEvent.requestPermission();
+        let state=await DeviceOrientationEvent.requestPermission();
         if(state!='granted')
         {
             console.log("OrientationEvent permission not granted");
