@@ -137,7 +137,6 @@ async function initFn()
         let updatePromiseList=[];
         let compareURL="{{site.github.api_url}}/repos/{{site.github.owner_name}}/{{site.github.repository_name}}/compare/"+lastRevision+"..."+currentRevision;
         let compareJSON=await (await fetch(compareURL)).json();
-        console.log(compareJSON);
         for(let i in compareJSON.files)
         {
             let fname=compareJSON.files[i].filename;
