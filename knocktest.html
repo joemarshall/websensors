@@ -128,21 +128,29 @@ location.href = "https:" + window.location.href.substring( window.location.proto
 
 async function initFn()
 {
-    // reload any script files that have updated since last reload
+    // reload any script files that have updated since last reload    
     const lastTS=localStorage.getItem('lastUpdate');
-    let updateJSON="";
-    if(!lastTS)
-    {
-        // do nothing - if we don't have localstorage we probably don't have cached files
-    }else
-    {
-        fileList={
+    let allFileList={
 {% for file in site.static_files %}
     "{{ file.path }}":"{{file.modified_time}}",
 {% endfor %}};
-        console.log(fileList);
-       
-  //      updateJSON=await (await fetch(`https://www.cs.nott.ac.uk/~pszjm2/audiotest/changed_files.php?timestamp=${lastTS}`,{cache:'reload'})).json();
+//    console.log(fileList);    
+    var nextTS=lastTS||0;
+    for(var fname in fileList)
+    {
+        thisTS=Date.parse(fileList[fname]);
+        if(lastTS && thisTS>lastTS)
+        {
+            if(fname.endsWith(".js") || fname.endsWith(".py"))
+            {
+                console.log("Reloading:",fname);
+                await fetch(fname,{cache:'reload'});
+            }
+        }
+        if(thisTS>nextTS)
+        {
+            nextTS=thisTS;
+        }
     }
 
 /*    console.log("Update JSON",updateJSON);
