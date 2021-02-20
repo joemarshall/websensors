@@ -136,9 +136,9 @@ async function initFn()
 {% endfor %}};
 //    console.log(fileList);    
     var nextTS=lastTS||0;
-    for(var fname in fileList)
+    for(var fname in allFileList)
     {
-        thisTS=Date.parse(fileList[fname]);
+        thisTS=Date.parse(allFileList[fname]);
         if(lastTS && thisTS>lastTS)
         {
             if(fname.endsWith(".js") || fname.endsWith(".py"))
