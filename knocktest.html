@@ -138,7 +138,7 @@ async function initFn()
     {
         fileList=[
 {% for file in site.static_files %}
-    "{{ file.path }}":"{{file.modified_time}}"
+    "{{ file.path }}":"{{file.modified_time}}",
 {% endfor %}];
         console.log(fileList);
        
