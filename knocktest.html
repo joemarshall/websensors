@@ -147,7 +147,7 @@ async function initFn()
             }
         }
         await Promise.all(updatePromiseList);
-        localStorage.setItem('lastRevision','currentRevision');
+        localStorage.setItem('lastRevision',currentRevision);
     }        
     
     await languagePluginLoader;
