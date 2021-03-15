@@ -1,4 +1,4 @@
-self.languagePluginUrl = "{{ PYODIDE_BASE_URL }}"
+self.languagePluginUrl = "./"
 
 importScripts("pyodide.js")
 
