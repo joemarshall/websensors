@@ -1,4 +1,4 @@
-self.languagePluginUrl = "{{ PYODIDE_BASE_URL }}"
+self.languagePluginUrl = "./"
 
 importScripts("pyodide.js")
 
@@ -99,6 +99,7 @@ class PyConsole(console.InteractiveConsole):
         self.cancelled=False
 
     def cancel_run(self):
+        self.resumer.cancel()
         self.cancelled=True
         self.resetbuffer()
         self.run_code_obj=None
