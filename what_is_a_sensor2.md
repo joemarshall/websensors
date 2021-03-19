@@ -1,4 +1,8 @@
-# What is a sensor (2)
+---
+title: What is a sensor (2)
+prev: what_is_a_sensor
+next: what_is_a_sensor3
+---
 ## Definition
 
 A sensor is: 
@@ -31,5 +35,4 @@ To understand more about the nature of sensors and sensing, there is a really us
 
 1. <a id="isa"></a> Instrument Society of America/ ANSI, “ISA S37.1–1975 (R1982),” ed, 1975. N.b. you don't need to read this reference unless you have an absolutely masochistic desire to find and read standards documents, read the book below instead. 
 
-2. <a id="mands"></a>McGrath M.J., Scanaill C.N. (2013) Sensing and Sensor Fundamentals. In: Sensor Technologies. Apress, Berkeley, CA. https://doi.org/10.1007/978-1-4302-6014-1_2
-
+1. <a id="mands"></a>McGrath M.J., Scanaill C.N. (2013) Sensing and Sensor Fundamentals. In: Sensor Technologies. Apress, Berkeley, CA. [https://doi.org/10.1007/978-1-4302-6014-1_2](https://doi.org/10.1007/978-1-4302-6014-1_2)

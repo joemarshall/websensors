@@ -1,12 +1,53 @@
-@import 'jekyll-theme-cayman';
+---
+---
+@import 'jekyll-theme-tactile';
 
-h1
+
+body,div,#container
 {
+    text-shadow:0 0;
+    color:#000;
+    background-color:#e7e7e7;
+    background-image: none;
+}
 
-    color:#f00;
+#pageheader
+{
+    width:100%;
+    overflow: hidden; white-space:nowrap;
+    color:#a88;
+}
+
+blockquote
+{
+    border-left-color:#855;
+    background-color:#fff;
+    font-size:100%;
+}
+
+
+details
+{
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+
+    text-shadow:0 0;
+    display:block;
+    background-color:#eaa;
+    color:#000;
+    margin-top:2%;
+    margin-bottom:2%;
+
 };
 
-.funny
+summary
 {
-    color:#0f0;
+    border: 1px solid #0;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    color:#fff;
+    display:list-item;
+    background-color:#766;
+
 }

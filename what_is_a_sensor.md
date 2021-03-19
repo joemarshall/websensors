@@ -1,4 +1,8 @@
-# What is a sensor (1)
+---
+title: What is a sensor (1)
+next: what_is_a_sensor2
+upprev: index
+---
 ## Examples of sensors
 
 This is a sensor
@@ -20,6 +24,3 @@ This is also a sensor
 So. What is a sensor? What does it do....
 
 Take a pause to think about that before you click to the next page which has the answer on it!
-
-
-[Next](what_is_a_sensor2.md)
