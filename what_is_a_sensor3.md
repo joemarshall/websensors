@@ -36,11 +36,11 @@ A PIR motion sensor is a sensor which is used to make lights turn on automatical
 <details>
 <summary>What does a PIR motion sensor measure?</summary>
 
-### Did you say 'motion', or 'human motion', or 'people moving'?
+<b>Did you say 'motion', or 'human motion', or 'people moving'?</b>
 
 This is what we want to know from a motion sensor, but in reality, all a PIR motion sensor measures is infrared radiation hitting two parts of the sensor. This responds to heat emitted by people or animals moving in the view of the sensor; when the difference in value between the two parts of the sensor changes, the motion sensor outputs a value to notify us that there is motion in the area of the sensor.
 
-### In practice motion sensors don't always respond as we wish - for example:
+<b> In practice motion sensors don't always respond as we wish - for example:</b>
 
 1) Sensors targeted at detecting humans, such as security lights, are often triggered by animals, passing cars with warm engines or other changes in emitted heat that occur in the area of the sensor.
 2) Changes in temperature due to weather conditions may cause the sensor to trigger.
@@ -55,11 +55,11 @@ A mobile phone contains a sensor called an accelerometer. This is used for examp
 <details>
 <summary>Do you know what an accelerometer measures?</summary>
 
-### Not motion or acceleration
+<b>Not motion or acceleration</b>
 
 An accelerometer does not measure either motion of the device or how it is oriented. In fact, an accelerometer measures the bending of tiny weighted springs inside the sensor chip. These respond to acceleration forces on the device, including those caused by gravity. Because of this gravitational force effect, accelerometers can be used to understand which way is down relative to the phone's current orientation. This means that when the phone is still, an accelerometer can be used to detect whether the phone is being held in landscape or portrait orientation and to rotate the phone display accordingly.
 
-### What goes wrong with orientation sensing
+<b> What goes wrong with orientation sensing </b>
 
 We want the phone display to orient such that it is the way up that the person requires, i.e. so they can see and read the screen naturally. Doing this with a simple sensor like an accelerometer means that:
 1) If the phone is jogged around, e.g. by someone running with their phone out, the accelerations due to this motion may cause the displayed image to rotate even though the phone is still in the original orientation.
