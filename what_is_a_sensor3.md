@@ -47,8 +47,8 @@ This is what we want to know from a motion sensor, but in reality, all a PIR mot
 3) It is possible to use insulating material or shields between a person and the sensor to stop a sensor firing. 
 4) If someone is not emitting sufficient heat due to extremely cold weather and associated clothing, or the temperature is very similar to human body temperature, the sensor range is diminished.
 5) The sensor has no idea of identity, so security alarms can't tell the difference between someone who is meant to be there and an unwanted intruder. This can cause false alarms.
----
 </details>
+
 
 A mobile phone contains a sensor called an accelerometer. This is used for example to detect which way up the phone is so that the screen can rotate as you turn the phone between landscape and portrait. 
 
@@ -68,6 +68,7 @@ We want the phone display to orient such that it is the way up that the person r
 4) If content on the display is wrongly oriented, it is impossible to correct for it. For example if a video is taken sideways, when you tilt the screen to correct for it, the video then reorients to still be sideways.
 </details>
 
+
 ## Summary
 
 Why are sensors hard? Look at the two questions below for the answers:
@@ -79,12 +80,14 @@ What do we want to know when we use sensors?
 Most of the time when we use a sensor, we want to infer something about the state of the world, or what is happening in it. For example with a motion sensor, we may want to know if there is someone unwanted within our building. With an accelerometer, we may want to know how a device is being held, or how it is being moved.
 </details>
 
+
 <details>
 <summary>
 What do sensors give us?
 </summary>
 Sensors give us relatively simple measurements of physical quantities, which may be of varying levels of accuracy. There may be some interpretation placed on top of this, but fundamentally, whilst what we ideally want is to have a sensor that tells us what we want to know, what we typically have is a sensor or sensors that respond to the physical state of the world, and we must use that to infer the underlying state that we are interested in.
 </details>
+
 
 ## References
 
