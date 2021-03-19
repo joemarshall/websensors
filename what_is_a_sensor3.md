@@ -54,10 +54,13 @@ A mobile phone contains a sensor called an accelerometer. This is used for examp
 
 <details>
 <summary>Do you know what an accelerometer measures?</summary>
+
 ### Not motion or acceleration
+
 An accelerometer does not measure either motion of the device or how it is oriented. In fact, an accelerometer measures the bending of tiny weighted springs inside the sensor chip. These respond to acceleration forces on the device, including those caused by gravity. Because of this gravitational force effect, accelerometers can be used to understand which way is down relative to the phone's current orientation. This means that when the phone is still, an accelerometer can be used to detect whether the phone is being held in landscape or portrait orientation and to rotate the phone display accordingly.
 
 ### What goes wrong with orientation sensing
+
 We want the phone display to orient such that it is the way up that the person requires, i.e. so they can see and read the screen naturally. Doing this with a simple sensor like an accelerometer means that:
 1) If the phone is jogged around, e.g. by someone running with their phone out, the accelerations due to this motion may cause the displayed image to rotate even though the phone is still in the original orientation.
 2) If a person lies down in such a way that their phone is angled somewhere between the two trigger angles, the phone may switch from one to another and back irritatingly.
