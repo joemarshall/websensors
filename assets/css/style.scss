@@ -3,8 +3,18 @@
 @import 'jekyll-theme-tactile';
 
 
-body,div,#container
+body
 {
+    background-color:#000;
+
+}
+#container
+{
+    background: rgba(0,0,0,255);
+}
+.inner
+{
+    padding: 1em;
     text-shadow:0 0;
     color:#000;
     background-color:#e7e7e7;
@@ -25,7 +35,6 @@ blockquote
     font-size:100%;
 }
 
-
 details
 {
     border: 1px solid #aaa;
@@ -41,8 +50,72 @@ details
 
 };
 
+.pyodide_box
+{
+    width:100%;
+};
+
+.pyodide_console
+{
+    font-family: monospace;
+    width: 100%;
+    height: 10em;
+    resize: vertical;
+    background-color: #000;
+    color: #fff;
+    white-space:pre-wrap;
+    overflow-y:scroll;
+    overflow-wrap: break-word;
+    scroll-snap-type: y proximity;
+};
+
+.pyodide_console_text:last-child
+{
+    width: 100%;
+    height: 1.5em;
+    overflow:hidden;
+}
+
+.pyodide_console_text:last-child
+{
+    scroll-snap-align: end;
+    scroll-margin-block-end: 5rem;
+}
+
+.pyodide_graph
+{
+    display:block;
+    width: 100%;
+    height: 10em;
+    resize: vertical;
+    background-color: #eef;
+    overflow-y:hidden;
+}
+.pyodide_code_readonly
+{
+    font-family: monospace;
+    width: 100%;
+    height: 10em;
+    resize: vertical;
+    background-color: #fff;
+    color: #000;
+    white-space:pre-wrap;
+    overflow-y:scroll;
+    
+};
+
+.cm-editor.cm-focused { outline: 2px solid red }
+.cm-editor { background-color:white;max-height: 80vh; border: 1px solid silver; font-size: 14px }
+.cm-scroller {     resize: vertical;
+    overflow-y:scroll;
+ }
+ .cm-activeLine{background-color:#fee;}
+.pyodide_code {background-color:#fff;}
+.cm-selectionLayer .cm-selectionBackground ::selection {background:#f00;}
+
 summary
 {
+    margin-bottom:.5em;
     border: 1px solid #0;
     border-radius: 4px;
     padding: .5em .5em 0;
@@ -50,4 +123,33 @@ summary
     display:list-item;
     background-color:#766;
 
+};
+
+figure
+{
+    margin-top:.5em;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: .5em;
+    background-color:#fff;
+}
+
+body {
+	counter-reset: caption_number;
+}
+
+figcaption {
+    counter-increment:caption_number;
+}
+
+figcaption::before{
+    content: 'Figure ' counter(caption_number) '. ';
+}
+
+figcaption
+{
+    font-weight: bold;
+    background-color:#eee;
+    padding-left: .5em;
+    padding-right: .5em;
 }

@@ -1,0 +1,485 @@
+<script language="javascript">
+window.sensor_objects=[];
+</script>
+{% if page.uses_audio %}
+<script src="audioworklet-polyfill.js"></script>
+
+
+<script type="module">    
+
+let snd_sensor={
+    name:"sound",
+    mod_snd:undefined,
+    init: async function(){this.mod_snd=await import("./sound_sensor.js");},
+    start: async function(callback){await this.mod_snd.start(callback)},
+    stop: async function() { await this.mod_snd.stop();}
+};
+
+window.sensor_objects.push(snd_sensor);
+</script>
+{% endif %}
+
+{% if page.uses_accelerometer %}
+<script type="module">
+let accel_sensor={
+    name:"accel",
+    mod_accel:undefined,
+    init: async function(){this.mod_accel=await import("./accel_sensor.js");},
+    checkPermissions: function(){this.mod.accel.requestPermissions()},
+    start: async function(callback){await this.mod_accel.startAccelerometer(callback)},
+    stop: async function() { await this.mod_accel.stopAccelerometer();}
+};
+
+window.sensor_objects.push(accel_sensor);
+</script>
+{% endif %}
+
+
+<script>
+// make a pyodide box function
+window.queued_pyodide_boxes=[]
+function makePyodideBox(options)
+{
+    if(!options)
+    {
+        options={}
+    }
+    if(!options.parent)
+    {
+        // no parent, add a div here and pass that in
+        let div=document.createElement("div");
+        let script = document.scripts[document.scripts.length - 1]; // A reference to the currently running script
+
+        div.className="pyodide_box";
+        script.parentNode.insertBefore(div,script);
+        options.parent=div;
+    }
+    if(window.makePyodideBoxInternal)
+    {
+        window.makePyodideBoxInternal(options);
+    }else
+    {
+        window.queued_pyodide_boxes.push(options)
+    }
+}
+</script>
+<script src="assets/js/codemirror.js"></script>
+
+<script type="module">
+import {makeGraphContext} from "{{ '/assets/js/py_graphs.js' || relative_url }}";
+
+let responseWaiter={};
+let pythonInitPromise;
+
+async function makePyodideBoxInternal(options)
+{    
+    let parent=options.parent;
+    let consoleDiv;
+    let editorDiv;
+    let editor;
+    let codeValue;
+    let graphCanvas;
+    let graphContext;
+
+    let figureCap;
+    let figure;
+
+    if(options.caption)
+    {
+        figure=document.createElement("figure");
+        figureCap=document.createElement("figcaption")
+        figureCap.innerText=options.caption;
+        parent.appendChild(figure);
+        parent=figure;
+    }
+    if(options.codeString)
+    {
+        codeValue=options.codeString;
+    }else if(options.codeFile)
+    {
+        codeValue=await (await fetch(options.codeFile)).text();
+    }
+    if(options.showCode || options.editable)
+    {
+        const {EditorState, EditorView, basicSetup} = CM["@codemirror/basic-setup"];
+        const {indentUnit} = CM["@codemirror/language"]
+        const {python, pythonLanguage} = CM["@codemirror/lang-python"];
+        const {completeFromList} = CM["@codemirror/autocomplete"];
+        const {drawSelection,keymap} = CM["@codemirror/view"];
+        const {defaultTabBinding,indentLess,indentMore} = CM["@codemirror/commands"]
+
+        // if we have an editor, then show that
+        editorDiv=document.createElement("div");
+        if(options.hasReadOnlyCode)
+        {
+            editorDiv.className="pyodide_code_readonly";        
+        }else
+        {
+            editorDiv.className="pyodide_code";
+        }
+        parent.appendChild(editorDiv);
+        function tabber(target)
+        {
+            var dispatch=target.dispatch;
+            var state=target.state;
+            if(state.selection.ranges.length>1
+             || state.selection.ranges.length==1 && !state.selection.ranges[0].empty)
+            {
+                // something selected, do indent
+                return indentMore(target)
+            }else
+            {
+                // nothing selected, insert spaces at anchor
+                // up to current tab column
+                var pos=state.selection.ranges[0].anchor;
+                var line=state.doc.lineAt(pos);
+                var col=pos-line.from;
+                // we need to go to multiple of 4 spaces
+                var numSpaces=4-(col%4);
+                var spaces="";
+                for(let c=0;c<numSpaces;c++)
+                {
+                    spaces+=" ";
+                }
+                dispatch({changes:{from:pos,to:pos,insert:spaces},
+                            selection:{anchor:pos+numSpaces} });
+                return true;
+            }
+        } 
+
+        let extensions=[
+            basicSetup,EditorState.tabSize.of(4),
+            python(),
+            drawSelection(),
+            indentUnit.of("    "),
+            keymap.of([{key:"Tab",run:tabber,shift:indentLess}])
+    ];
+        if(options.hasReadOnlyCode)
+        {
+            extensions.push(EditorView.editable.of(false))
+        }
+        let state = EditorState.create(
+            {                
+                
+                doc: codeValue,
+                extensions: extensions
+            });            
+       editor=new EditorView({state, parent:editorDiv});        
+    }
+    if(options.hasConsole)
+    {
+        // make a div for the console and add it to parent
+        consoleDiv=document.createElement("div");
+        consoleDiv.className="pyodide_console";
+        parent.appendChild(consoleDiv);
+        makeConsoleDiv(consoleDiv);
+    }
+    if(options.hasGraph)
+    {
+        // make a graph canvas
+        graphCanvas=document.createElement("canvas");
+        graphCanvas.className="pyodide_graph";
+        graphCanvas.width=512;
+        graphCanvas.height=256;
+        graphContext=makeGraphContext(graphCanvas);
+        parent.appendChild(graphCanvas);         
+    }
+    // add a run button which starts all sensors, sets 
+    // correct console div and graph canvas and runs the 
+    // python code
+    async function onRun()
+    {
+        // request permissions
+        // n.b. this has to happen first before we do 
+        // anything async or else safari won't let
+        // us request sensor access (has to be directly from
+        // a click event) 
+        for(let c in window.sensor_objects)
+        {
+            const o=window.sensor_objects[c];
+            if(o.requestPermissions)
+            {
+                await o.requestPermissions()
+            }
+        }
+        // stop anything else that is running
+        await asyncRun("abort","rerun");
+        // set the graph to point at our graph
+        pyodide_graph_context=graphContext
+        // set the console to point at our console
+        pyodide_console_div=consoleDiv;
+        // clear our console output
+        clearConsole();
+        // set the graph to point at our graph
+        // load our code string from editor
+        // if there is one
+        // run the code
+        for(let c in window.sensor_objects)
+        {
+            const o=window.sensor_objects[c];
+            if(o.start)
+            {
+                await o.start(sensorCallback.bind(null,o.name))
+            }
+        }
+
+
+        stopButton.disabled=false;
+        startButton.disabled=true;
+
+        codeValue=editor.state.doc.sliceString(0);
+        running=true;
+        await asyncRun("run",codeValue);
+        running=false;
+        for(let c in window.sensor_objects)
+        {
+            const o=window.sensor_objects[c];
+            if(o.stop)
+            {
+                await o.stop()
+            }
+        }
+        stopButton.disabled=true;
+        startButton.disabled=false;
+    }
+    // add a stop button which cancels everything remote
+    // and stops sensors
+    async function onStop()
+    {
+        // stop sensors or anything here 
+        // to avoid sending loads of 
+        // messages to stopped python
+        running=false;
+        await asyncRun("abort","cancel");
+    }
+
+    const startButton=document.createElement("button");
+    startButton.className="pyodide_start";        
+    startButton.innerText="Start";
+    startButton.disabled=true;
+    startButton.onclick=onRun;
+    parent.appendChild(startButton);
+    const stopButton=document.createElement("button");
+    stopButton.className="pyodide_stop";        
+    stopButton.innerText="Stop";
+    stopButton.disabled=true;
+    stopButton.onclick=onStop;
+    parent.appendChild(stopButton);
+
+    if(figureCap)
+    {
+        figure.appendChild(figureCap);
+    }
+    if(consoleDiv)
+    {
+        consoleDiv.innerText="Python loading";
+    }
+    // only allow starting code once pyodide is actually running
+    pythonInitPromise.then( function(){
+        if(consoleDiv)
+        {
+            consoleDiv.innerText="Python ready";
+        }
+        startButton.disabled=false;
+    });        
+}
+
+window.makePyodideBoxInternal=makePyodideBoxInternal;
+
+let running=false;
+let pythonInited=false;
+const pyodideWorker = new Worker('pyodide/async_worker.js')
+pyodideWorker.onmessage = onRemoteMessage;
+pyodideWorker.onerror = onRemoteError;
+
+let pyodide_console_div=undefined;
+let pyodide_graph_context=undefined;
+let lastMessage=1;
+
+function sensorCallback(name,...args)
+{
+    // don't send any more sensor messages 
+    // after stop button is pressed
+    if(!running)
+    {
+        return;
+    }
+    
+    lastMessage++;
+    // don't expect any response to this
+    pyodideWorker.postMessage({
+        cmd: "sensor",
+        arg: {name:name,args:args},
+        id: lastMessage
+    });    
+}
+
+function onRemoteError(event)
+{
+    console.log("ERROR in worker",event)
+}
+
+const NUM_CONSOLE_LINES=50;
+var consoleText="";
+var currentLine=0;
+function makeConsoleDiv(divParent)
+{
+}
+
+function clearConsole()
+{
+    consoleText="";
+    currentLine=0;
+    pyodide_console_div.innerHTML="";
+}
+
+function writeConsole(msg)
+{
+    if(pyodide_console_div)
+    {
+        consoleText+=msg;
+        var spl=consoleText.split("\n")
+        if( spl.length>NUM_CONSOLE_LINES)
+        {
+            consoleText=spl.slice(-NUM_CONSOLE_LINES).join("\n");
+        }
+        pyodide_console_div.innerText=consoleText;
+/*        var lineDiv=pyodide_console_div.lastChild;
+        let lines=msg.split("\n");
+        while(lines.length>0)
+        {
+            var txt=lines.shift();
+            if(txt.length>0 || lines.length>0)
+            {
+                // move onto next div
+                currentLine+=1;
+                if(currentLine>=NUM_CONSOLE_LINES)
+                {
+                    // overflow - remove the first div
+                    currentLine=NUM_CONSOLE_LINES-1;
+                    const div=pyodide_console_div.childNodes[0];
+                    div.nodeValue="";
+                    pyodide_console_div.removeChild(div);
+                    lineDiv=div;
+                }
+                // make new div until we're full
+                lineDiv=document.createTextNode("")
+//                    lineDiv=document.createElement("div")
+//                    lineDiv.innerHTML="";
+//                    lineDiv.style="display:block"
+//                    lineDiv.className="pyodide_console_text";
+                pyodide_console_div.appendChild(lineDiv);
+
+                lineDiv.nodeValue+=txt;
+            }
+        }*/
+    }
+}
+async function onRemoteMessage(event)
+{   
+    let msgData=event.data;
+    if(msgData["type"]=="graph")
+    {
+        if(pyodide_graph_context)
+        {
+            if (msgData["fn"]=="style")
+            {
+                pyodide_graph_context.setGraphStyle.apply(pyodide_graph_context,msgData.arguments)
+            }else if(msgData["fn"]=="data")
+            {
+                pyodide_graph_context.onGraphValue.apply(pyodide_graph_context,msgData.arguments)
+            }
+        }
+    }
+    else if(msgData["type"]=="stdout" || msgData["type"]=="stderr")
+    {
+        writeConsole(msgData["text"]);
+    }else if(msgData["type"]=="response")
+    {
+        let msgID=msgData["id"];
+        if(responseWaiter[msgID])
+        {
+            let p=responseWaiter[msgID];
+            p(msgData);
+            responseWaiter[msgID]=undefined;
+        }
+    }
+} 
+
+async function asyncRun(cmd,arg){
+    lastMessage++;
+    let thisMessage=lastMessage;
+    let p=new Promise((r,e)=>{responseWaiter[thisMessage]=(r)});
+    pyodideWorker.postMessage({
+        cmd: cmd,
+        arg: arg,
+        id: thisMessage
+    });
+    try
+    {
+        var responseData=await p;
+        return responseData;
+    }catch(e)
+    {
+        console.log("Error in asyncRun:",e);
+    }
+}
+
+// init pyodide on page load
+// so hopefully it will be ready by the time anyone 
+// looks at that content
+async function initFn()
+{
+    // reload any script files that have updated since last reload    
+    // this is the github checkin we're looking at
+    let currentRevision="{{ site.github.build_revision }}";
+    const lastRevision=localStorage.getItem('lastRevision');
+    if (lastRevision && lastRevision!=currentRevision)
+    {
+        let updatePromiseList=[];
+        let compareURL="{{site.github.api_url}}/repos/{{site.github.owner_name}}/{{site.github.repository_name}}/compare/"+lastRevision+"..."+currentRevision;
+        let compareJSON=await (await fetch(compareURL)).json();
+        for(let i in compareJSON.files)
+        {
+            let fname=compareJSON.files[i].filename;
+            if(fname.endsWith(".js") || fname.endsWith(".py"))
+            {
+                console.log("Updating:",fname);
+                updatePromiseList.push(fetch(fname,{cache:"no-cache"}));
+            }
+        }
+        await Promise.all(updatePromiseList);
+        localStorage.setItem('lastRevision',currentRevision);
+    }
+    async function initSensors()
+    {
+        for(let c in window.sensor_objects)
+        {
+            const o=window.sensor_objects[c];
+            if(o.init)
+            {
+                await o.init()
+            }
+        }
+    }
+
+    async function initPython()
+    {
+        await asyncRun("init","noconsole");
+
+
+        pythonInited=true;
+    }
+    await initSensors();
+    // start init python on page load in the hope it is
+    // done by the time it is needed
+    pythonInitPromise=initPython();
+    for(let box in window.queued_pyodide_boxes)
+    {
+        makePyodideBoxInternal(queued_pyodide_boxes[box]);
+    }
+}
+
+window.addEventListener('load',initFn);
+
+</script>

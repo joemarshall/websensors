@@ -37,6 +37,12 @@ export async function requestPermissions()
      return true;
 }
 
+export async function stopAccelerometer(callback)
+{
+    console.log("Stop accel",callback);
+    _js_accelerometer.stop()
+}
+
 export async function startAccelerometer(callback)
 {
     console.log("start accel",callback)

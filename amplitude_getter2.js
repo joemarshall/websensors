@@ -41,7 +41,7 @@ class AmplitudeProcessor extends AudioWorkletProcessor
     // Keep on processing if the volume is above a threshold, so that
     // disconnecting inputs does not immediately cause the meter to stop
     // computing its smoothed value.
-    return (input.length>0) || this._volume >= MINIMUM_VALUE;
+    return (input.length>0);// || this._volume >= MINIMUM_VALUE;
   }
 };
 registerProcessor('vumeter2', AmplitudeProcessor);

@@ -5,9 +5,10 @@
 title: What is a sensor (3)
 upnext: index
 prev: what_is_a_sensor2
+uses_pyodide: true
+uses_audio: true
 
 ---
-
 
 # Why are sensors complicated?
 
@@ -21,26 +22,28 @@ Let's go back to the definition of a sensor:
 
 There are two things here:
 
-# Sensor response is not a perfect representation of the stimulus
+# 1: Sensor response is not a perfect representation of the stimulus
 
 A sensor **responds** to a stimulus. This response does not enable us to perfectly know what the state of the stimulus is. For example a temperature sensor may show a value of 12.1 degrees C, but depending on the quality of the sensor it may be for example 11 or 13 degrees C in reality. A sound sensor may not respond to sounds that are too loud or too quiet. A motion sensor provides an idea that some kind of motion is happening in the object, but very limited information as to how much motion is occurring, or what it is that is moving. All sensors may have errors or noise which mask the effect of the stimulus on the measured value.
 
-TODO: noisy sound sensor goes here
+## Lets take a look at a sensor response
 
-Check out the example here of a sound level sensor which uses your webcam or computer microphone assuming you have one. If you don't have one, then plug one it, or find this page on your phone. Click to enable it, and try making some noises. You should see it responding to the sound, but think about how this is responding by looking at the questions below. Have a play and see what you think...:
+Check out the example again of a sound level sensor which uses your webcam or computer microphone assuming you have one. If you don't have one, then plug one it, or find this page on your phone. Click start to enable it, and try making some noises. You should see it responding to the sound, but think about how this is responding by looking at the questions below. Have a play and see what you think...:
 
 - Does this give a good measurement of the level of the sound?
-- If you wanted to measure loud banging noises or claps, would this data be useful?
+- If you wanted to measure loud banging noises or claps, would this data be useful? What would happen if the background noise was also high?
 - If you wanted to measure the overall sound level in the room, i.e. how noisy is this room right now, would this value be useful?
 - Make a continuous sound, does the sound meter stay level?
 - Make a really quiet sound, can you see it?
-- Make a really loud sound right near the microphone, what happens?
+- Make a really loud sound right near the microphone, what happens? How different is it to if you make a really loud noise slightly further back? What is happening to the level meter?
+
+<script> makePyodideBox({codeFile:"basic_audio.py",hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
 
 In the second section of these exercises, we will look at how to process and clean up data from individual sensors to get a better idea of the aspects of the sensed stimulus which we are interested in. 
 
-# Sensors don't usually measure what we want to know
+# 2: Sensors don't usually measure what we want to know
 
-Try and answer the questions below before you click them out:
+Try and answer the questions below before you click on them to open out the answer:
 
 A PIR motion sensor is a sensor which is used to make lights turn on automatically or trigger alarms based on when there is human motion in the area covered by the sensor.
 <details>
@@ -88,6 +91,12 @@ Why are sensors hard? Look at the two questions below for the answers:
 <summary>
 What do we want to know when we use sensors?
 </summary>
+
+<figure>
+<img src="images/sensors_wewant.svg" alt="We want to use sensors to find out what is the state of something in the world" title="What we want from sensors"/>
+<figcaption>What we want from sensors</figcaption>
+</figure>
+
 Most of the time when we use a sensor, we want to infer something about the state of the world, or what is happening in it. For example with a motion sensor, we may want to know if there is someone unwanted within our building. With an accelerometer, we may want to know how a device is being held, or how it is being moved.
 </details>
 
@@ -96,6 +105,10 @@ Most of the time when we use a sensor, we want to infer something about the stat
 <summary>
 What do sensors give us?
 </summary>
+<figure>
+<img src="images/sensors_weget.svg" alt="Sensors just measure simple physical quantities" title="What we get from sensors" />
+<figcaption>What we get from sensors</figcaption>
+</figure>
 Sensors give us relatively simple measurements of physical quantities, which may be of varying levels of accuracy. There may be some interpretation placed on top of this, but fundamentally, whilst what we ideally want is to have a sensor that tells us what we want to know, what we typically have is a sensor or sensors that respond to the physical state of the world, and we must use that to infer the underlying state that we are interested in.
 </details>
 

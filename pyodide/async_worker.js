@@ -2,6 +2,27 @@ self.languagePluginUrl = "./"
 
 importScripts("pyodide.js")
 
+var sensorModule;
+
+function loadAsModule(moduleName,modulePython)
+{
+    this._load_as_module_src=modulePython;
+
+    // load this code in as a python module
+    return pyodide.runPython(`
+import js,sys
+import importlib.util
+spec = importlib.util.spec_from_loader('${moduleName}', loader=None, origin='${moduleName}.py')
+${moduleName} = importlib.util.module_from_spec(spec)
+del spec
+sys.modules['${moduleName}']=${moduleName}
+exec(js._load_as_module_src, ${moduleName}.__dict__)
+${moduleName}
+`);
+    
+}
+
+
 
 class CancelSleep
 {
@@ -56,15 +77,144 @@ function stderr_write(s)
     }
 }
 
+function set_graph_style(graphName,colour,minVal,maxVal)
+{
+    if(!inCancel)
+    {
+        self.postMessage({type:"graph",fn:"style",arguments:[graphName,colour,minVal,maxVal]});
+    }
+
+}
+
+function on_graph_value(graphName,curVal)
+{
+    if(!inCancel)
+    {
+        self.postMessage({type:"graph",fn:"data",arguments:[graphName,curVal]});
+    }
+}
+
+
+
+async function runAsyncLoop(id,arg)
+{
+    retVal=pyodide.runPython("__pc.clear_cancel()")
+    runCommandID=id;
+    while(true)
+    {
+        var retVal;
+        var resumeArg;
+        retVal=pyodide.runPython("__pc.run_once()")
+        retVal=retVal.toJs();
+        if(!retVal || !retVal.get)
+        {
+            self.postMessage({id:id,type:"response",failed:true});
+            return
+        }                
+        if (retVal.get("done")==true)
+        {
+            self.postMessage({id:id,type:"response",results:true});
+            return;
+        }else
+        {
+            const action=retVal.get("action");
+            if(action==="await")
+            {
+                await retVal.get("object");
+            }else if(action=="resume")
+            { 
+                args=retVal.get("args"); 
+                if(args.get("interrupt")) {
+                    sleeper=sleep(0)
+                    try
+                    {
+                        await sleeper;                            
+                    }catch(e)
+                    {
+                        self.postMessage({id:id,type:"response",cancelled:true});    
+                        sleeper=null;
+                        return;
+                    }
+                    sleeper=null;
+                }else if(args.get("cmd")=="sleep")
+                {
+                    sleeper=sleep(args.get("time")*1000);
+                    try
+                    {
+                        await sleeper;
+                    }catch(e)
+                    {
+                        self.postMessage({id:id,type:"response",cancelled:true});    
+                        sleeper=null;
+                        return;
+                    }
+                    sleeper=null;
+                }
+            }
+        }
+    }
+
+}
 
 onmessage = async function(e) {
-    console.log("MSG:",pyConsole,e);
     await languagePluginLoader;
     const {cmd,arg,id} = e.data;    
     if(cmd =='init')
     {
+        // make the graph module (calls back to js to display graph values)
+        loadAsModule("graphs",`
+import js        
+def set_style(graphName,colour,minVal,maxVal): 
+    js.set_graph_style(graphName,colour,minVal,maxVal)           
+def on_value(graphName,value):
+    js.on_graph_value(graphName,value)        
+        `
+        );
 
-       await pyodide.runPythonAsync(`
+        // make the sensor module - receives sensor data
+        sensorModule=loadAsModule("sensors",`
+from math import sqrt
+
+def on_sensor_event(event):
+    name=event["name"]
+    value=event["args"]
+    if name=="accel":
+        accel._on_accel(value[0],value[1],value[2])
+    elif name=="sound":
+        sound._on_level(value[0])
+
+class accel:
+    _xyz=(0,0,0)
+    @staticmethod
+    def get_xyz():
+        return accel._xyz
+        
+    @staticmethod
+    def get_magnitude():
+        if  accel._xyz:
+            x,y,z=(accel._xyz)
+            return sqrt((x*x)+(y*y)+(z*z))
+        else:
+            return None
+        
+    # called from js to set the current acceleration
+    @staticmethod
+    def _on_accel(x,y,z):
+        accel._xyz=(x,y,z)
+    
+class sound:
+    _level=0
+    @staticmethod
+    def get_level():
+        return sound._level        
+        
+    # called from js to set the current level
+    @staticmethod
+    def _on_level(level):
+#        print("SNDLEVEL",level)
+        sound._level=level
+`);
+        await pyodide.runPythonAsync(`
 import unthrow
 # create hook for time.sleep
 import time
@@ -90,7 +240,7 @@ class PyConsole(console.InteractiveConsole):
         )
         self.resume_args=None
         self.resumer=unthrow.Resumer()
-        self.resumer.set_interrupt_frequency(50)
+        self.resumer.set_interrupt_frequency(100)
         self.cancelled=False
         self.run_source_obj=None
         self.run_code_obj=None
@@ -111,12 +261,10 @@ class PyConsole(console.InteractiveConsole):
             self.finished=True
             return {"done":True,"action":"cancelled"}
         if self.run_source_obj:
-            js.console.log("Load packages")
             src=self.run_source_obj
             self.run_source_obj=None
             return {"done":False,"action":"await","obj":console._load_packages_from_imports(src)}
         elif self.run_code_obj:
-            js.console.log("runcodeobject")
             with self.stdstreams_redirections():
                 try:
                     if not self.resumer.run_once(exec,[self.run_code_obj,self.locals]):
@@ -140,7 +288,6 @@ class PyConsole(console.InteractiveConsole):
     def runcode(self, code):
         #  we no longer actually run code in here, 
         # we store it here and then repeatedly run 
-        js.console.log("runcode")
         source = "\\n".join(self.buffer)
         self.run_code_obj=code
         self.run_source_obj = source
@@ -154,12 +301,14 @@ __pc=PyConsole()
         pyConsole.stdout_callback = stdout_write
         pyConsole.stderr_callback = stderr_write
 
-        console.log("Made pyconsole",pyConsole);
         self.postMessage({id:id,type:"response",results:true});
     }
     if (cmd =='run')
     {
-        await runPythonInLoop(id,arg); 
+        // push code directly into console runner
+        pyConsole.runcode(arg);
+        await runAsyncLoop(id,arg);
+        return;
     }
     if(cmd=="banner")
     {
@@ -174,64 +323,9 @@ __pc=PyConsole()
             self.postMessage({id:id,type:"response",needsMore:true});
         }else
         {
-            retVal=pyodide.runPython("__pc.clear_cancel()")
-            runCommandID=id;
-            while(true)
-            {
-                console.log("Run once",arg)
-                var retVal;
-                var resumeArg;
-                retVal=pyodide.runPython("__pc.run_once()")
-                if(!retVal || !retVal.get)
-                {
-                    self.postMessage({id:id,type:"response",failed:true});
-                    return
-                }                
-                if (retVal.get("done")==true)
-                {
-                    self.postMessage({id:id,type:"response",results:true});
-                    return;
-                }else
-                {
-                    const action=retVal.get("action");
-                    console.log("Resume loop",action);
-                    if(action==="await")
-                    {
-                        await retVal.get("object");
-                    }else if(action=="resume")
-                    { 
-                        args=retVal.get("args"); 
-                        console.log(args) 
-                        if(args.get("interrupt")) {
-                            console.log("I")
-                            sleeper=sleep(0)
-                            try
-                            {
-                                await sleeper;                            
-                            }catch(e)
-                            {
-                                self.postMessage({id:id,type:"response",cancelled:true});    
-                                sleeper=null;
-                                return;
-                            }
-                            sleeper=null;
-                        }else if(args.get("cmd")=="sleep")
-                        {
-                            sleeper=sleep(args.get("time")*1000);
-                            try
-                            {
-                                await sleeper;
-                            }catch(e)
-                            {
-                                self.postMessage({id:id,type:"response",cancelled:true});    
-                                sleeper=null;
-                                return;
-                            }
-                            sleeper=null;
-                        }
-                    }
-                }
-            }
+            // got a command to run, run the code in the console loop
+            await runAsyncLoop(id,arg);
+            return;
         }
     }
     if(cmd=="abort")
@@ -239,10 +333,8 @@ __pc=PyConsole()
         incancel=true;
         pyodide.runPython("__pc.cancel_run()"); 
         if(sleeper) {
-            console.log(sleeper);
             sleeper.cancel();
             sleeper=null;
-            self.postMessage({id:id,type:"response",results:true});
         }
         self.postMessage({id:id,type:"response",results:true});
         incancel=false;
@@ -250,6 +342,10 @@ __pc=PyConsole()
     if(cmd=="tab_complete")
     {
         self.postMessage({id:id,type:"response",results:pyConsole.complete()});
+    }
+    if(cmd=="sensor")
+    {
+        self.sensorModule.on_sensor_event(arg)
     }
 }
 
