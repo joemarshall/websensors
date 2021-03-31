@@ -2,7 +2,7 @@
 window.sensor_objects=[];
 </script>
 {% if page.uses_files %}
-{% include ondrive.html %}
+{% include onedrive.html %}
 {% endif %}
 
 {% if page.uses_audio %}
@@ -88,6 +88,8 @@ async function makePyodideBoxInternal(options)
     let figureCap;
     let figure;
 
+    let editorListener;
+
 
 
     if(options.caption)
@@ -108,19 +110,114 @@ async function makePyodideBoxInternal(options)
     if(options.showCode || options.editable)
     {
 {% if page.uses_files %}
-        openButton=document.createElement("Button");
-        openButton.innerText="Open Onedrive";
-        openButton.onclick=function()
+        if(options.showFileButtons)
         {
-            openOneDriveFile(function(dataURL)
+            let loginButton=document.createElement("Button");        
+            let openButton=document.createElement("Button");
+            let saveButton=document.createElement("Button");
+            let changeFolderButton=document.createElement("Button");
+            let filenameBox=document.createElement("input");
+            let folderBox=document.createElement("div")
+            folderBox.innerText="";
+            loginButton.innerText="Login onedrive";
+            filenameBox.type="text";
+            filenameBox.value="";
+            openButton.innerText="Open...";
+            saveButton.innerText="Save";
+            changeFolderButton.innerText="Change folder...";
+            openButton.onclick=function()
             {
-                alert("Got file:",dataURL);
-            })
+                oneDriveOpen(function(fileText,filename,foldername)
+                {                    
+                    filenameBox.value=filename;
+                    var doc=editor.state.doc;
+                    let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: fileText}})
+                    editor.dispatch(transaction);
+                    editor.state.values[0].done=[];
+                    editor.state.values[0].undone=[];
+                    folderBox.innerText=foldername;
+                });
+            }
+            saveButton.onclick=function()
+            {
+                let filename=filenameBox.value;
+                oneDriveSaveAs(editor.state.doc.toString(),filename);                
+                saveButton.innerText="Save";
+            };
+            changeFolderButton.onclick=function()
+            {
+                let filename=filenameBox.value;
+                oneDriveChooseFolder(filename,function(foldername)
+                {
+                    folderBox.innerText=foldername;
+                });
+            };
+            loginButton.onclick=async function()
+            {
+                if(oneDriveLoggedIn())
+                {
+                    await msLogout();
+                }else
+                {
+                    await msLogin(true);
+                }
+                if(oneDriveLoggedIn())
+                {
+                    loginButton.innerText="Logout onedrive";
+                }else
+                {
+                    loginButton.innerText="Login onedrive";
+                }
+            };
+            parent.appendChild(loginButton);
+            parent.appendChild(openButton);
+            parent.appendChild(saveButton);
+            parent.appendChild(changeFolderButton);
+            parent.appendChild(folderBox);
+            parent.appendChild(filenameBox);
+            // on reload, load up the previous onedrive file if there is 
+            // still one in the session
+            var token=await msLogin(false);
+            if(token)
+            {
+                loginButton.innerText="Logout onedrive";
+                oneDriveReload(function(fileText,filename,foldername)
+                {
+                    if(foldername)
+                    {
+                        folderBox.innerText=foldername;
+                    }
+                    if(fileText)
+                    {
+                        var doc=editor.state.doc;
+                        let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: fileText}})
+                        editor.dispatch(transaction);
+                        editor.state.values[0].done=[];
+                        editor.state.values[0].undone=[];
+                    }
+                    if(filename)
+                    {
+                        filenameBox.value=filename;
+                    }
+                });
+            }
+            editorListener=function(update)
+            {
+                if(update.docChanged)
+                {
+                    // make save button have * after it
+                    if(editor.state.values[0].done.length>1 || (editor.state.values[0].done.length==1 && editor.state.values[0].done[0].changes))
+                    {
+                        saveButton.disabled=false;
+                    }else
+                    {
+                        saveButton.disabled=true;
+                    }
+                }
+            }
+
         }
-        parent.appendChild(openButton);
 {% endif %}
-
-
 
         const {EditorState, EditorView, basicSetup} = CM["@codemirror/basic-setup"];
         const {indentUnit} = CM["@codemirror/language"]
@@ -167,14 +264,18 @@ async function makePyodideBoxInternal(options)
                 return true;
             }
         } 
-
         let extensions=[
             basicSetup,EditorState.tabSize.of(4),
             python(),
             drawSelection(),
             indentUnit.of("    "),
-            keymap.of([{key:"Tab",run:tabber,shift:indentLess}])
+            keymap.of([{key:"Tab",run:tabber,shift:indentLess}])            
     ];
+        if(editorListener)
+        {
+            extensions.push(EditorView.updateListener.of(editorListener));
+
+        }
         if(options.hasReadOnlyCode)
         {
             extensions.push(EditorView.editable.of(false))
@@ -250,7 +351,7 @@ async function makePyodideBoxInternal(options)
         stopButton.disabled=false;
         startButton.disabled=true;
 
-        codeValue=editor.state.doc.sliceString(0);
+        codeValue=editor.state.doc.toString();
         running=true;
         await asyncRun("run",codeValue);
         running=false;

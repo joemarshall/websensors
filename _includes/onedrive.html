@@ -1,23 +1,259 @@
 <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
+<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.13.0/js/msal-browser.min.js"></script>
+
 
 
 <script type="text/javascript">
-    function openOneDriveFile(dataCallback)
-    {
-      var odOptions = 
-      {
-        clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
-        action: "download",
-        multiSelect: false,
-        advanced: {},
-        success: function(files) { 
-            file=files.value[0];
-            dataCallback(file["@microsoft.graph.downloadUrl"]); 
+
+    const msalConfig = {
+        auth: {
+            clientId: 'bb2de524-1225-4957-a924-f91c5efe963f'
         },
-        cancel: function() { /* cancel handler */ },
-        error: function(error) { /* error handler */ }
-      };
-      OneDrive.open(odOptions);
+        cache: {
+            cacheLocation: "sessionStorage", // This configures where your cache will be stored
+            storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+        }
+    };
+
+    var msalInstance = new msal.PublicClientApplication(msalConfig);
+    let loggedIn=false;
+
+    function oneDriveLoggedIn()
+    {
+        return loggedIn;        
     }
-  </script>
-  <button onClick="launchOneDrivePicker()">Open from OneDrive</button>
+
+
+    async function msLogout()
+    {
+        msalInstance.logoutPopup();
+        loggedIn=false;
+    }
+
+    async function msLogin(autoLogin = false) {
+        loggedIn=false;
+        let currentAccounts = msalInstance.getAllAccounts();
+        if (currentAccounts === null || currentAccounts.length==0) 
+        {
+            if (autoLogin) {
+                try {
+                    const loginResponse = await msalInstance.loginPopup({ redirectUri: "{{ "/filedownload.html" |absolute_url }}"});
+                    currentAccounts = msalInstance.getAllAccounts();
+                } catch (err) {
+                    // handle login error
+                    return undefined;
+                }
+            }else
+            {
+                return undefined;
+            }
+        }
+
+        msalInstance.setActiveAccount(currentAccounts[0]);
+        var request = {
+            scopes: ["Files.ReadWrite.All"]
+        };
+
+        var authToken,tokenResponse;
+        try
+        {
+            tokenResponse=await msalInstance.acquireTokenSilent(request);
+            authToken=tokenResponse.accessToken;
+        }catch(err)
+        {
+            console.log("No silent token",err);
+            try
+            {
+                tokenResponse=msalInstance.acquireTokenPopup(request);
+                authToken=tokenResponse.accessToken;
+            }catch(err)
+            {
+                console.log("Couldn't authenticate",err);
+                return;
+            }
+        }
+        if(authToken)
+        {
+            loggedIn=true;
+        }
+        return authToken;
+
+    }
+    async function oneDriveReload(dataCallback) {
+        // refresh file from onedrive
+        var authToken = await msLogin();//sessionStorage.getItem('onedrive_auth');
+        var authURL = sessionStorage.getItem('onedrive_url');
+        var fileID = sessionStorage.getItem('onedrive_file');
+        var driveID = sessionStorage.getItem('onedrive_drive');
+
+        if (!authToken || !authURL || !fileID || !driveID) {
+            if(authURL && authToken && driveID)
+            {
+                var folderID=sessionStorage.getItem('onedrive_folder');
+                if(folderID)
+                {
+                    // get name of folder only
+                    dataCallback(undefined,undefined,await getFolderName());
+                }
+            }
+            return;
+        }
+        // get a download URL for this file
+        var url = `${authURL}/drives/${driveID}/items/${fileID}`;
+        //        var url=`${authURL}/drives/${driveID}/items/${fileID}?select=id,folder,@microsoft.graph.downloadUrl`;
+        var response = await fetch(url, {
+            headers:
+            {
+                'Authorization': "Bearer " + authToken
+            }
+        });
+        var json = await response.json();
+        url = json['@microsoft.graph.downloadUrl'];
+        sessionStorage.setItem('onedrive_folder', json.parentReference.id);
+
+        // now actually download the file (non-authenticated)
+        response = await fetch(url);
+        var text = await response.text();
+        dataCallback(text,json.name,json.parentReference.path.split(":")[1]);
+    }
+
+    async function oneDriveSave(codeFile) {
+        // save to the same file we just opened
+        var authToken = await msLogin(true);//sessionStorage.getItem('onedrive_auth');
+        var authURL = sessionStorage.getItem('onedrive_url');
+        var fileID = sessionStorage.getItem('onedrive_file');
+        var driveID = sessionStorage.getItem('onedrive_drive');
+        if (!authToken || !fileID) {
+            oneDriveSaveAs(codeFile)
+        }
+        // send to the simple upload URL for drive
+        // PUT /drives/{drive-id}/items/{item-id}/content
+        var url = `${authURL}/drives/${driveID}/items/${fileID}/content`;
+        var response = await fetch(url, {
+            method: 'PUT', headers:
+            {
+                'Content-Type': 'text/plain',
+                'Authorization': "Bearer " + authToken
+            },
+            body: codeFile,
+        });
+    }
+
+    async function oneDriveSaveAs(codeFile, filename) {
+        var authToken = await msLogin(true);//sessionStorage.getItem('onedrive_auth');
+        var authURL = sessionStorage.getItem('onedrive_url');
+        var folderID = sessionStorage.getItem('onedrive_folder');
+        var driveID = sessionStorage.getItem('onedrive_drive');
+
+        if (!folderID) {
+            // need to choose a folder
+            oneDriveChooseFolder(codeFile, filename);
+            return;
+        }
+        if (!authToken) {
+
+        }
+        // send to the simple upload URL for drive
+        // PUT /drives/{drive-id}/items/{item-id}/content
+        var url = `${authURL}drives/${driveID}/items/${folderID}:/${filename}:/content`;
+        var response = await fetch(url, {
+            method: 'PUT', headers:
+            {
+                'Content-Type': 'text/plain',
+                'Authorization': "Bearer " + authToken
+            },
+            body: codeFile,
+        });
+        var json = await response.json();
+        // update our session storage to point at 
+        // this new or updated file
+        sessionStorage.setItem('onedrive_file', json.id);
+
+    }
+
+    async function getFolderName(id)
+    {
+        var authToken = await msLogin();
+        var folderID=sessionStorage.getItem('onedrive_folder');
+        var authURL = sessionStorage.getItem('onedrive_url');
+        var driveID = sessionStorage.getItem('onedrive_drive');
+
+        var url = `${authURL}/drives/${driveID}/items/${folderID}`;
+        var response = await fetch(url, {
+            headers:
+            {
+                'Authorization': "Bearer " + authToken
+            }
+        });
+        var folderJSON=await response.json();
+        var folderName=folderJSON["name"];
+        var fullName=folderJSON.parentReference.path.split(":")[1]+"/"+folderName;
+        return fullName;
+    }
+
+    function oneDriveChooseFolder(filename,callback) {
+        // change selected folder using file picker
+        // and return name of folder to the callback
+        var odOptions =
+        {
+            clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+            action: "query",
+            multiSelect: false,
+            fileName: filename,
+            advanced: {
+                redirectUri: "{{ "/filedownload.html" |absolute_url }}",
+            },
+            success: async function (files) {
+                // folder actually
+                var folder = files.value[0];
+
+                var authToken = files.accessToken;
+                var authURL = files.apiEndpoint;
+
+                sessionStorage.setItem('onedrive_url', authURL);
+                sessionStorage.setItem('onedrive_folder', folder.id);
+                sessionStorage.removeItem('onedrive_file');
+                sessionStorage.setItem('onedrive_drive', folder.parentReference.driveId);
+
+                callback(await getFolderName());
+
+            },
+            cancel: function () { /* cancel handler */ },
+            error: function (error) { /* error handler */ }
+        };
+        OneDrive.save(odOptions);
+    }
+
+
+    async function oneDriveOpen(dataCallback) {
+        // first check we're logged in
+        // first login to MS
+        await msLogin(true);
+
+        // open file from file picker
+        var odOptions =
+        {
+            clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+            action: "query",
+            multiSelect: false,
+            advanced: {
+                redirectUri: "{{ "/filedownload.html" |absolute_url }}",
+                scopes: ["files.ReadWrite.All"],
+            },
+            success: function (files) {
+                // save this file id to session storage so we can save changes back
+                file = files.value[0];
+                sessionStorage.setItem('onedrive_auth', files.accessToken);
+                sessionStorage.setItem('onedrive_url', files.apiEndpoint);
+                sessionStorage.setItem('onedrive_file', file.id);
+                sessionStorage.setItem('onedrive_drive', file.parentReference.driveId);
+                // GET /drives/{drive-id}/items/{item-id}/content
+                oneDriveReload(dataCallback);
+            },
+            cancel: function () { /* cancel handler */ },
+            error: function (error) { /* error handler */ }
+        };
+        OneDrive.open(odOptions);
+    }
+
+</script>
