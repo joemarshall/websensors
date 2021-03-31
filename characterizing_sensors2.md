@@ -119,3 +119,15 @@ When might we need to sample sound quickly?
 </summary>
 If we want to detect short lived events, such as someone clapping, we will need to sample sound relatively quickly, requiring a higher sampling rate. We commonly also want to use sound sampling to record speech or music, these may require extremely fast sampling of sound (e.g. 48000Hz is relatively standard, 192000 Hz is used in audio production) in order to capture the full nuances of the incoming audio. 
 </details>
+
+# Non-linearity
+
+For many sensors, what we get from the sensor is a simple voltage or some kind of number based on that voltage. For many sensors, the relationship between this number and the measured quantity is not a simple linear mapping. For example, many temperature sensors are based on the resistance of thermistors which are placed in a voltage divider circuit against a known resistance. This can be related to temperature by first calculating the resistance based on measured voltage after the voltage divider, and then calculating the temperature based on the known response of the sensor. For example for temperature sensors we used in previous years which report a ten bit value between 0 and 1023, and use a 10000 Ohm fixed resistor, the following calculations were used to estimate temperature in C:
+
+$$ Resistance = 10,000*(1023-sensorVal)/sensorVal $$
+
+$$ Temperature = 1/(ln(Resistance/10000)/3975+1/298.15)-273.15 $$ 
+
+What is interesting here is that for such sensors, the sensitivity changes over the range - for this sensor, it is quite sensitive between 0 and 1000 degrees, but as the temperature moves outside that range it becomes increasingly less sensitive.
+
+{%include figure.html url="/images/temperature_nonlinear.svg" alt="A graph of temperature sensor raw data versus centigrade shows how sensitivity is reduced at the extremes of the temperature range." title="Sensitivity is reduced at both ends of the temperature range." caption="Nonlinearity in temperature sensor data." %}

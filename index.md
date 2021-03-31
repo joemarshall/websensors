@@ -15,24 +15,22 @@ The sensor processing examples on here use web based python scripts. These run i
 # What is a sensor?
 These pages introduce you to what a sensor is
 
-[What is a sensor pt1 - Examples of sensors](what_is_a_sensor1.md)
+[What is a sensor pt1 - Examples of sensors](what_is_a_sensor1)
 
-[What is a sensor pt2 - Definition](what_is_a_sensor2.md)
+[What is a sensor pt2 - Definition](what_is_a_sensor2)
 
-[What is a sensor pt3 - Why are sensors complicated](what_is_a_sensor3.md)
+[What is a sensor pt3 - Why are sensors complicated](what_is_a_sensor3)
 
 # Characteristics of sensors
 In the previous section we learnt how sensors **respond** to physical properties in the real world, rather than simply giving you the value of that property. In this section, we will look at how we can understand and characterize that response.
 
-[Characterizing sensors - Introduction](characterizing_sensors1.md)
+[Characterizing sensors - Introduction](characterizing_sensors1)
 
-[Characterizing sensors pt2 - Range ]()
+[Characterizing sensors pt2 - Range, resolution and sensitivity ](characterizing_sensors2)
 
-[Characterizing sensors pt3 - Resolution and sensitivity]()
+[Characterizing sensors pt3 - Numerical noise](characterizing_sensors3)
 
-[Characterizing sensors pt4 - Numerical noise]()
-
-[Characterizing sensors pt5 - Other types of errors]()
+[Characterizing sensors pt4 - Non-numerical sensor errors](characterizing_sensors4)
 
 # Filtering individual sensors
 Sensor data is dirrrty. How do we get a cleaner measurement of what we want to understand about the world? Find out in this exciting four part series on data filtering!
