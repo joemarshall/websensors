@@ -21,7 +21,8 @@ class VUMeterNode extends AudioWorkletNode {
     this.port.onmessage = event => {
       if (event.data.volume!=undefined)
       {
-            this._volume = event.data.volume;
+        // double it so it goes 0-1 
+            this._volume = Math.min(event.data.volume*2.0,1);
 //            window.setTimeout(this.draw.bind(this),0);
             _onLevel(this._volume);
           }

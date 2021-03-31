@@ -3,6 +3,7 @@ title: Web based python introduction
 uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
+upnext: index
 
 ---
 
@@ -58,3 +59,27 @@ while True:
 `  ,hasConsole:true,showCode:true,editable:true,caption:"Read smartphone accelerometer sensor in python"})
 </script>
 
+# Drawing things on graphs
+The graph module in python allows you to draw simple line graphs. It works in any code box that shows a graph below. Use it like this:
+
+<script>
+makePyodideBox({
+    codeString:`
+# we use time.sleep for delay
+import time    
+# load the graphing module
+import graphs
+c=0
+graphs.set_style("Straight","rgb(255,255,0)",-1,1)
+graphs.set_style("Squared","rgb(0,255,0)",-1,1)
+graphs.set_style("Cubed","blue",-1,1) 
+while True:
+    c=c+0.01
+    if c>1:
+        c=-1    
+    graphs.on_value("Straight",c)
+    graphs.on_value("Squared",c*c)
+    graphs.on_value("Cubed",c*c*c)
+    time.sleep(0.01)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Show values on a graph in python"})
+</script>

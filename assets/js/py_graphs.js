@@ -48,7 +48,7 @@ export function makeGraphContext(graphCanvas)
                 let histBuffer=this.graphHistories[name];
                 let scaleY=this.canvasHeight/(maxVal-minVal);
                 this.drawCtx.save();
-                this.drawCtx.setTransform(1,0,0,-scaleY,0,this.canvasHeight-maxVal*scaleY)
+                this.drawCtx.setTransform(1,0,0,-scaleY,0,this.canvasHeight + (minVal*scaleY))
                 this.drawCtx.beginPath();
                 this.drawCtx.moveTo(0,histBuffer[0]);
                 for (let i = 1; i < this.canvasWidth; i++) {

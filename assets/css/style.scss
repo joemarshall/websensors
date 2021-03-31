@@ -153,3 +153,29 @@ figcaption
     padding-left: .5em;
     padding-right: .5em;
 }
+
+ul li
+{
+    list-style-type:"\25CB"; 
+    margin-left: 1em;
+}
+
+li ul li
+{
+    list-style-type:"-"; 
+}
+
+ul
+{
+}
+
+li ul
+{
+    padding-top: .5em;
+    margin-bottom:0;
+}
+
+ol li
+{
+    margin-left: 1em;
+}
