@@ -4,6 +4,7 @@ prev: what_is_a_sensor
 next: what_is_a_sensor3
 uses_pyodide: true
 uses_audio: true
+uses_files: true
 ---
 
 # Definition

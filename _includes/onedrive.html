@@ -1,0 +1,23 @@
+<script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
+
+
+<script type="text/javascript">
+    function openOneDriveFile(dataCallback)
+    {
+      var odOptions = 
+      {
+        clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+        action: "download",
+        multiSelect: false,
+        advanced: {},
+        success: function(files) { 
+            file=files.value[0];
+            dataCallback(file["@microsoft.graph.downloadUrl"]); 
+        },
+        cancel: function() { /* cancel handler */ },
+        error: function(error) { /* error handler */ }
+      };
+      OneDrive.open(odOptions);
+    }
+  </script>
+  <button onClick="launchOneDrivePicker()">Open from OneDrive</button>

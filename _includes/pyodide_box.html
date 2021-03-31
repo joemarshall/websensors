@@ -1,6 +1,10 @@
 <script language="javascript">
 window.sensor_objects=[];
 </script>
+{% if page.uses_files %}
+{% include ondrive.html %}
+{% endif %}
+
 {% if page.uses_audio %}
 <script src="audioworklet-polyfill.js"></script>
 
@@ -84,6 +88,8 @@ async function makePyodideBoxInternal(options)
     let figureCap;
     let figure;
 
+
+
     if(options.caption)
     {
         figure=document.createElement("figure");
@@ -101,6 +107,21 @@ async function makePyodideBoxInternal(options)
     }
     if(options.showCode || options.editable)
     {
+{% if page.uses_files %}
+        openButton=document.createElement("Button");
+        openButton.innerText="Open Onedrive";
+        openButton.onclick=function()
+        {
+            openOneDriveFile(function(dataURL)
+            {
+                alert("Got file:",dataURL);
+            })
+        }
+        parent.appendChild(openButton);
+{% endif %}
+
+
+
         const {EditorState, EditorView, basicSetup} = CM["@codemirror/basic-setup"];
         const {indentUnit} = CM["@codemirror/language"]
         const {python, pythonLanguage} = CM["@codemirror/lang-python"];
@@ -166,6 +187,8 @@ async function makePyodideBoxInternal(options)
             });            
        editor=new EditorView({state, parent:editorDiv});        
     }
+
+
     if(options.hasConsole)
     {
         // make a div for the console and add it to parent
