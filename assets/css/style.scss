@@ -3,14 +3,33 @@
 @import 'jekyll-theme-tactile';
 
 
-body
+@media only screen and (max-width: 100ch) {
+    .desktoponly {
+       display:none;
+    }
+}
+
+#flexer
 {
     background-color:#000;
-
+    display:flex;
+    width:100%;
 }
-#container
+
+#sidebar
+{
+    flex-basis:20ch;
+    flex-grow:0;
+    flex-shrink:0;
+}
+
+#content
 {
     background: rgba(0,0,0,255);
+    flex-basis: 80ch;
+    flex-grow: 1;
+//    flex-shrink:1;
+    justify-content:center;
 }
 .inner
 {
@@ -173,6 +192,11 @@ li ul
 {
     padding-top: .5em;
     margin-bottom:0;
+}
+
+img
+{
+    width:100%;
 }
 
 ol li

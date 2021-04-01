@@ -20,15 +20,40 @@
 {% if page.uses_maths %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/englishextra/qrjs2@0.1.8/js/qrjs2.min.js"></script>
 {% endif %}
 
   </head>
 
   <body>
-  <div id="container">
+    <div id="flexer">
+  <div id="sidebar">
+    <div class="desktoponly">
+    Load this page on mobile:
+    <script>
+     var dataUriPngImage = document.createElement("img");
+			u = window.location.href;
+			s = QRCode.generatePNG(u, {
+					ecclevel: "M",
+					format: "html",
+					fillcolor: "#ffffff",
+					textcolor: "#000000",
+					margin: 4,
+					modulesize: 8
+				});
+			dataUriPngImage.src = s;
+      dataUriPngImage.style="width:100%"
+      let script = document.scripts[document.scripts.length - 1]; // A reference to the currently running script
+
+      script.parentNode.insertBefore(dataUriPngImage,script);
+    </script>
+    </div>
+  </div>
+  <div id="content">
       <div class="inner">
         <header>
-            <h2 id="pageheader">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
+            <h2 id="pageheader">{{ page.description | default: site.de
+              scription | default: site.github.project_tagline }}</h2>
             <h1>{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
         </header>
     
@@ -83,6 +108,7 @@
         ga('send', 'pageview');
       </script>
     {% endif %}
+  </div>
   </body>
 </html>
 
