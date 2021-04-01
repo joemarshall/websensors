@@ -1,11 +1,14 @@
 ---
-title: Characterizing Sensors - Numerical error and noise
+title: Numerical error and noise
 prev: characterizing_sensors2
 next: characterizing_sensors4
 uses_pyodide: true
 uses_light: true
 uses_maths: true
 uses_audio: true
+lesson_order: 3
+sublesson_order: 3
+
 ---
 As well as the fundamental limits of analog to digital conversion, such as temporal resolution, sensitivity and range, sensors have further problems. Basically most sensors are really not very good at taking physical quantities and converting them to digital values. In this section, we discuss **numerical errors** that occur in sensor data. These are errors which cause the output to be incorrect or hard to interpret in a way which is describable by mathematical formulae.
 

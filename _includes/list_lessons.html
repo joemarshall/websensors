@@ -1,0 +1,47 @@
+  <!-- create categories array-->
+  {% assign categories_array = "" | split:"|" %}
+
+  <!--Add each unique 'my_collection' category to the array-->
+  {% for lesson in site.lessons %}
+    {% assign slashes = lesson.url | split: '/'| reverse %}
+    {% if slashes[2]=='lessons' %}
+        {% assign category = slashes[1] | replace: '_',' ' %}
+        {% assign categories_array = categories_array | push: category | uniq %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% assign page_next = "" %}
+  {% assign page_prev = "" %}
+
+  <!--Output the categories and assign next and prev values for current page if applicable-->
+  <div class="sidebar_nav">
+  <ol class="sidebar_nav_category">
+  {% for category in categories_array %}
+      <li class="sidebar_nav_category">
+    {{ category | slice:2,100 }}
+    <ul class="sidebar_nav_lesson">
+    {% assign prev = "" %}
+    {% for lesson in site.lessons %}
+        {% assign slashes = lesson.url | split: '/'| reverse %}
+        {% if slashes[2]=='lessons' %}            
+            {% assign page_cat = slashes[1] | replace: '_',' ' %}
+            {% if page_cat==category %}
+                {% if prev==page.url %}
+                  {% assign page_next=lesson.url %}
+                {% endif %}
+                {% if lesson.url == page.url %}
+                    <li class="sidebar_nav_selected"><a href="{{ lesson.url}}">{{lesson.title}}</a></li>    
+                    {% assign page_prev=prev %}
+                {% else %}
+                    <li class="sidebar_nav_link"><a href="{{ lesson.url}}">{{lesson.title}}</a></li>    
+                {% endif %}  
+                {% assign prev = lesson.url %}
+            {% endif %}  
+        {% endif %}  
+    {% endfor %}
+    </ul>
+    </li>
+{% endfor %}
+</ol>
+</div>

@@ -1,3 +1,5 @@
+---
+---
 var _onLevel;
 var audioPlaying=false;
 
@@ -68,7 +70,7 @@ export async function start(callback)
       audioContext = new AudioContext() // Default
       || new webkitAudioContext() // Safari and old versions of Chrome
       || false; 
-        await audioContext.audioWorklet.addModule('amplitude_getter2.js');
+        await audioContext.audioWorklet.addModule('{{ "/assets/js/amplitude_getter2.js" | relative_url }}');
     }
     processorNode=new VUMeterNode(audioContext,20);
     sourceNode = audioContext.createMediaStreamSource(cameraStream);

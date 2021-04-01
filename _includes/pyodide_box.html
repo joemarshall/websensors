@@ -6,7 +6,7 @@ window.sensor_objects=[];
 {% endif %}
 
 {% if page.uses_audio %}
-<script src="audioworklet-polyfill.js"></script>
+<script src="{{ '/assets/js/audioworklet-polyfill.js' | relative_url }}"></script>
 
 
 <script type="module">    
@@ -14,7 +14,7 @@ window.sensor_objects=[];
 let snd_sensor={
     name:"sound",
     mod_snd:undefined,
-    init: async function(){this.mod_snd=await import("./sound_sensor.js");},
+    init: async function(){this.mod_snd=await import("{{ 'assets/js/sound_sensor.js' | relative_url }} ");},
     start: async function(callback){await this.mod_snd.start(callback)},
     stop: async function() { await this.mod_snd.stop();}
 };
@@ -28,7 +28,7 @@ window.sensor_objects.push(snd_sensor);
 let accel_sensor={
     name:"accel",
     mod_accel:undefined,
-    init: async function(){this.mod_accel=await import("./accel_sensor.js");},
+    init: async function(){this.mod_accel=await import("{{ 'assets/js/accel_sensor.js' | relative_url }}");},
     checkPermissions: function(){this.mod.accel.requestPermissions()},
     start: async function(callback){await this.mod_accel.startAccelerometer(callback)},
     stop: async function() { await this.mod_accel.stopAccelerometer();}
@@ -67,7 +67,7 @@ function makePyodideBox(options)
     }
 }
 </script>
-<script src="assets/js/codemirror.js"></script>
+<script src="{{ '/assets/js/codemirror.js' | relative_url }}" ></script>
 
 <script type="module">
 import {makeGraphContext} from "{{ '/assets/js/py_graphs.js' || relative_url }}";
@@ -105,7 +105,7 @@ async function makePyodideBoxInternal(options)
         codeValue=options.codeString;
     }else if(options.codeFile)
     {
-        codeValue=await (await fetch(options.codeFile)).text();
+        codeValue=await (await fetch('{{ "/assets/python/" | relative_url }}' +options.codeFile)).text();
     }
     if(options.showCode || options.editable)
     {
@@ -412,7 +412,7 @@ window.makePyodideBoxInternal=makePyodideBoxInternal;
 
 let running=false;
 let pythonInited=false;
-const pyodideWorker = new Worker('pyodide/async_worker.js')
+const pyodideWorker = new Worker('{{ "/pyodide/async_worker.js"| relative_url }} ')
 pyodideWorker.onmessage = onRemoteMessage;
 pyodideWorker.onerror = onRemoteError;
 

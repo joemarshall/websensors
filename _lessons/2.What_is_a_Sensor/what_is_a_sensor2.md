@@ -1,10 +1,13 @@
 ---
-title: What is a sensor (2)
+title: What defines a sensor?
 prev: what_is_a_sensor
 next: what_is_a_sensor3
 uses_pyodide: true
 uses_audio: true
 uses_files: true
+lesson_order: 2
+sublesson_order: 2
+
 ---
 
 # Definition

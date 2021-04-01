@@ -1,10 +1,11 @@
 ---
-title: Web based python introduction
+title: Python and sensors on the web
 uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
 upnext: index
-
+lesson_order: 1
+sublesson_order: 1
 ---
 
 This site uses a version of python compiled to run in your web browser, with some javascript added to allow you to read from sensors on your computer or phone and draw graphs. 
@@ -26,7 +27,7 @@ print ("hello web python")
 </script>
 
 # Getting data from sensors
-To get data from sensors, you use the sensors module, like these examples for sound and accelerometer respectively. Note, accelerometer will only work on a phone as computers don't typically have them in, or don't expose them to web browsers.
+To get data from sensors, you use the sensors module, like these examples for sound and accelerometer respectively. Note, accelerometer will only work on a phone as computers don't typically have them in, or don't expose them to web browsers. 
 
 <script>
 makePyodideBox({

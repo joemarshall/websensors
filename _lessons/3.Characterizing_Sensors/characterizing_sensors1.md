@@ -1,13 +1,16 @@
 ---
-title: Characterizing Sensors - Introduction
+title: Sensors are dirty and bad 
 next: characterizing_sensors2
 upprev: index
+lesson_order: 3
+sublesson_order: 1
+
 ---
 A sensor is:
 
 > A device that receives a stimulus and responds with an electrical signal [McGrath & Scanaill 2014](#mands)
 
-In this set of exercises we will explore the details of what that word **responds** means.
+In this set of exercises we will explore the details of what that word **responds** means. In short, sensors are quite bad, and data from sensors is quite dirty and horrible.
 
 # Responds, not equals
 So, we have sensor data from a sensor, and we have a physical process we want to observe using the sensor. 

@@ -2,12 +2,13 @@
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-title: What is a sensor (3)
+title: Why are sensors hard?
 upnext: index
 prev: what_is_a_sensor2
 uses_pyodide: true
 uses_audio: true
-
+lesson_order: 2
+sublesson_order: 3
 ---
 
 # Why are sensors complicated?
@@ -93,7 +94,7 @@ What do we want to know when we use sensors?
 </summary>
 
 <figure>
-<img src="images/sensors_wewant.svg" alt="We want to use sensors to find out what is the state of something in the world" title="What we want from sensors"/>
+<img src="{{ '/images/sensors_wewant.svg' | relative_url }}" alt="We want to use sensors to find out what is the state of something in the world" title="What we want from sensors"/>
 <figcaption>What we want from sensors</figcaption>
 </figure>
 
@@ -106,7 +107,7 @@ Most of the time when we use a sensor, we want to infer something about the stat
 What do sensors give us?
 </summary>
 <figure>
-<img src="images/sensors_weget.svg" alt="Sensors just measure simple physical quantities" title="What we get from sensors" />
+<img src="{{ '/images/sensors_weget.svg' | relative_url }}" alt="Sensors just measure simple physical quantities" title="What we get from sensors" />
 <figcaption>What we get from sensors</figcaption>
 </figure>
 Sensors give us relatively simple measurements of physical quantities, which may be of varying levels of accuracy. There may be some interpretation placed on top of this, but fundamentally, whilst what we ideally want is to have a sensor that tells us what we want to know, what we typically have is a sensor or sensors that respond to the physical state of the world, and we must use that to infer the underlying state that we are interested in.

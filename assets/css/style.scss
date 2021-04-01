@@ -9,23 +9,106 @@
     }
 }
 
-#flexer
+.navbuttons
 {
-    background-color:#000;
-    display:flex;
     width:100%;
+    display:flex;
+    justify-content: space-between;
+    padding: 1ch 0;
 }
 
-#sidebar
+.navbuttons>div>a
+{
+    background-color:#855;
+    color:#fff;
+    padding:.5ch 2ch;
+}
+
+.sidebar>h1
+{
+    display:block;
+}
+
+.sidebar_nav
+{
+}
+
+ol.sidebar_nav_category
+{
+    list-style-position: inside;
+    list-style:upper-latin;
+    background-color:#cccccc;
+    border-radius:5px;
+    border-width:2px;
+    border-color:#aaaaaa;
+    border-style:solid;
+    padding:5% 0;
+}
+
+li.sidebar_nav_category
+{
+    color:#000;
+}
+ 
+
+.sidebar_nav_lesson
+{
+    list-style-type: none;
+}
+
+.sidebar_nav_selected
+{
+    display:block;
+    width:100%;
+    background-color:#855;
+    color: #fff;
+    margin:0;
+    border-bottom:1px solid #888;
+    border-top: 1px solid #888;
+}
+
+.sidebar_nav_selected>a
+{
+    background-color:#855;
+    color: #fff;
+}
+
+.sidebar_nav_link
+{
+    display:block;
+    width:100%;
+    background-color:#fff;
+    color: #855;
+    margin:0;
+    border-bottom:1px solid #888;
+    border-top: 1px solid #888;
+}
+
+.sidebar_nav_link>a
+{
+    background-color:#fff;
+    color: #855;
+}
+
+.flexer
+{
+    text-shadow:0 0;
+    background-color:#e7e7e7;
+    display:flex;
+    width:100%;
+    flex-wrap:wrap;
+}
+
+.sidebar
 {
     flex-basis:20ch;
     flex-grow:0;
     flex-shrink:0;
 }
 
-#content
+.centrebar
 {
-    background: rgba(0,0,0,255);
+    background: #e7e7e7;
     flex-basis: 80ch;
     flex-grow: 1;
 //    flex-shrink:1;
@@ -34,10 +117,11 @@
 .inner
 {
     padding: 1em;
-    text-shadow:0 0;
     color:#000;
     background-color:#e7e7e7;
     background-image: none;
+    border-left:1px #dddddd solid;
+    border-right:1px #dddddd solid;
 }
 
 #pageheader

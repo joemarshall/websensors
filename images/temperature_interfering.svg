@@ -8,9 +8,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="133.61401mm"
+   height="119.85662mm"
+   viewBox="0 0 133.61401 119.85662"
    version="1.1"
    id="svg8702"
    inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
@@ -31,8 +31,8 @@
       <rect
          x="0"
          y="0"
-         width="3.8481e+06"
-         height="3.45186e+06"
+         width="3848100"
+         height="3451860"
          id="rect9268" />
     </clipPath>
     <image
@@ -44,10 +44,10 @@
     <clipPath
        id="clip3">
       <rect
-         x="5.3426e+06"
-         y="2.03171e+06"
-         width="3.83761e+06"
-         height="3.45186e+06"
+         x="5342600"
+         y="2031710"
+         width="3837610"
+         height="3451860"
          id="rect9272" />
     </clipPath>
   </defs>
@@ -59,8 +59,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.0456808"
-     inkscape:cx="399.21905"
-     inkscape:cy="612.05262"
+     inkscape:cx="254.86757"
+     inkscape:cy="277.29277"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -69,7 +69,11 @@
      inkscape:window-height="1030"
      inkscape:window-x="192"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata8699">
     <rdf:RDF>
@@ -85,7 +89,8 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-38.192995,-88.571876)">
     <g
        clip-path="url(#clip1)"
        transform="matrix(3.4722329e-5,0,0,3.4722329e-5,38.192995,88.571876)"

@@ -1,11 +1,14 @@
 ---
-title: Characterizing Sensors - Limitations of analog to digital conversion
+title: Limitations of analog to digital conversion
 prev: characterizing_sensors1
 next: characterizing_sensors3
 uses_pyodide: true
 uses_light: true
 uses_maths: true
 uses_audio: true
+lesson_order: 3
+sublesson_order: 2
+
 ---
 Before we can use data from a sensor, the analog signal from a piece of electronics has to be converted into a digital signal suitable for processing by a computer. This process places fundamental limitations in the quality of the signal that gets to our software for processing.
 

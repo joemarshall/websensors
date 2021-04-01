@@ -54,7 +54,21 @@ theme: jekyll-theme-tactile
 defaults:
   -
     scope:
-      path: "" # an empty string here means all files in the project
+      path: "*.md" # an empty string here means all files in the project
       type: "pages"
     values:
       layout: "page"
+  -
+    scope:
+      path: "_lessons/*/*.md"
+      type: "lessons" # a collection in your site, in plural form
+    values:
+      layout: "page"
+
+
+collections:
+  lessons:
+    lesson_order: true
+    sublesson_order: true
+    output: true
+    sort_by: lesson_order,sublesson_order

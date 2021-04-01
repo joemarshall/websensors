@@ -1,11 +1,14 @@
 ---
-title: Characterizing Sensors - Non-numerical errors
+title: Non-numerical errors
 prev: characterizing_sensors3
 upnext: index
 uses_pyodide: true
 uses_light: true
 uses_maths: true
 uses_audio: true
+lesson_order: 3
+sublesson_order: 4
+
 ---
 Many sources of error in sensor data are not possible to model as simple numerical deviations from the correct value. In this section we discuss a range of such non-numerical errors.
 

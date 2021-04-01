@@ -20,16 +20,37 @@
 {% if page.uses_maths %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/englishextra/qrjs2@0.1.8/js/qrjs2.min.js"></script>
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/gh/englishextra/qrjs2@0.1.8/js/qrjs2.min.js"></script>
 
   </head>
 
   <body>
-    <div id="flexer">
-  <div id="sidebar">
-    <div class="desktoponly">
-    Load this page on mobile:
+
+    <div class="flexer">
+      <div id="emptysidebar" class="sidebar">
+      </div>
+
+      <div class="centrebar"> 
+        <div class="inner">
+          <header class="inner">
+            <h2 id="pageheader">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
+            <h1>{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
+            </header>      
+            {% include find_next.html %}    
+            {% include navbuttons.html %}
+        </div>
+    </div>
+  </div>
+  
+    <div class="flexer">
+  <div class="sidebar">
+    <h1>Navigation</h1>
+  {% include list_lessons.html %}    
+
+  <div class="desktoponly">
+    Scan this QR code to load the page on mobile:
     <script>
      var dataUriPngImage = document.createElement("img");
 			u = window.location.href;
@@ -49,13 +70,8 @@
     </script>
     </div>
   </div>
-  <div id="content">
+<div id="content" class="centrebar">
       <div class="inner">
-        <header>
-            <h2 id="pageheader">{{ page.description | default: site.de
-              scription | default: site.github.project_tagline }}</h2>
-            <h1>{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
-        </header>
     
         <section id="downloads" class="clearfix">
           {% if site.show_downloads %}
@@ -75,19 +91,7 @@
           {{ content }}
         </section>
 
-        {% if page.upprev %}
-        <a href="{{page.upprev }}.html">Return to index</a>
-        {% endif %}
-        {% if page.prev %} 
-        <a href="{{page.prev }}.html">Prev</a>
-        {% endif %}
-        {% if page.next %}
-        <a href="{{page.next }}.html">Next</a>
-        {% endif %}
-        {% if page.upnext %}
-        <a href="{{page.upnext }}.html">Return to index</a>
-        {% endif %}
-
+        {% include navbuttons.html %}
         <footer>
         {% if site.github.is_project_page %}
           {{ site.title | default: site.github.repository_name }} is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a><br>

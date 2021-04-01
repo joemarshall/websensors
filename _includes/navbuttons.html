@@ -1,0 +1,17 @@
+<div class="navbuttons">
+    <div>
+    {% if page_prev!="" %}
+    <a class='prevbutton' href="{{page_prev }}">&lt; Prev</a>
+    {% endif %}
+    </div> 
+    <div>
+    {% if (page.url  | absolute_url)  != ("/index.html" | absolute_url)  %}
+    <a class='upbutton' href='{{ "/index.html" | relative_url }}'>Index</a>
+    {% endif %}
+    </div>
+    <div>
+    {% if page_next!="" %}
+    <a class='nextbutton' href="{{ page_next }}">Next &gt;</a>
+    {% endif %}
+    </div>
+    </div>

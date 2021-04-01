@@ -10,27 +10,27 @@ Any questions, email [Joe Marshall](mailto:joe.marshall@nottingham.ac.uk).
 
 The sensor processing examples on here use web based python scripts. These run in your web browser thanks to the [pyodide project](https://pyodide.org/).
 
-[Intro to web python](python_intro.html)
+[Intro to web python](lessons/python_intro.html)
 
 # What is a sensor?
 These pages introduce you to what a sensor is
 
-[What is a sensor pt1 - Examples of sensors](what_is_a_sensor1)
+[What is a sensor pt1 - Examples of sensors](lessons/what_is_a_sensor1)
 
-[What is a sensor pt2 - Definition](what_is_a_sensor2)
+[What is a sensor pt2 - Definition](lessons/what_is_a_sensor2)
 
-[What is a sensor pt3 - Why are sensors complicated](what_is_a_sensor3)
+[What is a sensor pt3 - Why are sensors complicated](lessons/what_is_a_sensor3)
 
 # Characteristics of sensors
 In the previous section we learnt how sensors **respond** to physical properties in the real world, rather than simply giving you the value of that property. In this section, we will look at how we can understand and characterize that response.
 
-[Characterizing sensors - Introduction](characterizing_sensors1)
+[Characterizing sensors - Introduction](lessons/characterizing_sensors1)
 
-[Characterizing sensors pt2 - Range, resolution and sensitivity ](characterizing_sensors2)
+[Characterizing sensors pt2 - Range, resolution and sensitivity ](lessons/characterizing_sensors2)
 
-[Characterizing sensors pt3 - Numerical noise](characterizing_sensors3)
+[Characterizing sensors pt3 - Numerical noise](lessons/characterizing_sensors3)
 
-[Characterizing sensors pt4 - Non-numerical sensor errors](characterizing_sensors4)
+[Characterizing sensors pt4 - Non-numerical sensor errors](lessons/characterizing_sensors4)
 
 # Filtering individual sensors
 Sensor data is dirrrty. How do we get a cleaner measurement of what we want to understand about the world? Find out in this exciting four part series on data filtering!
