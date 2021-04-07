@@ -31,10 +31,10 @@
                   {% assign page_next=lesson.url %}
                 {% endif %}
                 {% if lesson.url == page.url %}
-                    <li class="sidebar_nav_selected"><a href="{{ lesson.url}}">{{lesson.title}}</a></li>    
+                    <li class="sidebar_nav_selected"><a href="{{ lesson.url | relative_url }}">{{lesson.title}}</a></li>    
                     {% assign page_prev=prev %}
                 {% else %}
-                    <li class="sidebar_nav_link"><a href="{{ lesson.url}}">{{lesson.title}}</a></li>    
+                    <li class="sidebar_nav_link"><a href="{{ lesson.url | relative_url }}">{{lesson.title}}</a></li>    
                 {% endif %}  
                 {% assign prev = lesson.url %}
             {% endif %}  
