@@ -15,7 +15,7 @@ The sensor processing examples on here use web based python scripts. These run i
 # What is a sensor?
 These pages introduce you to what a sensor is
 
-[What is a sensor pt1 - Examples of sensors](_lessons/2.What_is_a_Sensor/what_is_a_sensor1.html)
+[What is a sensor pt1 - Examples of sensors](lessons/2.What_is_a_Sensor/what_is_a_sensor1.html)
 
 [What is a sensor pt2 - Definition](lessons/2.What_is_a_Sensor/what_is_a_sensor2.html)
 

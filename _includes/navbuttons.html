@@ -1,7 +1,7 @@
 <div class="navbuttons">
     <div>
     {% if page_prev!="" %}
-    <a class='prevbutton' href="{{page_prev }}">&lt; Prev</a>
+    <a class='prevbutton' href="{{page_prev | relative_url }}">&lt; Prev</a>
     {% endif %}
     </div> 
     <div>
@@ -11,7 +11,7 @@
     </div>
     <div>
     {% if page_next!="" %}
-    <a class='nextbutton' href="{{ page_next }}">Next &gt;</a>
+    <a class='nextbutton' href="{{ page_next | relative_url }}">Next &gt;</a>
     {% endif %}
     </div>
     </div>
