@@ -77,11 +77,11 @@ Another interesting event sensing error occurs with beam based sensors such as u
 
 Another key cause of poor quality sensor data is user or operator error. Errors in deploying and using sensors can cause many practical problems no matter the quality of the underlying sensor.
 
-<details markdown=1>
+<details  class="question" markdown=1>
 <summary>
 Can you think of some common user errors?
 </summary>
-From supervising MRT courseworks for several years, we have seen a wide range of sensor errors caused by user errors. Examples include:
+From supervising MRT courseworks  for several years, we have seen a wide range of sensor errors caused by user errors. Examples include:
 
 * Pointing directional sensors the wrong way.
 * Making noises while testing using a sound sensor which caused it to think the room was very noisy.

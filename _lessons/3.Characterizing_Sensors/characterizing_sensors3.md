@@ -22,7 +22,7 @@ This can make it hard to know exactly what the true value is because it is jumpi
 
 <script> makePyodideBox({codeFile:"random_noise.py",hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
 
-<details markdown=1>
+<details class="question" markdown=1>
 <summary>
 Can you think of things that might cause noise?
 </summary>
@@ -42,7 +42,7 @@ $$ sensorOutput = trueValue + bias $$
 
 <script> makePyodideBox({codeFile:"bias.py",hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
 
-<details markdown=1>
+<details class="question" markdown=1>
 <summary>
 Can you think of things that might cause bias?
 </summary>
@@ -59,7 +59,7 @@ Typically sensors exhibit a mixture of bias and noise. One way of considering th
 
 {%include figure.html url="/images/accuracy_vs_precision.svg" alt="A sensor is accurate if the average result is close to the correct value. A sensor is precise if the variation in output is small." title="When pinning the bow tie on the llama precisely, the positions are close together. When it is done accurately, the positions of the bow tie are centred around the correct position." caption="Precision and Accuracy in a game of Pin the Bow Tie on the Llama" %}
 
-<details>
+<details class="question">
 <summary>
 When might precision be more important than accuracy?
 </summary>
@@ -67,7 +67,7 @@ In many applications, we are more interested in changes in value than the raw va
 </details>
 
 
-<details markdown=1>
+<details class="question" markdown=1>
 <summary>
 When might accuracy be more important than precision?
 </summary>

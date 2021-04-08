@@ -30,7 +30,7 @@ For example, the code below shows the output of the light sensor, with the range
 
 What does this mean - this fundamental limit in sensor capability means that each sensor may be appropriate for only a certain range of inputs, which needs considering when using the sensors. For example in a previous year's coursework, a student wanted to sense changes in very bright light which caused the light sensor she was using to saturate. She solved this by covering the sensor with a tissue which reduced the amount of light hitting the sensor.
 
-<details>
+<details class="question">
 <summary>
 When might a small range be appropriate?
 </summary>
@@ -40,7 +40,7 @@ If it is possible to achieve the task being performed using a sensor with a smal
 * In some situations we are only interested in whether a value is inside or outside a range. For example light sensors are commonly used to turn off lights when ambient light levels are high enough. These sensors can have a very constrained range, as the only need a maximum slightly above the target ambient light level and a minimum slightly below.
 </details>
 
-<details>
+<details class="question">
 <summary>
 Why might we use a wide ranged sensor?
 </summary>
@@ -66,7 +66,7 @@ The script below artificially limits the resolution of the input sensor value. Y
 
 When you finish playing, try and answer the questions below (click to see the answer):
 
-<details>
+<details class="question">
 <summary>
 Why might we use a low resolution sensor?
 </summary>
@@ -77,7 +77,7 @@ If it is possible to achieve the task being performed using a low resolution sen
 * In some sensors such as cameras, there is a trade-off between value resolution and temporal resolution (see below), meaning that the sampling rate can be made much higher if the resolution is reduced.
 </details>
 
-<details>
+<details class="question">
 <summary>
 Why might we use a high resolution sensor?
 </summary>
@@ -109,14 +109,14 @@ In the code below, the sound sensor is sampled with a delay of 0.1 seconds, mean
 
 Think about the following questions and click to open my answer:
 
-<details>
+<details class="question">
 <summary>
 What could a very low sampling rate of sound level be useful for?
 </summary>
 If we want to create a sensor which estimates how noisy a room is throughout the week, and we want to use a very small amount of power, for example for creating an environmental sensor designed to be left for a long time running on battery power, we may be able to sample at a very low sampling rate, e.g. once per second. By averaging these values over a long time, e.g. over an hour, we can get a relatively good idea of how noisy a room has been in any particular hour of the week.
 </details>
 
-<details>
+<details class="question">
 <summary>
 When might we need to sample sound quickly?
 </summary>

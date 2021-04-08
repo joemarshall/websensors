@@ -287,3 +287,17 @@ ol li
 {
     margin-left: 1em;
 }
+
+.reminder::before
+{
+    content: "Remind yourself (think then click to open)";
+    text-emphasis:bold;
+    font-variant:small-caps;
+}
+
+.question::before
+{
+    content: "Question (think then click to open)";
+    text-emphasis:bold;
+    font-variant:small-caps;
+}

@@ -47,7 +47,7 @@ In the second section of these exercises, we will look at how to process and cle
 Try and answer the questions below before you click on them to open out the answer:
 
 A PIR motion sensor is a sensor which is used to make lights turn on automatically or trigger alarms based on when there is human motion in the area covered by the sensor.
-<details>
+<details  class="question">
 <summary>What does a PIR motion sensor measure?</summary>
 
 <h2>Did you say 'motion', or 'human motion', or 'people moving'?</h2>
@@ -67,7 +67,7 @@ This is what we want to know from a motion sensor, but in reality, all a PIR mot
 
 A mobile phone contains a sensor called an accelerometer. This is used for example to detect which way up the phone is so that the screen can rotate as you turn the phone between landscape and portrait. 
 
-<details>
+<details  class="question">
 <summary>Do you know what an accelerometer measures?</summary>
 
 <h2>Not motion or acceleration</h2>
@@ -88,7 +88,7 @@ We want the phone display to orient such that it is the way up that the person r
 
 Why are sensors hard? Look at the two questions below for the answers:
 
-<details>
+<details  class="question">
 <summary>
 What do we want to know when we use sensors?
 </summary>
@@ -102,7 +102,7 @@ Most of the time when we use a sensor, we want to infer something about the stat
 </details>
 
 
-<details>
+<details class="question">
 <summary>
 What do sensors give us?
 </summary>
