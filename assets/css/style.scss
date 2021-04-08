@@ -288,16 +288,29 @@ ol li
     margin-left: 1em;
 }
 
-.reminder::before
+.reminder:first-of-type::before
 {
     content: "Remind yourself (think then click to open)";
+}
+
+.reminder::before
+{
+    content:"Reminder";
     text-emphasis:bold;
     font-variant:small-caps;
+
+}
+
+
+.question:first-of-type::before
+{
+    content: "Question (think then click to open)";
 }
 
 .question::before
 {
-    content: "Question (think then click to open)";
+    content: "Question";
     text-emphasis:bold;
     font-variant:small-caps;
+
 }
