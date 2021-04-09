@@ -32,6 +32,7 @@ import graphs
 
 graphs.set_style("sound","rgb(0,0,0)",-0,1)
 graphs.set_style("threshold","rgb(0,255,0)",0,1)
+graphs.set_style("output","rgb(255,0,0)",0,1,subgraph_y=1)
 # try changing this threshold level and see what it does 
 # to the thresholded output
 THRESHOLD_LEVEL=0.5
@@ -40,7 +41,8 @@ while True:
     sound_level=sensors.sound.get_level()
     thresholded=1 if sound_level>THRESHOLD_LEVEL else 0
     graphs.on_value("sound",sound_level)
-    graphs.on_value("threshold",thresholded)
+    graphs.on_value("threshold",THRESHOLD_LEVEL)
+    graphs.on_value("output",thresholded)
     time.sleep(0.01)
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Apply a simple threshold to the sound sensor"})
 </script>

@@ -171,7 +171,6 @@ export function makeGraphContext(graphCanvas)
                     // we are one point ahead of the other sensor(s) 
                     // so just show one point older to maintain consistent alignment
                     i-=1;
-                    console.log("Bump")
                 }
 
                 let curX=xPos+(w-pointCount);
