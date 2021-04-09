@@ -77,11 +77,11 @@ function stderr_write(s)
     }
 }
 
-function set_graph_style(graphName,colour,minVal,maxVal)
+function set_graph_style(graphName,colour,minVal,maxVal,subgraphX,subgraphY)
 {
     if(!inCancel)
     {
-        self.postMessage({type:"graph",fn:"style",arguments:[graphName,colour,minVal,maxVal]});
+        self.postMessage({type:"graph",fn:"style",arguments:[graphName,colour,minVal,maxVal,subgraphX,subgraphY]});
     }
 
 }
@@ -164,8 +164,8 @@ onmessage = async function(e) {
         // make the graph module (calls back to js to display graph values)
         loadAsModule("graphs",`
 import js        
-def set_style(graphName,colour,minVal,maxVal): 
-    js.set_graph_style(graphName,colour,minVal,maxVal)           
+def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None): 
+    js.set_graph_style(graphName,colour,minVal,maxVal,subgraph_x,subgraph_y)           
 def on_value(graphName,value):
     js.on_graph_value(graphName,value)        
         `
