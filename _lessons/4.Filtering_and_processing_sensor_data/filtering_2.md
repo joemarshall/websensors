@@ -30,8 +30,8 @@ import sensors
 import graphs
 
 
-graphs.set_style("sound","rgb(0,0,0)",-0.1,1.1)
-graphs.set_style("threshold","rgb(0,255,0)",-0.1,1.1)
+graphs.set_style("sound","rgb(0,0,0)",-0,1)
+graphs.set_style("threshold","rgb(0,255,0)",0,1)
 # try changing this threshold level and see what it does 
 # to the thresholded output
 THRESHOLD_LEVEL=0.5
