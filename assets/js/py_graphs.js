@@ -16,6 +16,7 @@ export function makeGraphContext(graphCanvas)
     let ctx={
         defaultRange:[-1,1],// default y range, updated when an explicit range is set
         nextAutoColour:0,
+        needsPaint:false,
 
         drawCtx: graphCanvas.getContext("2d"),
         canvasWidth:graphCanvas.width,
@@ -57,7 +58,7 @@ export function makeGraphContext(graphCanvas)
             {
                 this.graphInfos[graphName]={};
             }
-            var info=this.graphInfos[graphName];
+            let info=this.graphInfos[graphName];
             info.subgraphX=subgraphX;
             info.subgraphY=subgraphY;
             info.range=[minVal,maxVal];
@@ -71,7 +72,7 @@ export function makeGraphContext(graphCanvas)
                 // no graph object at all
                 this.graphInfos[graphName]={}
             }
-            var info=this.graphInfos[graphName];
+            let info=this.graphInfos[graphName];
             if(!info.history)
             {
                 info.history=[];
@@ -98,7 +99,7 @@ export function makeGraphContext(graphCanvas)
         onGraphValue: function(graphName,value)
         {
             this.checkExists(graphName);
-            var info=this.graphInfos[graphName];
+            let info=this.graphInfos[graphName];
             info.history.push(value);
             info.count+=1;
             // keep an extra point here because we need to be able 
@@ -107,11 +108,12 @@ export function makeGraphContext(graphCanvas)
             {
                 info.history.shift();
             }
-            if(this.painted)
+            this.needsPaint=true;
+/*            if(this.painted)
             {
                 this.painted=false;
                 window.requestAnimationFrame(this.draw.bind(this));
-            }
+            }*/
         },  
         
 
@@ -130,7 +132,7 @@ export function makeGraphContext(graphCanvas)
                 {
                     if(other!=name)
                     {
-                        var otherInfo=this.graphInfos[other];
+                        let otherInfo=this.graphInfos[other];
                         // if we are one point different
                         // in count to another graph,
                         // then make sure we line up
@@ -186,14 +188,14 @@ export function makeGraphContext(graphCanvas)
                 this.drawCtx.stroke();      
             }
 
-            var maxTextWidth=0;
-            var maxTextY=0;
-            var fontSize=this.fontSize;
+            let maxTextWidth=0;
+            let maxTextY=0;
+            let fontSize=this.fontSize;
             this.drawCtx.font = `small-caps ${fontSize}px Arial `;
             this.drawCtx.textBaseline='top';
             let legendY=yPos+this.fontSize*0.5;
             this.drawCtx.textAlign='left';
-            var minTextY=legendY;
+            let minTextY=legendY;
 
             for(const name in this.graphInfos)
             {
@@ -229,8 +231,8 @@ export function makeGraphContext(graphCanvas)
         },
         drawGraphs: function()
         {
-            var subgraphXCount=0;
-            var subgraphYCount=0;
+            let subgraphXCount=0;
+            let subgraphYCount=0;
             for(const name in this.graphInfos)
             {
                 let info=this.graphInfos[name];
@@ -250,12 +252,21 @@ export function makeGraphContext(graphCanvas)
                     }
                 }
         },
-    
+
+        timer:function()
+        {
+            if(this.needsPaint)
+            {
+                this.needsPaint=false;
+                window.requestAnimationFrame(this.draw.bind(this));
+            }
+        },
+
+
         draw:function(timeObj)
         {
             this.clearCanvas();
             this.drawGraphs();
-            this.painted=true;
         },
     
         clearCanvas: function()
@@ -263,6 +274,7 @@ export function makeGraphContext(graphCanvas)
           this.drawCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         }
     };
+    window.setInterval(ctx.timer.bind(ctx),40);// 25hz update max
     return ctx;        
 }
 

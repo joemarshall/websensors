@@ -2,7 +2,7 @@ self.languagePluginUrl = "./"
 
 importScripts("pyodide.js")
 
-var sensorModule;
+let sensorModule;
 
 function loadAsModule(moduleName,modulePython)
 {
@@ -18,11 +18,8 @@ del spec
 sys.modules['${moduleName}']=${moduleName}
 exec(js._load_as_module_src, ${moduleName}.__dict__)
 ${moduleName}
-`);
-    
+`);    
 }
-
-
 
 class CancelSleep
 {
@@ -31,7 +28,7 @@ class CancelSleep
         this.p=new Promise((resolve,reject)=>{
           this.sleepTimer=setTimeout(resolve,ms); this.rejectFN=reject;
         });
-        this.p.owner=this;
+//        this.p.owner=this;
         this.p.cancel=()=>{this.cancel();}
     };
 
@@ -45,8 +42,7 @@ class CancelSleep
     {
         return this.p;
     }
-
-    
+   
 };
 
 function sleep(ms) {
@@ -54,12 +50,11 @@ function sleep(ms) {
     return new CancelSleep(ms).getPromise();
 }
 
-var inCancel=false;
-var pyConsole;
-var results,state;
-var sleeper;
-var sleepTimer;
-var runCommandID;
+let inCancel=false;
+let pyConsole;
+let results,state;
+let sleeper;
+let sleepTimer;
 
 function stdout_write(s)
 {
@@ -98,14 +93,15 @@ function on_graph_value(graphName,curVal)
 
 async function runAsyncLoop(id,arg)
 {
-    retVal=pyodide.runPython("__pc.clear_cancel()")
-    runCommandID=id;
+    pyodide.runPython("__pc.clear_cancel()")
+    let runCommandID=id;
     while(true)
     {
-        var retVal;
-        var resumeArg;
-        retVal=pyodide.runPython("__pc.run_once()")
-        retVal=retVal.toJs();
+        let retValPython;
+        let resumeArg;
+        retValPython=pyodide.runPython("__pc.run_once()")
+        retVal=retValPython.toJs();
+        retValPython.destroy();
         if(!retVal || !retVal.get)
         {
             self.postMessage({id:id,type:"response",failed:true});
@@ -156,11 +152,8 @@ async function runAsyncLoop(id,arg)
 
 }
 
-onmessage = async function(e) {
-    await languagePluginLoader;
-    const {cmd,arg,id} = e.data;    
-    if(cmd =='init')
-    {
+async function initPython()
+{
         // make the graph module (calls back to js to display graph values)
         loadAsModule("graphs",`
 import js        
@@ -301,6 +294,14 @@ __pc=PyConsole()
         pyConsole.stdout_callback = stdout_write
         pyConsole.stderr_callback = stderr_write
 
+}
+
+onmessage = async function(e) {
+    await languagePluginLoader;
+    const {cmd,arg,id} = e.data;
+    if(cmd =='init')
+    {
+        await initPython();
         self.postMessage({id:id,type:"response",results:true});
     }
     if (cmd =='run')
@@ -345,7 +346,7 @@ __pc=PyConsole()
     }
     if(cmd=="sensor")
     {
-        self.sensorModule.on_sensor_event(arg)
+        sensorModule.on_sensor_event(arg)
     }
 }
 
