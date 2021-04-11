@@ -2,12 +2,83 @@
 ---
 @import 'jekyll-theme-tactile';
 
-
-@media only screen and (max-width: 100ch) {
+// mobile things - don't display 'scan me'
+// and hide navbar by default
+// make content sit in middle but shrink rather
+// than wrap the 'open navigation' button
+@media only screen and (max-width: 120ch) {
     .desktoponly {
        display:none;
     }
+    .sidebar_opener
+    {
+        display:inherit;
+    }
+    .sidebar
+    {
+        display:flex;
+        align-items:stretch;
+        align-self:flex-start;
+        position:fixed;
+        left:0px;
+        top:0px;
+        bottom:0px;
+        z-index:1;
+        height:100vh;
+        overflow-y:hidden;
+    }
+    .sidebar_content
+    {
+        background-color:#e7e7e7;
+        height:100%;
+        width:fit-content;
+        overflow-y:auto;
+    }
+    .sidebarhidden
+    {
+        display: none;
+    }
+    
+    .centrebar
+    {
+        padding-left:3ch;
+    }
+
+    .sidebar_open_button
+    {
+        background-color: rgba(#000,.5);
+        color:#fff;
+        font-size:150%;
+        margin-top:4ch;
+        padding-bottom:2ch;
+        padding-top:2ch;
+        padding-left:.5ch;
+        padding-right:.5ch;
+        border-radius:.5ch;
+        writing-mode: vertical-rl;
+        border-top-left-radius: 0;
+        border-bottom-left-radius:0;
+ //       background-color:rgba(#e7e7e7,.5);
+        //transform:rotate(90deg);
+        //transform-origin:bottom left;
+    }
+    .flexer
+    {
+        margin-left:1ch;
+    }
+    .sidebar_content
+    {
+        width:20ch;
+    }
+    .flexer
+    {
+        flex-wrap:None;
+    }
+    
+
 }
+
+
 
 .navbuttons
 {
@@ -105,6 +176,7 @@ li.sidebar_nav_category
     flex-grow:0;
     flex-shrink:0;
 }
+
 
 .centrebar
 {
@@ -301,7 +373,6 @@ ol li
 
 }
 
-
 .question:first-of-type::before
 {
     content: "Question (think then click to open)";
@@ -314,3 +385,18 @@ ol li
     font-variant:small-caps;
 
 }
+
+.sidebarhidden
+{
+    display: visible;
+}
+
+
+.sidebar_opener
+{
+    flex-basis:2ch;
+    flex-grow:0;
+    flex-shrink:0; 
+}
+
+

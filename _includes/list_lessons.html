@@ -15,7 +15,7 @@
   {% assign page_prev = "" %}
 
   <!--Output the categories and assign next and prev values for current page if applicable-->
-  <div class="sidebar_nav">
+  <div class="sidebar_nav" id="navigation_content">
   <ol class="sidebar_nav_category">
   {% for category in categories_array %}
       <li class="sidebar_nav_category">
@@ -45,3 +45,17 @@
 {% endfor %}
 </ol>
 </div>
+
+<script>
+    function showNavigation()
+    {
+        var x = document.getElementById("sidebar_content");
+        if(x.className=="sidebar_content")
+        {
+            x.className+=" sidebarhidden";
+        }else
+        {
+            x.className="sidebar_content";
+        }
+    }
+</script>

@@ -23,6 +23,22 @@ window.sensor_objects.push(snd_sensor);
 </script>
 {% endif %}
 
+{% if page.uses_light %}
+<script type="module">    
+
+let light_sensor={
+    name:"light",
+    mod_light:undefined,
+    init: async function(){this.mod_light=await import("{{ 'assets/js/light_sensor.js' | relative_url }} ");},
+    start: async function(callback){await this.mod_light.start(callback)},
+    stop: async function() { await this.mod_light.stop();}
+};
+
+window.sensor_objects.push(light_sensor);
+</script>
+{% endif %}
+
+
 {% if page.uses_accelerometer %}
 <script type="module">
 let accel_sensor={

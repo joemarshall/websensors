@@ -44,33 +44,39 @@
     </div>
   </div>
   
-    <div class="flexer">
-  <div class="sidebar">
-    <h1>Navigation</h1>
-  {% include list_lessons.html %}    
+<div class="flexer">
+  <div id="sidebar_parent" class="sidebar">
+    <div class="sidebar_content sidebarhidden" id="sidebar_content">
+      <h1 class="desktoponly">Navigation</h1>
+      {% include list_lessons.html %}    
 
-  <div class="desktoponly">
-    Scan this QR code to load the page on mobile:
-    <script>
-     var dataUriPngImage = document.createElement("img");
-			u = window.location.href;
-			s = QRCode.generatePNG(u, {
-					ecclevel: "M",
-					format: "html",
-					fillcolor: "#ffffff",
-					textcolor: "#000000",
-					margin: 4,
-					modulesize: 8
-				});
-			dataUriPngImage.src = s;
-      dataUriPngImage.style="width:100%"
-      let script = document.scripts[document.scripts.length - 1]; // A reference to the currently running script
+      <div class="desktoponly">
+        Scan this QR code to load the page on mobile:
+        <script>
+        var dataUriPngImage = document.createElement("img");
+          u = window.location.href;
+          s = QRCode.generatePNG(u, {
+              ecclevel: "M",
+              format: "html",
+              fillcolor: "#ffffff",
+              textcolor: "#000000",
+              margin: 4,
+              modulesize: 8
+            });
+          dataUriPngImage.src = s;
+          dataUriPngImage.style="width:100%"
+          let script = document.scripts[document.scripts.length - 1]; // A reference to the currently running script
 
-      script.parentNode.insertBefore(dataUriPngImage,script);
-    </script>
+          script.parentNode.insertBefore(dataUriPngImage,script);
+        </script>
+      </div>
     </div>
-  </div>
-<div id="content" class="centrebar">
+    <div class="sidebar_opener">
+      <div class="sidebar_open_button" onclick="showNavigation()">Navigation</div>
+    </div>  
+  </div>  
+
+  <div id="content" class="centrebar">
       <div class="inner">
     
         <section id="downloads" class="clearfix">
