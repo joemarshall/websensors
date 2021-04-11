@@ -175,6 +175,8 @@ def on_sensor_event(event):
         accel._on_accel(value[0],value[1],value[2])
     elif name=="sound":
         sound._on_level(value[0])
+    elif name=="light":
+        light._on_level(value[0])
 
 class accel:
     _xyz=(0,0,0)
@@ -204,8 +206,18 @@ class sound:
     # called from js to set the current level
     @staticmethod
     def _on_level(level):
-#        print("SNDLEVEL",level)
         sound._level=level
+
+class light:
+    _level=0
+    @staticmethod
+    def get_level():
+        return light._level        
+        
+    # called from js to set the current level
+    @staticmethod
+    def _on_level(level):
+        light._level=level
 `);
         await pyodide.runPythonAsync(`
 import unthrow

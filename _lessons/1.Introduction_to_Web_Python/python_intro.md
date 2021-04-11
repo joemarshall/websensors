@@ -3,7 +3,7 @@ title: Python and sensors on the web
 uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
-upnext: index
+uses_light: true 
 lesson_order: 1
 sublesson_order: 1
 ---
@@ -11,6 +11,18 @@ sublesson_order: 1
 This site uses a version of python compiled to run in your web browser, with some javascript added to allow you to read from sensors on your computer or phone and draw graphs. 
 
 The reason for this is so that you can experiment with processing sensor data in python without requiring any specialist hardware. You can access sensors including sound level (on mobile or any PC with a microphone), light level (sort of, on anything with a camera) and mobile phone accelerometers and gyroscopes on Android or iOS.
+
+# Browser and System Compatibility of the different sensors
+
+Most things work fine in Chrome, Edge, Firefox and Safari on Windows, Mac or iOS.
+
+Light level sensing will work most accurately on Chrome or Edge for Windows and Android Chrome because other
+browsers don't allow manual control of camera exposure, so 
+auto exposure may break things.
+
+Sound level should be cool and dandy everywhere.
+
+There is no accelerometer support on Windows or Mac, so you can only read accelerometer on mobile platforms.
 
 # Python Hello World
 
@@ -84,3 +96,35 @@ while True:
     time.sleep(0.01)
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Show values on a graph in python"})
 </script>
+
+# Let's graph a sensor
+
+In the example below, we get the light and sound sensors and show them on a graph.
+
+Note in the set_style call, we use subgraph_y to split the graph into two separate graphs. You can also use subgraph_x
+to split the graph horizontally, but it is often less useful because things at the same time don't line up.
+
+<script>
+makePyodideBox({
+    codeString:`
+# we use time.sleep for delay
+import time    
+# load the graphing module and sensors 
+import graphs
+import sensors
+c=0
+graphs.set_style("sound","rgb(255,255,0)",0,1,subgraph_y=0)
+graphs.set_style("light","rgb(0,255,0)",0,1,subgraph_y=1)
+while True:
+    c=c+0.01
+    if c>1:
+        c=-1    
+    sound_level=sensors.sound.get_level()
+    light_level=sensors.light.get_level()
+    print(sound_level,light_level,sep=",")
+    graphs.on_value("light",light_level)
+    graphs.on_value("sound",sound_level)
+    time.sleep(0.1)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Show light and sound on a graph"})
+</script>
+

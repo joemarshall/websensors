@@ -49,7 +49,13 @@ export async function startAccelerometer(callback)
     let result;
     if(navigator.permissions && navigator.permissions.query)
     {
-        result=await navigator.permissions.query({ name: "accelerometer" });
+        try
+        {
+            result=await navigator.permissions.query({ name: "accelerometer" });
+        }catch(err)
+        {            
+            result=undefined;
+        }
     }
     if(!result || result.state=='granted')
     {
