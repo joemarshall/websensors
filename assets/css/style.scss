@@ -43,6 +43,10 @@
     {
         padding-left:3ch;
     }
+    .sidebar_open_button::before
+    {
+        content:"Navigation";
+    }
 
     .sidebar_open_button
     {
