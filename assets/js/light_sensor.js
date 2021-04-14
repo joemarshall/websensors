@@ -11,7 +11,7 @@ import "./imagecapture.js";
 // the document. In future it would be possible to
 // use an offscreencanvas, but safari doesn't support
 // that yet.
-const USE_VIDEO_ELEMENT=false;
+const USE_VIDEO_ELEMENT=true;
 
 var _onLevel;
 var cameraPlaying=false;
