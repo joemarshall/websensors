@@ -1,10 +1,28 @@
 import "./imagecapture.js";
 
+// if this is false we use grabframe which is supposed
+// to work but unreliable as of 04/2021
+// 
+// If true we draw the video stream
+// to a video element
+// and draw that into a canvas
+
+// n.b. we just use a canvas that isn't added to
+// the document. In future it would be possible to
+// use an offscreencanvas, but safari doesn't support
+// that yet.
+const USE_VIDEO_ELEMENT=false;
+
 var _onLevel;
 var cameraPlaying=false;
 var cameraStream,captureDevice,videoTrack;
 var grabInterval;
 
+var videoElement;
+if (USE_VIDEO_ELEMENT)
+{
+    videoElement=document.createElement('video');
+}
 var grabCanvas=document.createElement('canvas');
 grabCanvas.width=50;
 grabCanvas.height=50;
@@ -51,6 +69,12 @@ export async function start(callback)
             }
         }
 
+        if(videoElement)
+        {
+            videoElement.srcObject=cameraStream;
+            videoElement.play();
+        }
+
         grabInterval=setInterval(grabImage,100)
 
         cameraPlaying = true;    
@@ -66,9 +90,25 @@ async function grabImage()
 {
     if(cameraPlaying)
     {
-        captureDevice.grabFrame().then(processFrame).catch(error => {
-            console.log("Couldn't grab image:",error);
-            });    
+        if(videoElement)
+        {
+            // old school - draw videoelement into canvas
+            // then read pixels from that
+            processFrame(videoElement);
+        }else if( videoTrack.readyState == 'live')
+        {
+            // The right way but not worky on 
+            // chrome at least
+            try
+            {
+                let frame=await captureDevice.grabFrame();
+                processFrame(frame);
+            }
+            catch(error)
+            {
+                console.log("Couldn't grab image:",error);
+            }    
+        }
     }
 }
 
@@ -83,6 +123,7 @@ function processFrame(bmp)
         sum+=imageData.data[c];
         count+=1;
     }
+    imageData=undefined;
     let level=(sum/count)*(1.0/256.0);
     _onLevel(level);
     console.log(level);

@@ -477,6 +477,11 @@ function writeConsole(msg)
 {
     if(pyodide_console_div)
     {
+        let needs_rescroll=false;
+        if(pyodide_console_div.scrollTop+pyodide_console_div.clientHeight+1>=pyodide_console_div.scrollHeight)
+        {
+            needs_rescroll=true;
+        }
         consoleText+=msg;
         var spl=consoleText.split("\n")
         if( spl.length>NUM_CONSOLE_LINES)
@@ -484,6 +489,11 @@ function writeConsole(msg)
             consoleText=spl.slice(-NUM_CONSOLE_LINES).join("\n");
         }
         pyodide_console_div.innerText=consoleText;
+        if (needs_rescroll)
+        {
+            pyodide_console_div.scrollTop=pyodide_console_div.scrollHeight-pyodide_console_div.clientHeight;
+        }
+
 /*        var lineDiv=pyodide_console_div.lastChild;
         let lines=msg.split("\n");
         while(lines.length>0)
