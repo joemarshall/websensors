@@ -131,6 +131,20 @@ From a purely medical risk model, false positives may be seen as less of a probl
 However false positives do have some downsides here - they can both be extremely worrying to patients and they can lead to people experiencing invasive or dangerous second-level testing which they don't really need to have.
 </details>
 
+<details class="question" markdown=1>
+<summary> A traffic speed camera uses a sensor to detect the position of cars approaching or receding from the camera, and uses this to estimate their speed. If the detected speed is above the speed limit, an automatic fine is sent to the registered keeper of the car, along with photographic evidence which shows the car passing lines drawn on the road.
+
+What are the effects of false positives and negatives here?
+</summary>
+
+A speed camera firing means that a person may be sent legal paperwork, and ultimately may be fined or even lose their driving licence. This is a serious outcome, which means that false positives are very serious events, both for the driver, and also for the fine issuing body, who would potentially be open to legal challenges and liability if it was found that their cameras were fining innocent people.
+
+False negatives in contrast take a person who is speeding at the point they pass the camera, and do nothing to them. Given that unless we implement full-time tracking of all drivers to regulate speed, all around the country drivers are potentially speeding with zero ramifications, a false negative makes very little difference.
+
+Because of this balance, by design, speed cameras are made extremely unlikely to create false positive events. This is done in a variety of ways - firstly, cameras are carefully calibrated to give as accurate a speed as possible; secondly, camera systems are then set to only fire when the detected speed is significantly above the speed limit (it is widely reported but not officially acknowledged that the formula used in the UK is $$ triggerSpeed = (speedLimit*1.1) + 3 $$ ); finally, a series of painted white lines at known distances on the road is used, along with camera images taken at known intervals - a brief human visual check of these images can tell whether the car wheels pass too many lines across the pair of images which means they are above the speed limit.
+</details>
+
+
 As you can see here, sensor based systems are often deployed in situations where they are involved in decision making processes which may have real effects on societies and the people within those societies. Depending on the situation being sensed, and the different effect of each type of mistake we may wish to prioritise reduction of false positives or false negatives in our sensing system design.
 
 A further thing to consider is that the performance of sensor systems may differ based on aspects of what they are sensing. These can cause serious issues. For example many sensing systems have been demonstrated to work less accurately when applied to women or non-white people. As an example of what happens when things go wrong, check out [this article](https://www.theverge.com/2021/4/13/22382398/robert-williams-detroit-police-department-aclu-lawsuit-facial-recognition-wrongful-arrest) about a recent lawsuit relating to facial identification systems.[The Verge, April 2021](#verge2021). 
@@ -364,9 +378,7 @@ Increasing `MIN_TIME_BETWEEN_EVENTS` means that false positives due to fluctuati
 
 # Now let's try this kind of event sensing with audio
 
-We've seen with the light sensor examples how various different methods of thresholding and event triggering may be used to make event detection more robust to false positives, and how that is usually a balance between reducing false positives, where the sensing system reports events which did not really occur, and avoiding false negatives, where an event occurs but is not reported by the sensing system.
-
-Before we leave this page, here's a quick example of doing similar things with the sound sensor. Try running it and then clapping very loud, hopefully it should fire events each time you clap.
+We've seen with the light sensor examples how various different methods of thresholding and event triggering may be used to make event detection more robust to false positives, and how that is usually a balance between reducing false positives, where the sensing system reports events which did not really occur, and avoiding false negatives, where an event occurs but is not reported by the sensing system. Before we leave this page, here's a quick example of doing similar things with the sound sensor. Try running it and then clapping very loud, hopefully it should fire events each time you clap.
 
 <script>
 makePyodideBox({
@@ -430,10 +442,11 @@ while True:
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Sound sensor clap detection"})
 </script>
 
+# Summary
 
+In this page we saw how using sensors to detect events is made difficult because of two types of errors: False positives, in which the system reports an event when no event has occurred, and false negatives, in which the system doesn't report an event when one happens. As we saw in the examples above, making a system more robust to false positives can in many cases make it more prone to false negatives, and vice versa. Thus when designing sensor systems we need to carefully consider what the consequences of false positives and false negatives are and design our algorithms appropriately to focus on reducing whichever type of error is least acceptable.
 
 # References
 
-1. <a id="verge2021"></a> Face recognition sensing leads to lawsuit:
-https://www.theverge.com/2021/4/13/22382398/robert-williams-detroit-police-department-aclu-lawsuit-facial-recognition-wrongful-arrest
+1. <a id="verge2021"></a> Adi Robertson, Detroit man sues police for wrongfully arresting him based on facial recognition, in [The Verge, April 13th 2021](https://www.theverge.com/2021/4/13/22382398/robert-williams-detroit-police-department-aclu-lawsuit-facial-recognition-wrongful-arrest)
 

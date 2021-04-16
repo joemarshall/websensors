@@ -67,8 +67,11 @@ defaults:
 
 
 collections:
+  inlinefiles:
+    output: false
   lessons:
     lesson_order: true
     sublesson_order: true
     output: true
     sort_by: lesson_order,sublesson_order
+

@@ -1,4 +1,13 @@
 <figure>
+    {% if include.inline_file=="true" %}
+    {% assign inline_url = "/inlinefiles/"| append: include.url %}
+      {% for item in site.inlinefiles %}
+      {% if item.url == inline_url %}
+        {{ item.content }}
+        {% endif %}
+      {% endfor %}
+    {% else %}
     <img src="{{include.url | relative_url }}" alt="{{include.alt}}" title="{{include.title}}" />
+    {% endif %}
     <figcaption>{{include.caption}}</figcaption>
 </figure>
