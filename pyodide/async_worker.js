@@ -1,8 +1,19 @@
+---
+---
+
+
 self.languagePluginUrl = "./"
 
 importScripts("pyodide.js")
 
 let sensorModule;
+
+async function loadURLAsModule(moduleName,moduleURL)
+{
+    var response=await fetch(moduleURL);
+    var responseData=await response.text();
+    loadAsModule(moduleName,responseData);
+}
 
 function loadAsModule(moduleName,modulePython)
 {
@@ -154,8 +165,11 @@ async function runAsyncLoop(id,arg)
 
 async function initPython()
 {
-        // make the graph module (calls back to js to display graph values)
-        loadAsModule("graphs",`
+    // make the filter module (low, high pass, median filter etc.)
+    await loadURLAsModule("filters","{{'/assets/python/filters.py' | relative_url}}");
+
+    // make the graph module (calls back to js to display graph values)
+    loadAsModule("graphs",`
 import js        
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None): 
     js.set_graph_style(graphName,colour,minVal,maxVal,subgraph_x,subgraph_y)           
