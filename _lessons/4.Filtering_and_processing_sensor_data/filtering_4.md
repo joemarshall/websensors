@@ -506,7 +506,54 @@ while True:
     graphs.on_value("filtered sound",sound_lowpassed)
     graphs.on_value("threshold",THRESHOLD)
     time.sleep(SAMPLE_TIME)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Light sensor event detection using simple threshold"})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Clap sensing using high pass and low pass filters"})
+</script>
+
+# Sliding Block averaging
+
+Our simple low-pass and high pass filters are *infinite impulse response* filters; what this means is that in theory, the output at any point is dependent on every point in the past, even if in practice values from far in the past have very little influence. A different class of linear filter is a *finite impulse response* filter. A FIR linear filter is defined as a filter which is created using a weighted combination of purely previous *input* values (as opposed to an IIR filter which uses both previous input and output values). The simplest example of this is a sliding average filter; this uses a *history* list to store a fixed length block of previous data (we do this using [collections.deque](https://docs.python.org/3/library/collections.html#collections.deque); we then take the mean of the history to output each point. The effect of this is something like a low-pass filter; step changes turn in to sloping lines, but unlike the low-pass filter, which curves closer and closer to the final value but never quite hit it, the sliding block average goes to the final value after block-size samples.
+
+In code it looks like so:
+```python
+from collections import deque
+class SlidingAverageFilter:
+    def __init__(self,block_size):
+        self.history=deque(maxlen=block_size)
+
+    def on_value(self,new_value):
+        self.history.append(new_value)
+        mean = sum(self.history)/len(self.history)
+        return mean
+```
+
+Have a play with the python below to see how it works.
+
+<script>
+makePyodideBox({
+    codeString:`
+SAMPLE_TIME = 0.05 # sample 20 times a second
+BLOCK_SIZE = 20 # 1 second / 20 samples median filter size
+# set low pass filter to match median filter
+FILTER_TIME_CONSTANT=BLOCK_SIZE*SAMPLE_TIME
+
+import graphs, sensors,time
+# The filters module contains sliding average filter
+import filters
+graphs.set_style("light","rgb(0,0,0)",0,1)
+graphs.set_style("lowpassed light","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("average light","rgb(0,255,0)",0,1,subgraph_y=2)
+
+lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
+avgFilter=filters.SlidingAverageFilter(block_size=BLOCK_SIZE)
+while True:
+    light_level=sensors.light.get_level()
+    light_lowpassed=lpFilter.on_value(light_level)
+    light_sliding=avgFilter.on_value(light_level)
+    graphs.on_value("light",light_level)
+    graphs.on_value("lowpassed light",light_lowpassed)
+    graphs.on_value("average light",light_sliding)
+    time.sleep(SAMPLE_TIME)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Sliding average is quite similar to low-pass, but strictly dependent on only the last N values. This means it stabilises on a fixed value after BLOCK_SIZE samples."})
 </script>
 
 # Memory check

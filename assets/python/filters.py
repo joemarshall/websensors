@@ -14,7 +14,7 @@ class HighPassFilter:
     Methods
     -------
     on_value(value_in)
-        Process a new value with the filter and return the old one
+        Process a new value with the filter and return the output
     '''
     def __init__(self,alpha):
         self.last_input=None
@@ -69,7 +69,7 @@ class LowPassFilter:
     Methods
     -------
     on_value(value_in)
-        Process a new value with the filter and return the old one
+        Process a new value with the filter and return the output
     '''
     def __init__(self,alpha):
         self.last_value=None
@@ -121,7 +121,7 @@ class MedianFilter:
     Methods
     -------
     on_value(value_in)
-        Process a new value with the filter and return the old one
+        Process a new value with the filter and return the output
     '''
 
     def __init__(self,block_size):
@@ -132,4 +132,114 @@ class MedianFilter:
         ordered=sorted(self.history)
         orderedPos=int(len(ordered)/2)        
         return ordered[orderedPos]
+
+class SlidingAverageFilter:
+    '''
+    A class to perform a sliding average
+    on a sensor value
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the output
+    '''
+
+    def __init__(self,block_size):
+        self.history=deque(maxlen=block_size)
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        mean = sum(self.history)/len(self.history)
+        return mean
+
+class BlockMeanFilter:
+    '''
+    A class to perform an average on blocks of sensor data
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the output, or None if there is no output value right now
+    '''
+
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            output=sum(self.history)/len(self.history)
+            self.history=[]
+            return output
+        return None
+
+class BlockMedianFilter:
+    '''
+    A class to perform a median over blocks of sensor values
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the output, or None if there is no output value right now
+    '''
+
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            self.history.sort()
+            output=self.history[len(self.history)//2]
+            self.history=[]
+            return output
+        return None
+
+class BlockMaxFilter:
+    '''
+    A class to perform a maximum on blocks of data
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the output, or None if there is no output value right now
+    '''
+
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            output=max(self.history)
+            self.history=[]
+            return output
+        return None
+
+class BlockMinFilter:
+    '''
+    A class to perform a minimum on blocks of data
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the output, or None if there is no output value right now
+    '''
+
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            output=min(self.history)
+            self.history=[]
+            return output
+        return None
+
+
 

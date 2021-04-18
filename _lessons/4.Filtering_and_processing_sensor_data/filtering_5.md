@@ -1,5 +1,5 @@
 ---
-title: Some non-linear filtering things
+title: Non-linear filter awesomeness
 lesson_order: 4
 sublesson_order: 5
 uses_maths: true
@@ -50,6 +50,7 @@ class MedianFilter:
         ordered=sorted(self.history)
         orderedPos=int(len(ordered/2))
         median=ordered[orderedPos]
+        return median
 ```
 
 As before, the MedianFilter class is in my filters module, so you don't need to copy it in every time. Let us stick this into a bit of light-sensor code, so you can see what it looks like in comparison to the response of a low-pass filter with a time constant chosen to be equal to the length of the median filter.
@@ -81,8 +82,94 @@ while True:
     graphs.on_value("lowpassed light",light_lowpassed)
     graphs.on_value("median light",light_median)
     time.sleep(SAMPLE_TIME)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Low-pass filter causes delay - try 'turning on and off the light' by covering the light sensor and see how long this takes to detect the changes in light status."})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Comparing median and low-pass filter."})
+</script>
+
+# Block averaging
+
+All the filters we have looked at so far take in one value, and output a single value in return. Block averaging is different. Instead of taking an average over a sliding history block, when we block average, we read in a number of samples, take an average over that block (mean or median), then output a single value. This kind of averaging can be a useful way to turn a large amount of sensor data into a more maneagable, smaller dataset. It is widely used in machine learning (along with block maximum and block minimums).
+
+Here is what block averaging looks like in our filters module. Note how the value functions return None unless the block is full.
+
+``` python
+class BlockMeanFilter:
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            output=sum(self.history)/len(self.history)
+            self.history=[]
+            return output
+        return None
+
+class BlockMedianFilter:
+    def __init__(self,block_size):
+        self.history=[]
+        self.block_size=block_size
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        if len(self.history)==self.block_size:
+            self.history.sort()
+            output=self.history[len(self.history)//2]
+            self.history=[]
+            return output
+        return None
+
+```
+
+Check out the example below showing block based filtering of sound (median, mean and maximum). These kind of filters can be really useful if you want to do something like 'detect the amount of noise in each minute of the day'.
+
+<script>
+makePyodideBox({
+    codeString:`
+
+SAMPLE_TIME = 0.01 # sample 100 times a second
+BLOCK_SIZE = 20 # 1/5 second / 20 samples median filter size
+
+import graphs, sensors,time
+# The filters module contains median filter
+import filters
+graphs.set_style("sound","rgb(0,0,0)",0,1)
+graphs.set_style("block mean","rgb(255,0,0)",0,1,subgraph_x=0,subgraph_y=1)
+graphs.set_style("block max","rgb(0,255,0)",0,1,subgraph_x=1,subgraph_y=0)
+graphs.set_style("block median","rgb(0,0,255)",0,1,subgraph_x=1,subgraph_y=1)
+
+meanFilter=filters.BlockMeanFilter(block_size=BLOCK_SIZE)
+medFilter=filters.BlockMedianFilter(block_size=BLOCK_SIZE)
+maxFilter=filters.BlockMaxFilter(block_size=BLOCK_SIZE)
+while True:
+    sound_level=sensors.sound.get_level()
+    meanVal=meanFilter.on_value(sound_level)
+    medVal=medFilter.on_value(sound_level)
+    maxVal=maxFilter.on_value(sound_level)
+    # add values to the graphs - n.b. the graph.on_value ignores
+    # any None values, so they won't move the graph along
+    graphs.on_value("sound",sound_level)
+    graphs.on_value("block mean",meanVal)
+    graphs.on_value("block median",medVal)
+    graphs.on_value("block max",maxVal)
+    time.sleep(SAMPLE_TIME)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Comparing median and low-pass filter."})
 </script>
 
 
-# Block averaging
+# Memory check
+<details class="question" markdown=1>
+<summary>What are the advantages and disadvantages of median filtering against low-pass filtering</summary>
+
+Our simple low pass filter is very simple to implement and extremely efficient in terms of memory and performance. It can be used to smooth out everything in a signal, including step changes in the signal. It is however badly affected by large outliers in the data, and loses information when the underlying data changes quickly.
+
+The median filter has advantages in that it is less affected by outliers, and it maintains step changes in the data. It is also often possible to use a smaller delay with median filter, which reduces delay in response of our sensor algorithms.
+
+</details>
+
+<details class="question" markdown=1>
+<summary>What is different about our block-based filters to all the previous filters?</summary>
+In previous filters that we have seen, each sample of input data leads to one sample of output data.
+
+In the block-based filters, for a given block-size, we output one sample, so the number of output samples is smaller by a factor of blocksize i.e. $$samples_{output}=\frac{samples_{input}}{blocksize}$$ .
+</details>
