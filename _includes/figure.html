@@ -1,9 +1,7 @@
 <figure>
     {% if include.inline_file=="true" %}
     {% assign inline_url = "/inlinefiles/"| append: include.url %}      
-    WOOOOO {{ inline_url }}
       {% for item in site.inlinefiles %}
-      {{item.url}}
       {% if item.url == inline_url %}
         {{ item.content }}
         {% endif %}

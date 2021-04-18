@@ -32,6 +32,9 @@ Step response of a filter is what happens to the output data when presented with
 
 Because of the limited effects of outliers, in practice a median filter often can effectively filter data with a far smaller buffer than the time constant of the simple linear filters we are using. This can reduce delay by quite a lot. In addition to this, an advantage of the median filter is that the response delay is fixed, in that for a simple step change in value, the filter responds at N/2 values, and we know for sure than any values further back in time than N samples do not affect the output at all. This fixed property means we can make guarantees about how fast our median filter based system will respond regardless of the input data.
 
+{%include figure.html url="median_filter.svg" alt="Median filter versus low-pass filter." caption="Median filter versus low-pass filter. Click the circles to see interesting points I have highlighted" inline_file="true" %}
+
+
 ## Median filter in code
 
 The class below does a simple median filter. Using the 'deque' from collections to store a history of the last N values, it sorts the history deque and takes the middle value to do the median (this is not the most efficient median algorithm, but it is simple to understand and good enough for most sensor data processing).
