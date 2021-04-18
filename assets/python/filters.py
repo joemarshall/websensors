@@ -1,6 +1,11 @@
 from math import pi 
 # we use pi for calculation
 # of alpha from cutoff frequency
+
+# we use a deque in the median filter
+from collections import deque
+
+
 class HighPassFilter:
     '''
     A class to perform simple first order 
@@ -107,4 +112,24 @@ class LowPassFilter:
         '''
         alpha=(time_between_samples)/(time_constant+time_between_samples)
         return LowPassFilter(alpha)
+
+class MedianFilter:
+    '''
+    A class to perform median filtering
+    on a sensor value
+
+    Methods
+    -------
+    on_value(value_in)
+        Process a new value with the filter and return the old one
+    '''
+
+    def __init__(self,block_size):
+        self.history=deque(maxlen=block_size)
+
+    def on_value(self,new_value):        
+        self.history.append(new_value)
+        ordered=sorted(self.history)
+        orderedPos=int(len(ordered)/2)        
+        return ordered[orderedPos]
 

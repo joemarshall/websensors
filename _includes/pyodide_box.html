@@ -418,7 +418,7 @@ async function makePyodideBoxInternal(options)
     pythonInitPromise.then( function(){
         if(consoleDiv)
         {
-            consoleDiv.innerText="Python ready";
+            consoleDiv.innerText="Python ready, press start button to run code";
         }
         startButton.disabled=false;
     });        
@@ -616,18 +616,22 @@ async function initFn()
     async function initPython()
     {
         await asyncRun("init","noconsole");
-
-
         pythonInited=true;
+        window.dispatchEvent(new Event("pythoninited"));
     }
-    await initSensors();
     // start init python on page load in the hope it is
     // done by the time it is needed
     pythonInitPromise=initPython();
+
+    let promiseList=[];
     for(let box in window.queued_pyodide_boxes)
     {
-        makePyodideBoxInternal(queued_pyodide_boxes[box]);
+        promiseList.push(makePyodideBoxInternal(queued_pyodide_boxes[box]))        
     }
+    await Promise.all(promiseList);
+    window.dispatchEvent(new Event("pythonboxesmade"));
+    await initSensors();
+
 }
 
 window.addEventListener('load',initFn);

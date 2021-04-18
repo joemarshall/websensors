@@ -1,0 +1,23 @@
+<script language="javascript" type="module">
+
+function savePosition()
+{
+    console.log("WOO",window.scrollY);
+    window.sessionStorage.setItem("SCROLLY",window.scrollY);
+}
+function resetPosition()
+{
+    let scrollPos=window.sessionStorage.getItem("SCROLLY");
+    if(scrollPos)
+    {
+        console.log("BOOM1",window.scrollY);
+        window.scroll(window.scrollX,scrollPos);
+        console.log("BOOM",scrollPos);
+    }
+}
+
+// after all loading reset scroll position
+window.addEventListener("pythonboxesmade",resetPosition);
+// on leave page, save scroll position
+window.addEventListener("beforeunload",savePosition);
+</script>

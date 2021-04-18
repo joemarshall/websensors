@@ -275,6 +275,32 @@ while True:
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Light sensor event detection using simple threshold"})
 </script>
 
+## What bad things does a low-pass filter do to my filter?
+A low-pass filter by definition removes high-frequency variations from the signal. However, it is important to understand that this is not without any problems. A key problem with low-pass filters is how they cause delay in response. This can make systems that use excessive low-pass filtering respond to events with a delay. Check out the example below which uses light sensor to detect if the light is on or off. If you make the time constant of the filter shorter, you'll see that the system responds quicker, but is also sensitive to things like if you wave in front of the sensor, whereas if the you make the time constant longer, the system is more robust, but takes a longer time to notice that the switch has changed.
+
+<script>
+makePyodideBox({
+    codeString:`# two second time constant - mess with this to see 
+# the response changing
+FILTER_TIME_CONSTANT=2
+import graphs, sensors,time
+# The filters module contains my simple high and low pass filters
+import filters
+graphs.set_style("light","rgb(0,0,0)",0,1)
+graphs.set_style("lowpassed light","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("light is on","rgb(255,0,0)",0,1,subgraph_y=2)
+
+lightFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,0.05)
+while True:
+    light_level=sensors.light.get_level()
+    light_lowpassed=lightFilter.on_value(light_level)
+    graphs.on_value("light",light_level)
+    graphs.on_value("lowpassed light",light_lowpassed)
+    graphs.on_value("light is on",light_lowpassed>0.5)
+    time.sleep(0.05)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Low-pass filter causes delay - try 'turning on and off the light' by covering the light sensor and see how long this takes to detect the changes in light status."})
+</script>
+
 # Task 2 - High-pass filtering to emphasise short term changes in value
 
 A *high-pass* filter does the opposite of a low-pass filter. Instead of suppressing the high frequencies of a signal, a high-pass filter attenuates the low frequencies in a signal, to leave only the higher frequencies. This can be useful for example if we want to remove extremely slow variations in a light sensor signal caused by changes in ambient light, and only see short term variation when a person does something which immediately changes the level of light hitting the sensor. 
@@ -437,7 +463,7 @@ while True:
 
 What is it for? Linear filtering is a nice way to do a lot of things - like all the clever stuff we did in the previous section with thresholding, we can skip a load of that and make really robust event sensing systems by just doing a bit of high pass and low pass filtering and then applying simple thresholds to that.
 
-Like the thing below which tries to detect clapping sounds.
+Like the thing below which tries to detect clapping sounds. It passes the input sound through a short high-pass filter to remove any slow signals from the sound, then a low-pass to just make things smoother so the filtered value doesn't bounce around the threshold, then a simple threshold check. And boom, once you have your linear filters, you can do much more robust event sensing in very few lines. Have a play with it. Clearly there are a bunch of ways you could make it more robust e.g. it can't tell the difference between a clap and a sustained loud noise, but by using linear filters, we can make a pretty functional clap based interaction with minimal effort. When you finish playing with this one, check out the questions at the end of the page.
 
 <script>
 makePyodideBox({
@@ -482,3 +508,23 @@ while True:
     time.sleep(SAMPLE_TIME)
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Light sensor event detection using simple threshold"})
 </script>
+
+# Memory check
+
+<details class="question" markdown=1>
+<summary>What sort of thing is a high-frequency in sensor data? Think about e.g sound and light sensors </summary>
+High-frequency signals are things which change quickly. 
+
+In a light sensor, this will be things like switching lights on and off, or people moving in front and shadowing the sensor. There is also often high-frequency noise, which is when the sensor has electrical interference which causes the value to jump around quite quickly.
+
+In a sound sensor, the highest frequency signal other than electrical noise is the individual vibrations in the sound coming into the sensor. Then we have things like speech events, where we can see the average sensor value go up and down quite quickly.
+</details>
+
+<details class="question" markdown=1>
+<summary>What sort of thing is a low-frequency in sensor data?</summary>
+Low-frequency signals are slow changing elements of the sensor stimulus. 
+
+In a light sensor, low-frequency changes that are part of the sensor signals include things like the time of year and location (which governs length of the day), the phases of the moon and the time of day. Then slightly higher-frequency signals include the parts of the ambient light level that are governed by things like how much cloud is in the sky, whether a room light is on etc.
+
+In a sound sensor, low-frequencies can be things like the level of sound that has been observed in the room over the last day, hour or minute, moving up to things that happen at the scale of seconds like words and phonemes of speech. Finally, moving up in frequency, we get to very very deep bass sounds, and up to high frequency sounds, then sensor noise.. 
+</details>
