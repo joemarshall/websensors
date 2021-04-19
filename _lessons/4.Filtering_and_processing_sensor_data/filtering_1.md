@@ -2,6 +2,7 @@
 title: Approaches to making sensor data usable
 lesson_order: 4
 sublesson_order: 1
+category_intro_html: Sensor data is dirrrty. How do we get a cleaner measurement of what we want to understand about the world? Find out in this exciting multi-part series on data filtering!
 ---
 # Sensors are bad
 

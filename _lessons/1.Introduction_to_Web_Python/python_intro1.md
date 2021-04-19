@@ -6,6 +6,7 @@ uses_accelerometer: true
 uses_light: true 
 lesson_order: 1
 sublesson_order: 1
+category_intro_html: "The sensor processing examples on here use web based python scripts. These run in your web browser thanks to the [pyodide project](https://pyodide.org/). In this section we will discuss this stuff, the coursework, and how you should use web python in your coursework."
 ---
 
 This site uses a version of python compiled to run in your web browser, with some javascript added to allow you to read from sensors on your computer or phone and draw graphs. 

@@ -1,0 +1,29 @@
+  <!-- create categories array-->
+  {% assign categories_array = "" | split:"|" %}
+
+  <!--Add each unique 'my_collection' category to the array-->
+  {% for lesson in site.lessons %}
+    {% assign slashes = lesson.url | split: '/'| reverse %}
+    {% if slashes[2]=='lessons' %}
+        {% assign category = slashes[1] | replace: '_',' ' %}
+        {% assign categories_array = categories_array | push: category | uniq %}
+    {% endif %}
+  {% endfor %}
+
+  {% for category in categories_array %}
+# {{ category | slice:2,100 }}
+  {% for lesson in site.lessons %}
+          {% assign slashes = lesson.url | split: '/'| reverse %}
+          {% if slashes[2]=='lessons' %}            
+              {% assign page_cat = slashes[1] | replace: '_',' ' %}
+              {% if page_cat==category %}
+                {% if lesson.category_intro_html %}              
+{{ lesson.category_intro_html }}<br>
+                {% endif %}
+<a href="{{ lesson.url | relative_url }}">{{lesson.title}}</a><br>    
+              {% endif %}  
+          {% endif %}  
+      {% endfor %}
+  {% endfor %}
+  
+  

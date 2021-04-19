@@ -4,7 +4,7 @@ next: characterizing_sensors2
 upprev: index
 lesson_order: 3
 sublesson_order: 1
-
+category_intro_html: In the previous section we learnt that sensors **respond** to physical properties in the real world, rather than simply giving you the value of that property. In this section, we will look at how we can understand and characterize that response.
 ---
 A sensor is:
 

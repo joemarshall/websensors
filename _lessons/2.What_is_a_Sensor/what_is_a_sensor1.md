@@ -2,6 +2,7 @@
 title: Here are some sensors
 lesson_order: 2
 sublesson_order: 1
+category_intro_html: These pages introduce you to what a sensor is, you need to know this before you can work with them in any principled way.
 ---
 ## Examples of sensors
 
