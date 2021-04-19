@@ -843,5 +843,18 @@ pre code
     background-color:#f8f8f8;
 }
 
+.scratchbutton
+{
+  width:100%;
+  text-align:center;
+}
+
+.scratchbutton>a
+{
+  background-color:#855;
+  color:#fff;
+  padding:.5ch 2ch;
+}
+
 // github code highlighting style because it is nice and clear
 {% include_relative highlight-github.css %}

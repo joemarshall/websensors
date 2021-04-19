@@ -14,4 +14,9 @@
     <a class='nextbutton' href="{{ page_next | relative_url }}">Next &gt;</a>
     {% endif %}
     </div>
-    </div>
+</div>
+{% if (page.url  | absolute_url)  != ("/scratchpad.html" | absolute_url)  %}
+<div class="scratchbutton">
+<a href="{{ '/scratchpad.html'|relative_url}}">Go to coursework 2 scratchpad</a>
+</div>
+{% endif %}

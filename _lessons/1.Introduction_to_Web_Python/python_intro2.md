@@ -6,3 +6,74 @@ uses_accelerometer: true
 uses_light: true 
 ---
 
+The second coursework is all about sensing people who are doing repetitive physical activities. Things like using the sensors on your phone to count how many push-ups you are doing.
+
+Here is a repetitive activity being sensed - click start below, and if you are quiet, you should be able to clap, and the number of claps being printed out should go up.
+
+<script>
+makePyodideBox({
+    codeString:`# detect things that happen in less than about a 20th of a second
+HIGH_PASS_CONSTANT=.2
+# very small low pass filter just to remove any jumps around the threshold
+LOW_PASS_CONSTANT=0.01
+# detect jumps of 0.2 from constant level
+THRESHOLD=0.2
+# time between samples
+SAMPLE_TIME=0.005
+import time
+import graphs
+import sensors
+# hey look at this, I put all the filters I talk about
+# in the filters module for you to save you copy/pasting
+# the code in your work
+import filters
+
+graphs.set_style("sound","rgb(0,0,0)",0,1)
+graphs.set_style("filtered sound","rgb(255,0,0)",-1,1,subgraph_y=1)
+graphs.set_style("threshold","rgb(0,255,0)",-1,1,subgraph_y=1)
+
+hpFilter=filters.HighPassFilter.make_from_time_constant(HIGH_PASS_CONSTANT,SAMPLE_TIME)
+lpFilter=filters.LowPassFilter.make_from_time_constant(LOW_PASS_CONSTANT,SAMPLE_TIME)
+
+last_thresholded=1
+event_count=0
+while True:
+    sound_level=sensors.sound.get_level()
+    sound_highpassed=hpFilter.on_value(sound_level)
+    sound_lowpassed=lpFilter.on_value(sound_highpassed)
+    thresholded=1 if sound_level>THRESHOLD else 0
+    if thresholded==1 and last_thresholded==0:
+        event_count+=1
+        print(time.time(),event_count)
+    last_thresholded=thresholded
+    print(event_count,sep=',')
+    graphs.on_value("sound",sound_level)
+    graphs.on_value("filtered sound",sound_lowpassed)
+    graphs.on_value("threshold",THRESHOLD)
+    time.sleep(SAMPLE_TIME)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Clap sensing using high pass and low pass filters"})
+</script>
+
+To understand how this code works, work through the exercises in this website, which will help you learn the basics of how sensor processing systems are developed.
+
+# Coursework doings
+
+For the coursework, you will choose a repetitive physical activity, which may be anything you want. Then you will design a system which senses this activity. 
+
+You will then prototype *only* the sensor processing aspect of this, i.e. the part which interprets the sensor data. You will not prototype the user interface, the server backend, physical hardware or anything else. These aspects of the system may be described in the design section of your report, but are not part of the practical work.
+
+For the practical work, you  will develop a sensing algorithm, a python script like the one above which takes in sensor data, processes that data, and outputs some kind of interpretation of the data. This will use the methods in the sections on sensor filtering and combination. 
+
+Once the algorithm is built, you will use the methods in the section on testing of algorithms to quantify how well your system works, and in what circumstances it fails and why. This is an important part of the final report which is highly weighted, so don't leave this till the last minute...
+
+As the previous paragraphs perhaps made obvious, the final outcome of this work is a written report. You must also submit all code for your sensor algorithm, which we will run during marking so we can understand how your system works. Please make sure all code you submit does run, as we cannot mark non-running code.
+
+# The coursework workflow 
+
+## How do you keep track of code?
+
+You can code in the [{{"/scratchpad.html" |relative_url }}](Python Scratchpad) on this site. This is a webpage which lets you run python scripts with whatever sensors you choose, and importantly, is linked to your onedrive. This means you can load and save scripts from there.
+
+## How do you save output?
+
+In the scratchpad, you can capture output from your scripts to your onedrive. This allows you to do things like process the data offline on your own computer, or save data for testing runs.
