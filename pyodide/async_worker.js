@@ -67,6 +67,48 @@ let results,state;
 let sleeper;
 let sleepTimer;
 
+function console_write(args)
+{
+    var s="";
+    for(let i in args)
+    {
+        s+=args[i]+" ";
+    }
+    s+="\n";
+    self.postMessage({type:"console",text:s});
+}
+
+function overrideConsole(oldConsole)
+{
+    consoleProxy=
+    {
+        log:function()
+        {
+            console_write(arguments);
+            oldConsole.log.apply(oldConsole,arguments)
+        },
+        warn:function()
+        {
+            console_write(arguments);
+            oldConsole.warn.apply(oldConsole,arguments)
+        },
+        error:function()
+        {
+            console_write(arguments);
+            oldConsole.error.apply(oldConsole,arguments)
+        },
+        info:function()
+        {
+            console_write(arguments);
+            oldConsole.info.apply(oldConsole,arguments)
+        }
+    };
+    return consoleProxy;
+     
+}
+
+console=overrideConsole(console);
+
 function stdout_write(s)
 {
     if(!inCancel)

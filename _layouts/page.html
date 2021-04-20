@@ -109,10 +109,11 @@
 
         {% include navbuttons.html %}
         <footer>
-        {% if site.github.is_project_page %}
+          {% if site.github.is_project_page %}
           {{ site.title | default: site.github.repository_name }} is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a><br>
           Source code at <a href="{{ site.github.repository_url }}">{{site.github.repository_url}}</a>
           <br>
+          {% include capture_logs.html %}
         {% endif %}
         </footer>
 

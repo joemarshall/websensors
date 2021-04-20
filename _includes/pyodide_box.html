@@ -528,7 +528,14 @@ function writeConsole(msg)
 async function onRemoteMessage(event)
 {   
     let msgData=event.data;
-    if(msgData["type"]=="graph")
+    if(msgData["type"]=="console")
+    {
+        var logDiv=document.getElementById("LOGDIV");
+        if(logDiv)
+        {
+            logDiv.appendChild(document.createTextNode(msgData["text"]));
+        }
+    }else if(msgData["type"]=="graph")
     {
         if(pyodide_graph_context)
         {

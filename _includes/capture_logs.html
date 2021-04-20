@@ -1,0 +1,80 @@
+
+
+If something isn't working, please <a onclick="showLogs()">Show me the logs</a>        
+<div id="logparent">
+    <button onclick="copyLogs()">Copy logs to clipboard</button>
+    <div id="LOGDIV">
+    </div>
+</div>
+
+<script>
+
+
+function setLog(logDiv)
+{
+    let origConsole=window.console;
+    let isDebug=true;
+    if(!origConsole)
+    {
+        origConsole=console;
+    }
+    var logger={
+        logArray:[],
+        log: function () {
+            this.addLog(arguments, "logs");
+            isDebug && origConsole.log && origConsole.log.apply(origConsole, arguments);
+        },
+        warn: function () {
+            this.addLog(arguments, "warns");
+            isDebug && origConsole.warn && origConsole.warn.apply(origConsole, arguments);
+        },
+        error: function () {
+            this.addLog(arguments, "errors");
+            isDebug && origConsole.error && origConsole.error.apply(origConsole, arguments);
+        },
+        info: function (v) {
+            this.addLog(arguments, "infos");
+            isDebug && origConsole.info && origConsole.info.apply(origConsole, arguments);
+        },
+        debug: function (debugEnabled) {
+            isDebug = debugEnabled;
+        },
+
+        addLog: function (arguments, array) {
+            var s="";
+            for(let i in arguments)
+            {
+                s+=arguments[i]+" ";
+            }
+            s+="\n";
+            logDiv.appendChild(document.createTextNode(s));
+        }
+    };
+    window.console=logger;    
+}
+
+setLog(document.getElementById("LOGDIV"));
+
+function showLogs()
+{
+    var logDiv=document.getElementById("logparent");
+    if(logDiv.style.visibility!="visible")
+    {
+        logDiv.style.visibility="visible";
+    }else
+    {
+        logDiv.style.visibility="hidden";
+    }
+}
+
+function copyLogs()
+{
+    var range = document.createRange();
+    range.selectNode(document.getElementById("LOGDIV"));
+    window.getSelection().removeAllRanges(); // clear current selection
+    window.getSelection().addRange(range); // to select text
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();// to deselect
+}
+
+</script>

@@ -856,5 +856,19 @@ pre code
   padding:.5ch 2ch;
 }
 
+#logparent
+{
+  visibility: hidden;  
+}
+
+#LOGDIV
+{
+  width:100%;
+  white-space:pre;
+  font-family:Courier;
+  overflow-x:scroll;
+  overflow-y:scroll;
+}
+
 // github code highlighting style because it is nice and clear
 {% include_relative highlight-github.css %}
