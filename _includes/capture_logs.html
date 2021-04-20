@@ -3,6 +3,7 @@
 If something isn't working, please <a onclick="showLogs()">Show me the logs</a>        
 <div id="logparent">
     <button onclick="copyLogs()">Copy logs to clipboard</button>
+    <button onclick="downloadLogs()">Get logs to file</button>
     <div id="LOGDIV">
     </div>
 </div>
@@ -75,6 +76,21 @@ function copyLogs()
     window.getSelection().addRange(range); // to select text
     document.execCommand("copy");
     window.getSelection().removeAllRanges();// to deselect
+}
+
+function downloadLogs()
+{
+    var text=document.getElementById('LOGDIV').textContent;
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', "spits_log.txt");
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 </script>
