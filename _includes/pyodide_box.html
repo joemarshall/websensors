@@ -1,6 +1,10 @@
 <script language="javascript">
 window.sensor_objects=[];
 </script>
+
+<script src="{{ '/assets/js/fake_worker.js' | relative_url }}"></script>
+
+
 {% if page.uses_files %}
 {% include onedrive.html %}
 {% endif %}
@@ -428,7 +432,8 @@ window.makePyodideBoxInternal=makePyodideBoxInternal;
 
 let running=false;
 let pythonInited=false;
-const pyodideWorker = new Worker('{{ "/pyodide/async_worker.js"| relative_url }} ')
+const pyodideWorker = new FakeWorker('{{ "/assets/js/async_worker.js"| relative_url }} ')
+//const pyodideWorker = new Worker('{{ "/assets/js/async_worker.js"| relative_url }} ')
 pyodideWorker.onmessage = onRemoteMessage;
 pyodideWorker.onerror = onRemoteError;
 

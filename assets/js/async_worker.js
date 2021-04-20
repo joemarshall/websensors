@@ -1,10 +1,18 @@
 ---
 ---
 
+var workerContext;
+if(self.hasOwnProperty('fakeWorkerContext'))
+{
+   workerContext=fakeWorkerContext;
+}else
+{
+    workerContext=self;
+}
 
-self.languagePluginUrl = "./"
+languagePluginUrl="{{'/pyodide/' | relative_url }}";
 
-importScripts("pyodide.js")
+workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
 
 let sensorModule;
 
@@ -75,7 +83,7 @@ function console_write(args)
         s+=args[i]+" ";
     }
     s+="\n";
-    self.postMessage({type:"console",text:s});
+    workerContext.postMessage({type:"console",text:s});
 }
 
 function overrideConsole(oldConsole)
@@ -113,7 +121,7 @@ function stdout_write(s)
 {
     if(!inCancel)
     {
-        self.postMessage({type:"stdout",text:s});
+        workerContext.postMessage({type:"stdout",text:s});
     }
 }
 
@@ -121,7 +129,7 @@ function stderr_write(s)
 {
     if(!inCancel)
     {
-        self.postMessage({type:"stderr",text:s});
+        workerContext.postMessage({type:"stderr",text:s});
     }
 }
 
@@ -129,7 +137,7 @@ function set_graph_style(graphName,colour,minVal,maxVal,subgraphX,subgraphY)
 {
     if(!inCancel)
     {
-        self.postMessage({type:"graph",fn:"style",arguments:[graphName,colour,minVal,maxVal,subgraphX,subgraphY]});
+        workerContext.postMessage({type:"graph",fn:"style",arguments:[graphName,colour,minVal,maxVal,subgraphX,subgraphY]});
     }
 
 }
@@ -138,7 +146,7 @@ function on_graph_value(graphName,curVal)
 {
     if(!inCancel)
     {
-        self.postMessage({type:"graph",fn:"data",arguments:[graphName,curVal]});
+        workerContext.postMessage({type:"graph",fn:"data",arguments:[graphName,curVal]});
     }
 }
 
@@ -157,12 +165,12 @@ async function runAsyncLoop(id,arg)
         retValPython.destroy();
         if(!retVal || !retVal.get)
         {
-            self.postMessage({id:id,type:"response",failed:true});
+            workerContext.postMessage({id:id,type:"response",failed:true});
             return
         }                
         if (retVal.get("done")==true)
         {
-            self.postMessage({id:id,type:"response",results:true});
+            workerContext.postMessage({id:id,type:"response",results:true});
             return;
         }else
         {
@@ -180,7 +188,7 @@ async function runAsyncLoop(id,arg)
                         await sleeper;                            
                     }catch(e)
                     {
-                        self.postMessage({id:id,type:"response",cancelled:true});    
+                        workerContext.postMessage({id:id,type:"response",cancelled:true});    
                         sleeper=null;
                         return;
                     }
@@ -193,7 +201,7 @@ async function runAsyncLoop(id,arg)
                         await sleeper;
                     }catch(e)
                     {
-                        self.postMessage({id:id,type:"response",cancelled:true});    
+                        workerContext.postMessage({id:id,type:"response",cancelled:true});    
                         sleeper=null;
                         return;
                     }
@@ -367,13 +375,13 @@ __pc=PyConsole()
 
 }
 
-onmessage = async function(e) {
+workerContext.onmessage = async function(e) {
     await languagePluginLoader;
     const {cmd,arg,id} = e.data;
     if(cmd =='init')
     {
         await initPython();
-        self.postMessage({id:id,type:"response",results:true});
+        workerContext.postMessage({id:id,type:"response",results:true});
     }
     if (cmd =='run')
     {
@@ -385,14 +393,14 @@ onmessage = async function(e) {
     if(cmd=="banner")
     {
         banner=pyodide.runPython("__pc.banner()");
-        self.postMessage({id:id,type:"response",results:banner});
+        workerContext.postMessage({id:id,type:"response",results:banner});
     }
     if(cmd=="push_and_run")
     {        
         needsMore=pyConsole.push(arg);
         if (needsMore)
         {
-            self.postMessage({id:id,type:"response",needsMore:true});
+            workerContext.postMessage({id:id,type:"response",needsMore:true});
         }else
         {
             // got a command to run, run the code in the console loop
@@ -408,12 +416,12 @@ onmessage = async function(e) {
             sleeper.cancel();
             sleeper=null;
         }
-        self.postMessage({id:id,type:"response",results:true});
+        workerContext.postMessage({id:id,type:"response",results:true});
         incancel=false;
     }
     if(cmd=="tab_complete")
     {
-        self.postMessage({id:id,type:"response",results:pyConsole.complete()});
+        workerContext.postMessage({id:id,type:"response",results:pyConsole.complete()});
     }
     if(cmd=="sensor")
     {
