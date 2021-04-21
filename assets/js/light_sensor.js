@@ -1,4 +1,3 @@
-import "./imagecapture.js";
 
 // if this is false we use grabframe which is supposed
 // to work but unreliable as of 04/2021
@@ -12,6 +11,7 @@ import "./imagecapture.js";
 // use an offscreencanvas, but safari doesn't support
 // that yet.
 const USE_VIDEO_ELEMENT=true;
+//import "./imagecapture.js";
 
 
 var primed=false;
