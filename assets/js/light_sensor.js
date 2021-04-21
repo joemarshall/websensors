@@ -80,11 +80,7 @@ export async function start(callback)
             if(videoTrack.getCapabilities)
             {
                 let caps=videoTrack.getCapabilities();
-                if(caps["exposureMode"])
-                {
-                    await videoTrack.applyConstraints({"advanced":[{'exposureMode':'manual'}]});
-                }
-                if(caps["exposureTime"])
+                if(caps["exposureTime"] && caps["exposureTime"].step!=0)
                 {
                     let c=caps["exposureTime"];
                     // default to 100th of a second exposure
@@ -98,10 +94,18 @@ export async function start(callback)
                         exposureVal=c.max;
                     }
                     await videoTrack.applyConstraints({"advanced":[{'exposureTime':exposureVal}]});
+                    if(caps["exposureMode"])
+                    {
+                        await videoTrack.applyConstraints({"advanced":[{'exposureMode':'manual'}]});
+                    }
                 }
                 if(caps["whiteBalanceMode"])
                 {
                     await videoTrack.applyConstraints({"advanced":[{'whiteBalanceMode':'manual'}]});
+                }
+                if(caps["colorTemperature"])
+                {
+                    await videoTrack.applyConstraints({"advanced":[{'colorTemperature':'4000'}]});
                 }
             }
 
