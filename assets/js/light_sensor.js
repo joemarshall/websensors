@@ -22,6 +22,8 @@ var videoElement;
 if (USE_VIDEO_ELEMENT)
 {
     videoElement=document.createElement('video');
+    videoElement.playsinline=true;
+    videoElement.autoplay=true;
 }
 var grabCanvas=document.createElement('canvas');
 grabCanvas.width=50;
@@ -36,7 +38,7 @@ export async function start(callback)
     {
         cameraPlaying=false;
         cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: true
+            video: {width:640}
         });
         videoTrack = cameraStream.getVideoTracks()[0];
         captureDevice = new ImageCapture(videoTrack,cameraStream);        
