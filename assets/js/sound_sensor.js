@@ -45,43 +45,39 @@ class VUMeterNode extends AudioWorkletNode {
 
 }
 
-var cameraStream,sourceNode,processorNode,audioContext;
+var micStream,sourceNode,processorNode,audioContext;
 
 export async function start(callback)
 {
     _onLevel=callback;
     try
     {
-        cameraStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-    //        video: true
+        micStream = await navigator.mediaDevices.getUserMedia({
+            audio: true
         });        
+
+        if(!audioContext)
+        {
+          var AudioContext = window.AudioContext || window.webkitAudioContext // Safari and old versions of Chrome
+          audioContext = new AudioContext();
+          await audioContext.audioWorklet.addModule('{{ "/assets/js/amplitude_getter2.js" | relative_url }}');
+        }
+        processorNode=new VUMeterNode(audioContext,20);
+        sourceNode = audioContext.createMediaStreamSource(micStream);
+        sourceNode.connect(processorNode);
+        audioPlaying = true;    
+        console.log("Started audio input");   
+    
     }catch(e)
     {
         console.log("Error loading sound:",e);
         return;
-    }
-    
-    var AudioContext = window.AudioContext // Default
-        || window.webkitAudioContext // Safari and old versions of Chrome
-        || false;     
-    if(!audioContext)
-    {
-      audioContext = new AudioContext() // Default
-      || new webkitAudioContext() // Safari and old versions of Chrome
-      || false; 
-        await audioContext.audioWorklet.addModule('{{ "/assets/js/amplitude_getter2.js" | relative_url }}');
-    }
-    processorNode=new VUMeterNode(audioContext,20);
-    sourceNode = audioContext.createMediaStreamSource(cameraStream);
-    sourceNode.connect(processorNode);
-    audioPlaying = true;    
-    console.log("Started audio input");   
+    }    
 }
 
 export async function stop()
 {
-  console.log("STOPPING");
+  console.log("STOPPING audio");
   if(processorNode)
   {
     processorNode.disconnect();
@@ -92,10 +88,10 @@ export async function stop()
     sourceNode.disconnect();
     sourceNode=undefined;
   }
-  if(cameraStream)
+  if(micStream)
   {
-    cameraStream.getTracks().forEach(track=>track.stop());
-    cameraStream=undefined;
+    micStream.getTracks().forEach(track=>track.stop());
+    micStream=undefined;
   }
   // never close audio context as bad things happen in chrome
   // and I can't work out what has a reference to it
