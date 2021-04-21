@@ -10,7 +10,9 @@ if(self.hasOwnProperty('fakeWorkerContext'))
     workerContext=self;
 }
 
-languagePluginUrl="{{'/pyodide/' | relative_url }}";
+// serve through jsdelivr for faster loading
+languagePluginUrl='https://cdn.jsdelivr.net/gh/joemarshall/websensors/pyodide/';
+//languagePluginUrl="{{'/pyodide/' | relative_url }}";
 
 workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
 
