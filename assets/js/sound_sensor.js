@@ -91,6 +91,7 @@ export async function requestPermissions()
 
 export async function start(callback)
 {
+  primed=false;
     _onLevel=callback;
     try
     {
