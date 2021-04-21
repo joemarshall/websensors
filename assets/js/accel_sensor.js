@@ -13,8 +13,7 @@ export async function requestPermissions()
         {
             console.log("Motionevent permission not granted");
             return false;
-        }
-        
+        }        
      }
     }else
     {

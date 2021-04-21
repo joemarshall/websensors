@@ -18,6 +18,7 @@ window.sensor_objects=[];
 let snd_sensor={
     name:"sound",
     mod_snd:undefined,
+    requestPermissions: function(){return this.mod_snd.requestPermissions()},
     init: async function(){this.mod_snd=await import("{{ 'assets/js/sound_sensor.js' | relative_url }} ");},
     start: async function(callback){await this.mod_snd.start(callback)},
     stop: async function() { await this.mod_snd.stop();}
@@ -33,6 +34,7 @@ window.sensor_objects.push(snd_sensor);
 let light_sensor={
     name:"light",
     mod_light:undefined,
+    requestPermissions: function(){return this.mod_light.requestPermissions()},
     init: async function(){this.mod_light=await import("{{ 'assets/js/light_sensor.js' | relative_url }} ");},
     start: async function(callback){await this.mod_light.start(callback)},
     stop: async function() { await this.mod_light.stop();}
@@ -49,7 +51,7 @@ let accel_sensor={
     name:"accel",
     mod_accel:undefined,
     init: async function(){this.mod_accel=await import("{{ 'assets/js/accel_sensor.js' | relative_url }}");},
-    checkPermissions: function(){this.mod.accel.requestPermissions()},
+    requestPermissions: function(){return this.mod_accel.requestPermissions()},
     start: async function(callback){await this.mod_accel.startAccelerometer(callback)},
     stop: async function() { await this.mod_accel.stopAccelerometer();}
 };
@@ -338,14 +340,19 @@ async function makePyodideBoxInternal(options)
         // anything async or else safari won't let
         // us request sensor access (has to be directly from
         // a click event) 
+        let permissionRequesters=[]
         for(let c in window.sensor_objects)
         {
             const o=window.sensor_objects[c];
             if(o.requestPermissions)
             {
-                await o.requestPermissions()
+                permissionRequesters.push(o.requestPermissions());
             }
         }
+        // now we have done everything that needs to be non-async
+        // so we can await promises with wild abandon
+        await Promise.all(permissionRequesters);
+
         // stop anything else that is running
         await asyncRun("abort","rerun");
         // set the graph to point at our graph
@@ -363,10 +370,9 @@ async function makePyodideBoxInternal(options)
             const o=window.sensor_objects[c];
             if(o.start)
             {
-                await o.start(sensorCallback.bind(null,o.name))
+                await o.start(sensorCallback.bind(null,o.name));
             }
         }
-
 
         stopButton.disabled=false;
         startButton.disabled=true;

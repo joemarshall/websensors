@@ -13,6 +13,8 @@ import "./imagecapture.js";
 // that yet.
 const USE_VIDEO_ELEMENT=true;
 
+
+var primed=false;
 var _onLevel;
 var cameraPlaying=false;
 var cameraStream,captureDevice,videoTrack;
@@ -50,57 +52,70 @@ async function get_camera_stream()
     console.log("Couldn't find working constraints for camera");    
 }
 
+// this stuff needs to be run direct from the click event
+// or else it won't work in safari
+// n.b. don't await anything before
+// you do all the getting media stream stuff
+export async function requestPermissions()
+{
+    primed=true;
+    cameraStream = await get_camera_stream();
+}
+
 export async function start(callback)
 {
+    primed=false;
     _onLevel=callback;
     try
     {
-        cameraPlaying=false;
-        cameraStream = await get_camera_stream();
-        videoTrack = cameraStream.getVideoTracks()[0];
-        if( !USE_VIDEO_ELEMENT)
+        if(cameraStream)
         {
-            captureDevice = new ImageCapture(videoTrack,cameraStream);        
-        }
-        // if possible, disable auto white balance and fix brightness
-        if(videoTrack.getCapabilities)
-        {
-            let caps=videoTrack.getCapabilities();
-            if(caps["exposureMode"])
+            cameraPlaying=false;
+            videoTrack = cameraStream.getVideoTracks()[0];
+            if( !USE_VIDEO_ELEMENT)
             {
-                await videoTrack.applyConstraints({"advanced":[{'exposureMode':'manual'}]});
+                captureDevice = new ImageCapture(videoTrack,cameraStream);        
             }
-            if(caps["exposureTime"])
+            // if possible, disable auto white balance and fix brightness
+            if(videoTrack.getCapabilities)
             {
-                let c=caps["exposureTime"];
-                // default to 100th of a second exposure
-                // unit is in multiples of 100 microseconds 
-                let exposureVal=100; 
-                if(c.min>exposureVal)
+                let caps=videoTrack.getCapabilities();
+                if(caps["exposureMode"])
                 {
-                    exposureVal=c.min;
-                }else if(c.max<exposureVal)
-                {
-                    exposureVal=c.max;
+                    await videoTrack.applyConstraints({"advanced":[{'exposureMode':'manual'}]});
                 }
-                await videoTrack.applyConstraints({"advanced":[{'exposureTime':exposureVal}]});
+                if(caps["exposureTime"])
+                {
+                    let c=caps["exposureTime"];
+                    // default to 100th of a second exposure
+                    // unit is in multiples of 100 microseconds 
+                    let exposureVal=100; 
+                    if(c.min>exposureVal)
+                    {
+                        exposureVal=c.min;
+                    }else if(c.max<exposureVal)
+                    {
+                        exposureVal=c.max;
+                    }
+                    await videoTrack.applyConstraints({"advanced":[{'exposureTime':exposureVal}]});
+                }
+                if(caps["whiteBalanceMode"])
+                {
+                    await videoTrack.applyConstraints({"advanced":[{'whiteBalanceMode':'manual'}]});
+                }
             }
-            if(caps["whiteBalanceMode"])
+
+            if(videoElement)
             {
-                await videoTrack.applyConstraints({"advanced":[{'whiteBalanceMode':'manual'}]});
+                videoElement.srcObject=cameraStream;
+                videoElement.play();
             }
+
+            grabInterval=setInterval(grabImage,100)
+
+            cameraPlaying = true;    
+            console.log("Started camera input");
         }
-
-        if(videoElement)
-        {
-            videoElement.srcObject=cameraStream;
-            videoElement.play();
-        }
-
-        grabInterval=setInterval(grabImage,100)
-
-        cameraPlaying = true;    
-        console.log("Started camera input");
     }catch(e)
     {
         console.log("Error loading camera:",e);
@@ -153,6 +168,11 @@ function processFrame(bmp)
 
 export async function stop()
 {
+    // we're primed to go again, let it rerun
+    if(primed)
+    {
+        return;
+    }
     if(grabInterval)
     {
         clearInterval(grabInterval);
