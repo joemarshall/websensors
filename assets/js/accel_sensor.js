@@ -39,13 +39,13 @@ export async function requestPermissions()
 
 export async function stopAccelerometer(callback)
 {
-    console.log("Stop accel",callback);
+    console.log("Stop accel");
     _js_accelerometer.stop()
 }
 
 export async function startAccelerometer(callback)
 {
-    console.log("start accel",callback)
+    console.log("start accel")
     let result;
     if(navigator.permissions && navigator.permissions.query)
     {

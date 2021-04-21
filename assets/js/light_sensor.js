@@ -36,7 +36,7 @@ export async function start(callback)
     {
         cameraPlaying=false;
         cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: {width:320,height:240}
+            video: true
         });
         videoTrack = cameraStream.getVideoTracks()[0];
         captureDevice = new ImageCapture(videoTrack,cameraStream);        
@@ -126,7 +126,6 @@ function processFrame(bmp)
     imageData=undefined;
     let level=(sum/count)*(1.0/256.0);
     _onLevel(level);
-    console.log(level);
 
 }
 
