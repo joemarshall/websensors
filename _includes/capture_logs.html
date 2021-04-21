@@ -16,16 +16,23 @@ function setLog(logDiv)
     let getLineFromStack=function(stack) 
     {
         var suffix = stack.split('\n')[2];
-
-        if (suffix.indexOf(' (') >= 0) {
-            suffix = suffix.split(' (')[1].substring(0, suffix.length - 1);
+        if(suffix)
+        {
+            if (suffix.indexOf(' (') >= 0) {
+                suffix = suffix.split(' (')[1].substring(0, suffix.length - 1);
+            }
+            else {
+                suffix = suffix.split('at ')[1];
+            }
+            if(suffix)
+            {
+                suffix = '@' + suffix.substr(suffix.lastIndexOf('/') + 1);
+            }
         }
-        else {
-            suffix = suffix.split('at ')[1];
+        if(!suffix)
+        {
+            return "@ wasm";
         }
-
-        suffix = '@' + suffix.substr(suffix.lastIndexOf('/') + 1);
-
         return suffix;
     };
     let getCallerLineNumber=function(err)
