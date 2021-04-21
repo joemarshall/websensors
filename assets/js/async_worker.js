@@ -115,7 +115,10 @@ function overrideConsole(oldConsole)
      
 }
 
-console=overrideConsole(console);
+if(!self.hasOwnProperty('fakeWorkerContext'))
+{
+    console=overrideConsole(console);
+}
 
 function stdout_write(s)
 {

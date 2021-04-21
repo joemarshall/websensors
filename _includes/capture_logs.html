@@ -13,6 +13,48 @@ If something isn't working, please <a onclick="showLogs()">Show me the logs</a>
 
 function setLog(logDiv)
 {
+    let getLineFromStack=function(stack) 
+    {
+        var suffix = stack.split('\n')[2];
+
+        if (suffix.indexOf(' (') >= 0) {
+            suffix = suffix.split(' (')[1].substring(0, suffix.length - 1);
+        }
+        else {
+            suffix = suffix.split('at ')[1];
+        }
+
+        suffix = '@' + suffix.substr(suffix.lastIndexOf('/') + 1);
+
+        return suffix;
+    };
+    let getCallerLineNumber=function(err)
+    {
+        var line;
+
+        // Firefox
+        if (err.fileName && err.lineNumber) {
+            line=err.fileName.substr(err.fileName.lastIndexOf('/') + 1) + ':' + err.lineNumber + ':1';
+        }
+        // Chrome/WebKit
+        else if (err.stack) {
+            line=getLineFromStack(err.stack);
+        }
+        return line;
+
+    };
+    let addLog=function (arguments, array) {
+        var s="";
+        for(let i in arguments)
+        {
+            s+=arguments[i]+" ";
+        }
+        s+="\n";
+        logDiv.appendChild(document.createTextNode(s));
+    };
+
+
+
     let origConsole=window.console;
     let isDebug=true;
     if(!origConsole)
@@ -21,35 +63,32 @@ function setLog(logDiv)
     }
     var logger={
         logArray:[],
-        log: function () {
-            this.addLog(arguments, "logs");
-            isDebug && origConsole.log && origConsole.log.apply(origConsole, arguments);
+        log: function (...theArgs) {
+            theArgs.push(getCallerLineNumber(new Error()));            
+            addLog(theArgs, "logs");
+            isDebug && origConsole.log && origConsole.log.apply(origConsole, theArgs);
         },
-        warn: function () {
-            this.addLog(arguments, "warns");
-            isDebug && origConsole.warn && origConsole.warn.apply(origConsole, arguments);
+        warn: function (...theArgs) {
+            theArgs.push(getCallerLineNumber(new Error()));            
+            addLog(theArgs, "warns");
+            isDebug && origConsole.warn && origConsole.warn.apply(origConsole,theArgs);
         },
-        error: function () {
-            this.addLog(arguments, "errors");
-            isDebug && origConsole.error && origConsole.error.apply(origConsole, arguments);
+        error: function (...theArgs) {
+            theArgs.push(getCallerLineNumber(new Error()));            
+            addLog(theArgs, "errors");
+            isDebug && origConsole.error && origConsole.error.apply(origConsole, theArgs);
         },
-        info: function (v) {
-            this.addLog(arguments, "infos");
-            isDebug && origConsole.info && origConsole.info.apply(origConsole, arguments);
+        info: function (...theArgs) {
+            theArgs.push(getCallerLineNumber(new Error()));            
+            addLog(theArgs, "infos");
+            isDebug && origConsole.info && origConsole.info.apply(origConsole, theArgs);
         },
         debug: function (debugEnabled) {
             isDebug = debugEnabled;
         },
 
-        addLog: function (arguments, array) {
-            var s="";
-            for(let i in arguments)
-            {
-                s+=arguments[i]+" ";
-            }
-            s+="\n";
-            logDiv.appendChild(document.createTextNode(s));
-        }
+
+  
     };
     window.console=logger;    
 }
