@@ -31,17 +31,37 @@ grabCanvas.height=50;
 var grabContext=grabCanvas.getContext('2d');
 //document.body.appendChild(grabCanvas);
 
+async function get_camera_stream()
+{
+    let constraint_tries=[{video:true},{video:{width:640}},{video:{width:480}}];
+    for(let c in constraint_tries)
+    {
+        try
+        {
+            cameraPlaying=false;
+            cameraStream = await navigator.mediaDevices.getUserMedia(constraint_tries[c]);
+            return cameraStream;
+        }
+        catch(e)
+        {
+            console.log(e);
+        }
+    }
+    console.log("Couldn't find working constraints for camera");    
+}
+
 export async function start(callback)
 {
     _onLevel=callback;
     try
     {
         cameraPlaying=false;
-        cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: {width:640}
-        });
+        cameraStream = await get_camera_stream();
         videoTrack = cameraStream.getVideoTracks()[0];
-        captureDevice = new ImageCapture(videoTrack,cameraStream);        
+        if( !USE_VIDEO_ELEMENT)
+        {
+            captureDevice = new ImageCapture(videoTrack,cameraStream);        
+        }
         // if possible, disable auto white balance and fix brightness
         if(videoTrack.getCapabilities)
         {
@@ -97,7 +117,7 @@ async function grabImage()
             // old school - draw videoelement into canvas
             // then read pixels from that
             processFrame(videoElement);
-        }else if( videoTrack.readyState == 'live')
+        }else if( videoTrack.readyState == 'live' && captureDevice)
         {
             // The right way but not worky on 
             // chrome at least
