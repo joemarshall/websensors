@@ -155,6 +155,14 @@ function on_graph_value(graphName,curVal)
     }
 }
 
+function on_speech_say(words)
+{
+    if(!inCancel)
+    {
+        workerContext.postMessage({type:"speech",say:words});
+    }
+
+}
 
 
 async function runAsyncLoop(id,arg)
@@ -222,6 +230,13 @@ async function initPython()
 {
     // make the filter module (low, high pass, median filter etc.)
     await loadURLAsModule("filters","{{'/assets/python/filters.py' | relative_url}}");
+
+    loadAsModule("speech",`
+import js
+
+def say(words):
+    js.on_speech_say(words)
+`);
 
     // make the graph module (calls back to js to display graph values)
     loadAsModule("graphs",`

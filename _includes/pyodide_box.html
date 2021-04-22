@@ -10,8 +10,6 @@ window.sensor_objects=[];
 {% endif %}
 
 {% if page.uses_audio %}
-<script src="{{ '/assets/js/audioworklet-polyfill.js' | relative_url }}"></script>
-
 
 <script type="module">    
 
@@ -546,7 +544,15 @@ async function onRemoteMessage(event)
         {
             logDiv.appendChild(document.createTextNode(msgData["text"]));
         }
-    }else if(msgData["type"]=="graph")
+    }else if(msgData["type"]=="speech")
+    {
+        if(msgData["say"])
+        {
+            let utterance = new SpeechSynthesisUtterance(msgData["say"]);
+            speechSynthesis.speak(utterance);            
+        }   
+    }
+    else if(msgData["type"]=="graph")
     {
         if(pyodide_graph_context)
         {
