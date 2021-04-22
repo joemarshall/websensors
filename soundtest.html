@@ -1,24 +1,32 @@
 <html>
 
-<script type="module">
-
-import { requestPermissions, start,stop } from './assets/js/sound_sensor.js';
-
-function callbackFn(level)
-{
-    var textNode=document.createTextNode(level+"\n");
-    document.getElementById("values").prepend(textNode);
-}
-
-document.getElementById("init").addEventListener("click",()=>{requestPermissions()});
-document.getElementById("start").addEventListener("click",()=>{start(callbackFn)});
-document.getElementById("stop").addEventListener("click",()=>{stop()});
-</script>
 
 <button id="init">INIT</button>
 <button id="start">START</button>
 <button id="stop">STOP</button>
 
 <pre id="values"></pre>
+
+<script type="module">
+
+    import { requestPermissions, start,stop } from './assets/js/sound_sensor.js';
+    
+    function callbackFn(level)
+    {
+        var textNode=document.createTextNode(level+"\n");
+        document.getElementById("values").prepend(textNode);
+    }
+    
+    window.console.log=function(...args){
+        var textNode=document.createTextNode(JSON.stringify(args)+"\n");
+        document.getElementById("values").prepend(textNode);
+
+    }
+
+    document.getElementById("init").addEventListener("click",()=>{console.log("init");requestPermissions()});
+    document.getElementById("start").addEventListener("click",()=>{console.log("start");start(callbackFn)});
+    document.getElementById("stop").addEventListener("click",()=>{console.log("stop");stop()});
+    </script>
+    
 
 </html>
