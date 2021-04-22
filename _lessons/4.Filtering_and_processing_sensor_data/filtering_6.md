@@ -1,5 +1,5 @@
 ---
-title: Exciting things with specific sensors
+title: Awesome Accelerometers
 uses_maths: true
 uses_pyodide: true
 uses_audio: true
@@ -7,11 +7,11 @@ uses_light: true
 uses_accelerometer: true
 ---
 
-In this section we talk about specific filtering that one might wish to do with a few different sensors.
+In this section we talk about specific filtering that one might wish to do for the accelerometer
 
 # Accelerometer
 
-The accelerometer is a really neat sensor which outputs the acceleration that the device is experiencing. We can use this to detect gestures, estimate orientation of the device, estimate how fast the device is moving, all sorts of things. However processing sensor data from it is relatively difficult. 
+The accelerometer is a really neat sensor which outputs the acceleration that the device is experiencing. We can use this to detect gestures, estimate orientation of the device, estimate how fast the device is moving, detect bumps, all sorts of things. However processing sensor data from it is relatively difficult. 
 
 <details class="question" markdown=1>
 <summary>Any idea why accelerometer data is hard to process?</summary>
@@ -138,7 +138,7 @@ while True:
     angle=math.atan2(x,z)
     if angle<-math.pi/4:
         dotPos-=0.05
-        if dotPos>0:
+        if dotPos<0:
             dotPos=0
     elif angle>math.pi/4:
         dotPos+=0.05
@@ -151,3 +151,37 @@ while True:
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Tilt based on the accelerometer"})
 </script>
 
+# What can't you do with an accelerometer?
+
+A warning... One thing that is commonly attempted with an accelerometer is to identify device motion and changes in position. The reasoning behind this is that in theory if we know the initial position and velocity of our device, by integrating the acceleration we can estimate speed, and then by integrating the speed, we get relative position.
+
+This process of estimating changes in position from a known starting point is known as *dead reckoning*. It is sort of possible in some situations when the accelerometer orientation is known to a high degree of accuracy. However it is extremely hard to do successfully for one reason, which is that as well as integrating the actual value of the acceleration, we also integrate any error in the accelerometer signal. Any error in accelerometer means that the velocity is wrong, which means that the position quickly drifts away from the real position. 
+
+Try the code below on your phone to see - put the phone on a flat surface, and hit start, then move it 20cm to the right. See what the distance moved is reported as, and whether it stops when you stop.
+
+<script>
+makePyodideBox({
+    codeString:`
+SAMPLE_TIME = 0.01 # sample 100 times a second
+
+import graphs, sensors,time,filters,speech
+graphs.set_style("x accel","rgb(0,0,0)",-10,10)
+graphs.set_style("velocity","rgb(255,0,0)",-50,50,subgraph_y=1)
+graphs.set_style("position","rgb(255,0,0)",-50,50,subgraph_y=2)
+
+# startup delay 
+time.sleep(.5)
+
+# initially we are stopped at position 0
+velocity=0
+position=0
+while True:
+    x,y,z=sensors.accel.get_xyz()
+    velocity+=x*SAMPLE_TIME
+    position+=velocity*SAMPLE_TIME
+    graphs.on_value("x accel",x)
+    graphs.on_value("velocity",velocity)
+    graphs.on_value("position",position)
+    time.sleep(SAMPLE_TIME)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Integrating accelerometer to get velocity and position quickly drifts"})
+</script>

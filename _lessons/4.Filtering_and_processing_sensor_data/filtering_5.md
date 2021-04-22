@@ -1,5 +1,5 @@
 ---
-title: Non-linear filter awesomeness
+title: The delights of non-linear filters
 lesson_order: 4
 sublesson_order: 5
 uses_maths: true
