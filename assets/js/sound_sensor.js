@@ -74,13 +74,13 @@ export async function requestPermissions()
       micStream = await navigator.mediaDevices.getUserMedia({
         audio: true
       });
+      sourceNode = audioContext.createMediaStreamSource(micStream);
       if(!_made_worklet)
       {
           await audioContext.audioWorklet.addModule('{{ "/assets/js/amplitude_getter2.js" | relative_url }}');
           _made_worklet=true;  
       }
       processorNode=new VUMeterNode(audioContext,20);
-      sourceNode = audioContext.createMediaStreamSource(micStream);
       sourceNode.connect(processorNode);
     }catch(e)
     {
@@ -112,11 +112,10 @@ export async function stop()
   }
   _onLevel=undefined;
   console.log("STOPPING audio");
-  if(processorNode)
+/*  if(processorNode)
   {
-    processorNode.disconnect();
     processorNode=undefined;
-  }
+  }*/
   if(sourceNode)
   {
     sourceNode.disconnect();
