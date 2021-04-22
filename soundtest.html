@@ -122,7 +122,11 @@ LOGS ARE HERE
 
     import { requestPermissions, start,stop } from './assets/js/sound_sensor.js';
 
-    console.log("IMPORTED OK")
+    window.addEventListener("load",()=>
+    {
+        console.log("Module event");
+    });
+    console.log("IMPORTED OK");
     
     function callbackFn(level)
     {
