@@ -98,8 +98,10 @@
           
             };
             window.console=logger;    
+            // show global errors too
+            window.onerror=function(...args){console.error("ERR",args);};
+            console.log("OVerriden")        
         }
-        
         
         </script>
         
