@@ -22,7 +22,7 @@ Further to that, the accelerometer axes are aligned to the axes of the device; t
 
 So, what are some ways to process the accelerometer that are useful:
 
-## Method 1 - Ensure fixed alignment of the device
+## Method 1 - Ensure fixed alignment of the device and remove constant gravitational acceleration
 
 Stick your phone on the floor. As long as it is flat, then the Z axis should be pointing up. Then we can just treat that z axis as a single sensor value as before. Try playing with this knock sensor code on your phone. It should say knock when you hit the floor or jump next to it hard enough.
 
@@ -86,6 +86,8 @@ graphs.set_style("lowpassed magnitude","rgb(255,0,0)",-5,5,subgraph_y=1)
 time.sleep(.5)
 
 lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
+
+mag_max=-100
 while True:
     x,y,z=sensors.accel.get_xyz()
 #    print(x,y,z)
@@ -93,10 +95,59 @@ while True:
     # for gravitational acceleration
     magnitude=math.sqrt(x*x+y*y+z*z)-9.8 
     mag_lowpassed=lpFilter.on_value(magnitude)
+    if mag_lowpassed>3 and mag_max<=3:
+        specch.say("Ouchy ouch")
+    elif mag_lowpassed>5 and mag_max<=5:
+        speech.say("Too hard")
+    mag_max=max(mag_lowpassed,mag_max)
     graphs.on_value("magnitude",magnitude)
     graphs.on_value("lowpassed magnitude",magnitude)
     time.sleep(SAMPLE_TIME)
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"We can use the magnitude to make things work any way up"})
 </script>
 
-## Method 3 - Use the gravitational acceleration for things 
+## Method 3 - Use the gravitational acceleration for orientation sensing
+
+If you assume the accelerometer is still, then you can use the gravitational acceleration to detect orientation. For example, if a phone is flat on it's back, the z acceleration is $$9.8m/s^2$$ (or 1G).
+
+The code below detects whether a phone is tipped to it's left or right (in portrait orientation) by looking at the angle defined by Z and X. 
+
+` roll = math.atan2(z,x ) `
+
+where [math.atan2](https://docs.python.org/3/library/math.html) is the full circle arc-tangent function, which gives an angle from a vector.
+
+<script>
+makePyodideBox({
+    codeString:`
+SAMPLE_TIME = 0.01 # sample 100 times a second
+FILTER_TIME_CONSTANT=.05 # 2 seconds
+
+import graphs, sensors,time,filters,speech
+import math
+graphs.set_style("angle","rgb(0,0,0)",-math.pi,math.pi)
+
+# startup delay 
+time.sleep(.5)
+
+lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
+
+dotPos=10;
+
+while True:
+    x,y,z=sensors.accel.get_xyz()
+    angle=math.atan2(x,z)
+    if angle<-math.pi/4:
+        dotPos-=0.05
+        if dotPos>0:
+            dotPos=0
+    elif angle>math.pi/4:
+        dotPos+=0.05
+        if dotPos>20:
+            dotPos=20
+    print(" "*int(dotPos) + ".");
+    
+    graphs.on_value("angle",angle)
+    time.sleep(SAMPLE_TIME)
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Tilt based on the accelerometer"})
+</script>
+
