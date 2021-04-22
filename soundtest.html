@@ -1,11 +1,19 @@
 <html>
 
 
-<button id="init">INIT</button>
+<button id="init">ASKPERMISSIONS</button>
 <button id="start">START</button>
 <button id="stop">STOP</button>
 
 <pre id="values"></pre>
+
+<script>
+window.console.log=function(...args){
+    var textNode=document.createTextNode(JSON.stringify(args)+"\n");
+    document.getElementById("values").prepend(textNode);
+};
+
+</script>
 
 <script type="module">
 
@@ -17,11 +25,6 @@
         document.getElementById("values").prepend(textNode);
     }
     
-    window.console.log=function(...args){
-        var textNode=document.createTextNode(JSON.stringify(args)+"\n");
-        document.getElementById("values").prepend(textNode);
-
-    }
 
     document.getElementById("init").addEventListener("click",()=>{console.log("init");requestPermissions()});
     document.getElementById("start").addEventListener("click",()=>{console.log("start");start(callbackFn)});
