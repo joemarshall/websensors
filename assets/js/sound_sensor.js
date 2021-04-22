@@ -1,3 +1,5 @@
+---
+---
 var _onLevel;
 var audioPlaying=false;
 
@@ -9,7 +11,7 @@ async function makeProcessor(ctx,intervalInMS)
     {
           if(!_made_worklet)
           {
-              await ctx.audioWorklet.addModule('assets/js/amplitude_getter2.js');
+              await ctx.audioWorklet.addModule("{{'/assets/js/amplitude_getter2.js'|relative_url}}");
               _made_worklet=true;  
           }
 

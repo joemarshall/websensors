@@ -9,8 +9,6 @@ uses_accelerometer: true
 
 In this section we talk about specific filtering that one might wish to do for the accelerometer
 
-# Accelerometer
-
 The accelerometer is a really neat sensor which outputs the acceleration that the device is experiencing. We can use this to detect gestures, estimate orientation of the device, estimate how fast the device is moving, detect bumps, all sorts of things. However processing sensor data from it is relatively difficult. 
 
 <details class="question" markdown=1>
@@ -179,6 +177,7 @@ while True:
     x,y,z=sensors.accel.get_xyz()
     velocity+=x*SAMPLE_TIME
     position+=velocity*SAMPLE_TIME
+    print("V:",velocity,"P:",position)
     graphs.on_value("x accel",x)
     graphs.on_value("velocity",velocity)
     graphs.on_value("position",position)
