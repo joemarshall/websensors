@@ -121,6 +121,8 @@ LOGS ARE HERE
 <script type="module">
 
     import { requestPermissions, start,stop } from './assets/js/sound_sensor.js';
+
+    console.log("IMPORTED OK")
     
     function callbackFn(level)
     {
@@ -132,6 +134,8 @@ LOGS ARE HERE
     document.getElementById("init").addEventListener("click",()=>{console.log("init");requestPermissions()});
     document.getElementById("start").addEventListener("click",()=>{console.log("start");start(callbackFn)});
     document.getElementById("stop").addEventListener("click",()=>{console.log("stop");stop()});
+
+    window.onerror=function(...args){console.error("ERR",args);};
     </script>
     
 <body>

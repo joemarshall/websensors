@@ -104,6 +104,10 @@ function setLog(logDiv)
   
     };
     window.console=logger;    
+    // show global errors too
+    window.onerror=function(...args){console.error("ERR",args);};
+
+    
 }
 
 setLog(document.getElementById("LOGDIV"));
