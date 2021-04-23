@@ -272,7 +272,7 @@ while True:
     graphs.on_value("sound",sound_level)
     graphs.on_value("lowpassed sound",sound_lowpassed)
     time.sleep(0.05)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Light sensor event detection using simple threshold"})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Low pass filter applied to sound sensor data - make some noise and see how the two graphs respond"})
 </script>
 
 ## What bad things does a low-pass filter do to my filter?
@@ -455,7 +455,7 @@ while True:
     graphs.on_value("light",light_level)
     graphs.on_value("highpassed light",light_highpassed)
     time.sleep(0.05)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Light sensor event detection using simple threshold"})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"High pass filter applied to light sensor"})
 </script>
 
 
@@ -553,7 +553,7 @@ while True:
     graphs.on_value("lowpassed light",light_lowpassed)
     graphs.on_value("average light",light_sliding)
     time.sleep(SAMPLE_TIME)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Sliding average is quite similar to low-pass, but strictly dependent on only the last N values. This means it stabilises on a fixed value after BLOCK_SIZE samples."})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Sliding average is quite similar to low-pass, but strictly dependent on only the last N values. This means it stabilises on a fixed value after BLOCK_SIZE samples, whereas low-pass is always slightly curving towards the input value."})
 </script>
 
 # Memory check
