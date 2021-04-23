@@ -7,7 +7,9 @@ uses_light: true
 uses_accelerometer: true
 ---
 
-In this section we talk about specific filtering that one might wish to do for the accelerometer
+This and the following pages include some recipes for specific sensors. These just look at things you might commonly like to do with each sensor and combine the filtering methods we've seen in the previous pages. Hopefully this will give you an idea of ways that you might apply these filtering methods in practice.
+
+So, lets talk about accelerometers:
 
 The accelerometer is a really neat sensor which outputs the acceleration that the device is experiencing. We can use this to detect gestures, estimate orientation of the device, estimate how fast the device is moving, detect bumps, all sorts of things. However processing sensor data from it is relatively difficult. 
 
@@ -94,9 +96,9 @@ while True:
     magnitude=math.sqrt(x*x+y*y+z*z)-9.8 
     mag_lowpassed=lpFilter.on_value(magnitude)
     if mag_lowpassed>3 and mag_max<=3:
-        specch.say("Ouchy ouch")
+        speech.say("Oi, stop shaking me")
     elif mag_lowpassed>5 and mag_max<=5:
-        speech.say("Too hard")
+        speech.say("Too much shaking")
     mag_max=max(mag_lowpassed,mag_max)
     graphs.on_value("magnitude",magnitude)
     graphs.on_value("lowpassed magnitude",magnitude)
