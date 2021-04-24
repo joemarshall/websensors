@@ -491,6 +491,12 @@ footer a:hover {
     padding:.5ch 2ch;
 }
 
+.navbuttons>div>a:hover
+{
+    background-color:#e88;
+}
+
+
 .sidebar>h1
 {
     display:block;
@@ -864,6 +870,12 @@ pre code
   padding:.5ch 2ch;
 }
 
+.scratchbutton>a:hover
+{
+  background-color:#f88;
+}
+
+
 #logparent
 {
   display: none;  
@@ -877,6 +889,28 @@ pre code
   overflow-x:scroll;
   overflow-y:scroll;
 }
+
+.files>button,.pyodide_start,.pyodide_stop
+{
+  border-radius:.5ch;
+  padding:.5ch;
+  border:.5ch solid #700;
+  background-color: #700;
+  color:#fff;
+  margin-right:1ch;
+}
+.files>button:hover,.pyodide_start:hover,.pyodide_stop:hover
+{
+  background-color: #a66;
+  border:.5ch solid #a66;
+}
+
+.files>button:disabled,.pyodide_start:disabled,.pyodide_stop:disabled
+{
+  background-color: #666;
+  border:.5ch solid #666;
+}
+
 
 // github code highlighting style because it is nice and clear
 {% include_relative highlight-github.css %}
