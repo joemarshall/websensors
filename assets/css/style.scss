@@ -957,5 +957,24 @@ label
   margin-right:1ch;
 }
 
+.switcher
+{
+  width:100%;
+  display:flex;
+}
+.switcher>button
+{
+  width:100%;
+  background-color:black;
+  color:white;
+}
+.switcher>button:disabled
+{
+  width:100%;
+  background-color:white;
+  color:black;
+}
+
+
 // github code highlighting style because it is nice and clear
 {% include_relative highlight-github.css %}
