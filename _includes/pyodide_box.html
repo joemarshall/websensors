@@ -91,14 +91,19 @@ function makePyodideBox(options)
 
 <script type="module">
 import {makeGraphContext} from "{{ '/assets/js/py_graphs.js' || relative_url }}";
+import {Console} from "{{ '/assets/js/console.js' || relative_url }}";
 
 let responseWaiter={};
 let pythonInitPromise;
 
+let box_index=0;
+
 async function makePyodideBoxInternal(options)
 {    
+    box_index+=1;
     let parent=options.parent;
     let consoleDiv;
+    let consoleObj;
     let editorDiv;
     let editor;
     let codeValue;
@@ -132,7 +137,9 @@ async function makePyodideBoxInternal(options)
 {% if page.uses_files %}
         if(options.showFileButtons)
         {
-            let loginButton=document.createElement("Button");        
+            let filesDiv=document.createElement("div");
+            filesDiv.className="files";
+            let loginButton=document.createElement("Button");
             let openButton=document.createElement("Button");
             let saveButton=document.createElement("Button");
             let changeFolderButton=document.createElement("Button");
@@ -167,7 +174,7 @@ async function makePyodideBoxInternal(options)
             changeFolderButton.onclick=function()
             {
                 let filename=filenameBox.value;
-                oneDriveChooseFolder(filename,function(foldername)
+                oneDriveChooseFolder(filename,false).then(function(foldername)
                 {
                     folderBox.innerText=foldername;
                 });
@@ -189,23 +196,28 @@ async function makePyodideBoxInternal(options)
                     loginButton.innerText="Login onedrive";
                 }
             };
-            parent.appendChild(loginButton);
-            parent.appendChild(openButton);
-            parent.appendChild(saveButton);
-            parent.appendChild(changeFolderButton);
-            parent.appendChild(folderBox);
-            parent.appendChild(filenameBox);
+            filesDiv.appendChild(loginButton);
+            filesDiv.appendChild(openButton);
+            filesDiv.appendChild(saveButton);
+            filesDiv.appendChild(changeFolderButton);
+            filesDiv.appendChild(folderBox);
+            filesDiv.appendChild(filenameBox);
+            parent.appendChild(filesDiv);
             // on reload, load up the previous onedrive file if there is 
             // still one in the session
             var token=await msLogin(false);
             if(token)
             {
                 loginButton.innerText="Logout onedrive";
-                oneDriveReload(function(fileText,filename,foldername)
+                oneDriveReload(function(fileText,filename,foldername,logfolder)
                 {
                     if(foldername)
                     {
                         folderBox.innerText=foldername;
+                    }
+                    if(logfolder)
+                    {
+                        logFolderName.innerText=logfolder;
                     }
                     if(fileText)
                     {
@@ -316,7 +328,7 @@ async function makePyodideBoxInternal(options)
         consoleDiv=document.createElement("div");
         consoleDiv.className="pyodide_console";
         parent.appendChild(consoleDiv);
-        makeConsoleDiv(consoleDiv);
+        consoleObj=new Console(consoleDiv)
     }
     if(options.hasGraph)
     {
@@ -356,9 +368,9 @@ async function makePyodideBoxInternal(options)
         // set the graph to point at our graph
         pyodide_graph_context=graphContext
         // set the console to point at our console
-        pyodide_console_div=consoleDiv;
+        pyodide_console=consoleObj;
         // clear our console output
-        clearConsole();
+        consoleObj.clear();
         // set the graph to point at our graph
         // load our code string from editor
         // if there is one
@@ -379,6 +391,11 @@ async function makePyodideBoxInternal(options)
         running=true;
         await asyncRun("run",codeValue);
         running=false;
+{% if page.uses_files %}
+        // make really sure that the console is saved
+        consoleObj.save();
+{% endif %}
+
         for(let c in window.sensor_objects)
         {
             const o=window.sensor_objects[c];
@@ -413,6 +430,61 @@ async function makePyodideBoxInternal(options)
     stopButton.disabled=true;
     stopButton.onclick=onStop;
     parent.appendChild(stopButton);
+{% if page.uses_files %}
+    const logs_div=document.createElement("div");
+    const captureCheck=document.createElement("input");
+    captureCheck.type="checkbox"
+    const captureText=document.createElement("label")
+    captureText.innerText="Autosave output"
+    captureCheck.id="captureCheck_"+box_index;
+
+    const saveConsoleFn=
+            (filename,txt)=>{
+
+            if(captureCheck.checked)
+            {
+                // save output to dated file
+                oneDriveSaveConsoleLog(txt,filename);
+                return true;
+            }
+        };
+    consoleObj.setSaveFn(saveConsoleFn);
+
+    captureCheck.addEventListener("change",async (event)=>{
+        if(captureCheck.checked)
+        {
+            var captureFolder=await oneDriveFolderName(true);
+            if(!captureFolder)
+            {
+                var folderName=await oneDriveChooseFolder("",true);
+                logFolderName.textContent=foldername;            
+            }
+            consoleObj.save();
+        }
+    });
+
+
+    captureText["htmlFor"]=captureCheck.id;
+
+    logs_div.appendChild(captureCheck);
+    logs_div.appendChild(captureText)
+    const chooseOutputFolderButton=document.createElement("button");
+    chooseOutputFolderButton.className="pyodide_stop";        
+    chooseOutputFolderButton.innerText="Output folder...";
+    const logFolderName=document.createElement("span");
+    logFolderName.textContent="    ";
+    chooseOutputFolderButton.onclick=function()
+    {
+        oneDriveChooseFolder("",true).then(function(foldername)
+        {
+            logFolderName.textContent=foldername;            
+        });        
+    }
+    logs_div.appendChild(chooseOutputFolderButton);
+    logs_div.appendChild(logFolderName);
+    parent.appendChild(logs_div);
+{% endif %}
+
 
     if(figureCap)
     {
@@ -441,9 +513,17 @@ const pyodideWorker = new FakeWorker('{{ "/assets/js/async_worker.js"| relative_
 pyodideWorker.onmessage = onRemoteMessage;
 pyodideWorker.onerror = onRemoteError;
 
-let pyodide_console_div=undefined;
+let pyodide_console=undefined;
 let pyodide_graph_context=undefined;
 let lastMessage=1;
+
+function writeConsole(msg)
+{
+    if(pyodide_console)
+    {
+        pyodide_console.write(msg);
+    }
+}
 
 function sensorCallback(name,...args)
 {
@@ -468,72 +548,6 @@ function onRemoteError(event)
     console.log("ERROR in worker",event)
 }
 
-const NUM_CONSOLE_LINES=50;
-var consoleText="";
-var currentLine=0;
-function makeConsoleDiv(divParent)
-{
-}
-
-function clearConsole()
-{
-    consoleText="";
-    currentLine=0;
-    pyodide_console_div.innerHTML="";
-}
-
-function writeConsole(msg)
-{
-    if(pyodide_console_div)
-    {
-        let needs_rescroll=false;
-        if(pyodide_console_div.scrollTop+pyodide_console_div.clientHeight+1>=pyodide_console_div.scrollHeight)
-        {
-            needs_rescroll=true;
-        }
-        consoleText+=msg;
-        var spl=consoleText.split("\n")
-        if( spl.length>NUM_CONSOLE_LINES)
-        {
-            consoleText=spl.slice(-NUM_CONSOLE_LINES).join("\n");
-        }
-        pyodide_console_div.innerText=consoleText;
-        if (needs_rescroll)
-        {
-            pyodide_console_div.scrollTop=pyodide_console_div.scrollHeight-pyodide_console_div.clientHeight;
-        }
-
-/*        var lineDiv=pyodide_console_div.lastChild;
-        let lines=msg.split("\n");
-        while(lines.length>0)
-        {
-            var txt=lines.shift();
-            if(txt.length>0 || lines.length>0)
-            {
-                // move onto next div
-                currentLine+=1;
-                if(currentLine>=NUM_CONSOLE_LINES)
-                {
-                    // overflow - remove the first div
-                    currentLine=NUM_CONSOLE_LINES-1;
-                    const div=pyodide_console_div.childNodes[0];
-                    div.nodeValue="";
-                    pyodide_console_div.removeChild(div);
-                    lineDiv=div;
-                }
-                // make new div until we're full
-                lineDiv=document.createTextNode("")
-//                    lineDiv=document.createElement("div")
-//                    lineDiv.innerHTML="";
-//                    lineDiv.style="display:block"
-//                    lineDiv.className="pyodide_console_text";
-                pyodide_console_div.appendChild(lineDiv);
-
-                lineDiv.nodeValue+=txt;
-            }
-        }*/
-    }
-}
 async function onRemoteMessage(event)
 {   
     let msgData=event.data;

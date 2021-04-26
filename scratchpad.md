@@ -8,7 +8,7 @@ uses_files: true
 ---
 This page is designed for use as a scratchpad, so you can test and run sensor algorithms. 
 
-You will ue this to do your programming in Coursework 2.
+You will use this to do your programming in Coursework 2.
 
 <script>
 makePyodideBox({codeString:"print('hello world')",

@@ -911,6 +911,51 @@ pre code
   border:.5ch solid #666;
 }
 
+input[type="checkbox"]{
+  width: 2ch;
+  height: 2ch;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance:none;
+  outline: 0.2ch solid #e88;
+  padding:.5ch;
+
+}
+
+
+input[type="checkbox"]:after
+{
+display:flex;
+line-height:100%;
+width: 100%;
+text-align: center;
+vertical-align: middle;
+justify-content:center;
+content:"\00a0\00a0";
+}
+
+input[type="checkbox"]:checked:after
+{
+display:flex;
+line-height:100%;
+width: 100%;
+text-align: center;
+vertical-align: middle;
+justify-content:center;
+content:"✔"
+}
+
+input[type="checkbox"]:hover
+{
+background-color:#a44;
+}
+
+label
+{
+  font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, serif;
+  margin-right:1ch;
+}
 
 // github code highlighting style because it is nice and clear
 {% include_relative highlight-github.css %}
