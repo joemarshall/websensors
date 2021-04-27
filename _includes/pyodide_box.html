@@ -439,7 +439,7 @@ async function makePyodideBoxInternal(options)
     captureCheck.id="captureCheck_"+box_index;
 
     const saveConsoleFn=
-            (filename,txt)=>{
+            function(filename,txt){
 
             if(captureCheck.checked)
             {
@@ -450,7 +450,7 @@ async function makePyodideBoxInternal(options)
         };
     consoleObj.setSaveFn(saveConsoleFn);
 
-    captureCheck.addEventListener("change",async (event)=>{
+    captureCheck.addEventListener("change",async function(event){
         if(captureCheck.checked)
         {
             var captureFolder=await oneDriveFolderName(true);
@@ -597,7 +597,7 @@ async function onRemoteMessage(event)
 async function asyncRun(cmd,arg){
     lastMessage++;
     let thisMessage=lastMessage;
-    let p=new Promise((r,e)=>{responseWaiter[thisMessage]=(r)});
+    let p=new Promise(function(r,e){responseWaiter[thisMessage]=(r)});
     pyodideWorker.postMessage({
         cmd: cmd,
         arg: arg,
