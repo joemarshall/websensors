@@ -1,7 +1,8 @@
 
+var NUM_CONSOLE_LINES=50;
+
 export class Console
 {
-    static NUM_CONSOLE_LINES=50;
 
     constructor(divParent)
     {
@@ -42,9 +43,9 @@ export class Console
         this.fullText+=msg;
         this.text+=msg;
         var spl=this.text.split("\n")
-        if( spl.length>Console.NUM_CONSOLE_LINES)
+        if( spl.length>NUM_CONSOLE_LINES)
         {
-            this.text=spl.slice(-Console.NUM_CONSOLE_LINES).join("\n");
+            this.text=spl.slice(-NUM_CONSOLE_LINES).join("\n");
         }
         this.div.innerText=this.text;
         if (needs_rescroll)
