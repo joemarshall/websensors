@@ -670,6 +670,29 @@ async function initFn()
     window.dispatchEvent(new Event("pythonboxesmade"));
     await initSensors();
 
+    let debugContainer=document.getElementById('debug_links');
+    let s=document.createElement("span");
+    s.textContent="Get sensor permissions: ";
+    debugContainer.appendChild(s)
+    for(let c in window.sensor_objects)
+        {
+            const o=window.sensor_objects[c];
+            if(o.requestPermissions)
+            {
+                const requestLink=document.createElement("button");
+                requestLink.style.marginLeft="1ch";
+                requestLink.textContent=o.name;
+                requestLink.onclick=async function()
+                {
+                    await o.requestPermissions();
+                    await o.start();
+                    await o.stop();
+                };
+                debugContainer.append(requestLink)
+            }
+        }
+
+
 }
 
 window.addEventListener('load',initFn);
