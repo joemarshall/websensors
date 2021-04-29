@@ -9,22 +9,6 @@ window.sensor_objects=[];
 {% include onedrive.html %}
 {% endif %}
 
-{% if page.uses_accelerometer %}
-<script type="module">
-let accel_sensor={
-    name:"accel",
-    mod_accel:undefined,
-    init: async function(){this.mod_accel=await import("{{ 'assets/js/accel_sensor.js' | relative_url }}");},
-    requestPermissions: function(){return this.mod_accel.requestPermissions()},
-    start: async function(callback){await this.mod_accel.startAccelerometer(callback)},
-    stop: async function() { await this.mod_accel.stopAccelerometer();}
-};
-
-window.sensor_objects.push(accel_sensor);
-</script>
-{% endif %}
-
-
 {% if page.uses_audio %}
 
 <script type="module">    
@@ -59,6 +43,20 @@ window.sensor_objects.push(light_sensor);
 {% endif %}
 
 
+{% if page.uses_accelerometer %}
+<script type="module">
+let accel_sensor={
+    name:"accel",
+    mod_accel:undefined,
+    init: async function(){this.mod_accel=await import("{{ 'assets/js/accel_sensor.js' | relative_url }}");},
+    requestPermissions: function(){return this.mod_accel.requestPermissions()},
+    start: async function(callback){await this.mod_accel.startAccelerometer(callback)},
+    stop: async function() { await this.mod_accel.stopAccelerometer();}
+};
+
+window.sensor_objects.push(accel_sensor);
+</script>
+{% endif %}
 
 
 <script>
