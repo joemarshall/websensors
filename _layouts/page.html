@@ -13,11 +13,36 @@
     <![endif]-->
     <script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script>
     <script>
+      const config = {
+          startOnLoad:false,
+          width:"100%",
+          flowchart:{
+            useMaxWidth:true,
+            htmlLabels:true,
+            width:"100%"
+        }
+      };
+      mermaid.mermaidAPI.initialize(config);
+
       window.addEventListener("load",()=>{
+        let idCounter=0;
         let mermaid_blocks=document.querySelectorAll('pre > code[class=language-mermaid]');
-        mermaid_blocks.forEach((x)=>{x.parentNode.className="mermaid_block"});
-        window.mermaid.init(undefined, mermaid_blocks);
-      });
+        mermaid_blocks.forEach(
+          (x)=>
+          {
+            var parent=x.parentNode;
+            idCounter+=1;
+            x.id="MERMAID_"+idCounter;
+            var graphDef=x.textContent;
+            x.parentNode.className="mermaid_block";
+            mermaid.mermaidAPI.render(x.id, graphDef,
+              (svgCode,bindFunctions)=>
+              {parent.innerHTML=svgCode;
+              }
+              );
+          });
+
+      });    
       </script>
 
 {% seo %}
