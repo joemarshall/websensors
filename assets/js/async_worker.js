@@ -10,8 +10,12 @@ if(self.hasOwnProperty('fakeWorkerContext'))
     workerContext=self;
 }
 
+
+// gitcdn is even faster
+languagePluginUrl='https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/';
 // serve through jsdelivr for faster loading
-languagePluginUrl='https://cdn.jsdelivr.net/gh/joemarshall/websensors/pyodide/';
+//languagePluginUrl='https://rawcdn.githack.com/joemarshall/websensors/main/pyodide/';
+//languagePluginUrl='https://cdn.jsdelivr.net/gh/joemarshall/websensors/pyodide/';
 //languagePluginUrl="{{'/pyodide/' | relative_url }}";
 
 workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
@@ -164,7 +168,6 @@ function on_speech_say(words)
 
 }
 
-
 async function runAsyncLoop(id,arg)
 {
     pyodide.runPython("__pc.clear_cancel()")
@@ -229,166 +232,27 @@ async function runAsyncLoop(id,arg)
 async function initPython()
 {
     // make the filter module (low, high pass, median filter etc.)
-    await loadURLAsModule("filters","{{'/assets/python/filters.py' | relative_url}}");
+    loadAsModule("filters",`
+{% include filters_module.py %}
+`);    
 
     loadAsModule("speech",`
-import js
-
-def say(words):
-    js.on_speech_say(words)
+{% include speech_module.py %}
 `);
 
     // make the graph module (calls back to js to display graph values)
     loadAsModule("graphs",`
-import js        
-def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None): 
-    js.set_graph_style(graphName,colour,minVal,maxVal,subgraph_x,subgraph_y)           
-def on_value(graphName,value):
-    # ignore None values as block based filters output them when
-    # no value is ready
-    if value!=None:
-        js.on_graph_value(graphName,value)        
-        `
+{% include graphs_module.py %}
+    `
         );
 
         // make the sensor module - receives sensor data
         sensorModule=loadAsModule("sensors",`
-from math import sqrt
-
-def on_sensor_event(event):
-    name=event["name"]
-    value=event["args"]
-    if name=="accel":
-        accel._on_accel(value[0],value[1],value[2])
-    elif name=="sound":
-        sound._on_level(value[0])
-    elif name=="light":
-        light._on_level(value[0])
-
-class accel:
-    _xyz=(0,0,0)
-    @staticmethod
-    def get_xyz():
-        return accel._xyz
-        
-    @staticmethod
-    def get_magnitude():
-        if  accel._xyz:
-            x,y,z=(accel._xyz)
-            return sqrt((x*x)+(y*y)+(z*z))
-        else:
-            return None
-        
-    # called from js to set the current acceleration
-    @staticmethod
-    def _on_accel(x,y,z):
-        accel._xyz=(x,y,z)
-    
-class sound:
-    _level=0
-    @staticmethod
-    def get_level():
-        return sound._level        
-        
-    # called from js to set the current level
-    @staticmethod
-    def _on_level(level):
-        sound._level=level
-
-class light:
-    _level=0
-    @staticmethod
-    def get_level():
-        return light._level        
-        
-    # called from js to set the current level
-    @staticmethod
-    def _on_level(level):
-        light._level=level
+{% include sensors_module.py %}
 `);
         await pyodide.runPythonAsync(`
-import unthrow
-# create hook for time.sleep
-import time
-time.sleep=lambda t: unthrow.stop({"cmd":"sleep","time":t})
-
-import sys
-import js
-from pyodide import console
-
-
-def displayhook(value):
-    separator = "\\n[[;orange;]<long output truncated>]\\n"
-    _repr = lambda v: console.repr_shorten(v, separator=separator)
-    return console.displayhook(value, _repr)
-
-sys.displayhook = displayhook
-
-
-class PyConsole(console.InteractiveConsole):
-    def __init__(self):
-        super().__init__(
-            persistent_stream_redirection=False,
-        )
-        self.resume_args=None
-        self.resumer=unthrow.Resumer()
-        self.resumer.set_interrupt_frequency(100)
-        self.cancelled=False
-        self.run_source_obj=None
-        self.run_code_obj=None
-
-    def clear_cancel(self):
-        self.cancelled=False
-
-    def cancel_run(self):
-        self.resumer.cancel()
-        self.cancelled=True
-        self.resetbuffer()
-        self.run_code_obj=None
-        self.run_source_obj =None
-
-    def run_once(self):
-        if self.cancelled:
-            self.cancelled=False
-            self.finished=True
-            return {"done":True,"action":"cancelled"}
-        if self.run_source_obj:
-            src=self.run_source_obj
-            self.run_source_obj=None
-            return {"done":False,"action":"await","obj":console._load_packages_from_imports(src)}
-        elif self.run_code_obj:
-            with self.stdstreams_redirections():
-                try:
-                    if not self.resumer.run_once(exec,[self.run_code_obj,self.locals]):
-                        self.resume_args=self.resumer.resume_params
-                        self.flush_all()
-                        # need to rerun run_once after handling this action
-                        return {"done":False,"action":"resume","args":self.resume_args}
-                except BaseException:
-                    self.showtraceback()
-                # in CPython's REPL, flush is performed
-                # by input(prompt) at each new prompt ;
-                # since we are not using input, we force
-                # flushing here
-                self.flush_all()
-                self.run_code_obj=None
-                self.run_source_obj =None
-
-            return {"done":True}
-
-
-    def runcode(self, code):
-        #  we no longer actually run code in here, 
-        # we store it here and then repeatedly run 
-        source = "\\n".join(self.buffer)
-        self.run_code_obj=code
-        self.run_source_obj = source
-
-    def banner(self):
-        return f"Welcome to the Pyodide terminal emulator 🐍\\n{super().banner()}"
-
-__pc=PyConsole()            
-        `);
+{% include init_console.py %}
+`);
         pyConsole=pyodide.globals.get("__pc");
         pyConsole.stdout_callback = stdout_write
         pyConsole.stderr_callback = stderr_write

@@ -363,6 +363,7 @@ async function makePyodideBoxInternal(options)
         // so we can await promises with wild abandon
         await Promise.all(permissionRequesters);
 
+
         // stop anything else that is running
         await asyncRun("abort","rerun");
         // set the graph to point at our graph
@@ -389,6 +390,7 @@ async function makePyodideBoxInternal(options)
 
         codeValue=editor.state.doc.toString();
         running=true;
+        sensorCallback("replayer","time,sound,light\n1,2,3\n4,5,6\n")
         await asyncRun("run",codeValue);
         running=false;
 {% if page.uses_files %}
