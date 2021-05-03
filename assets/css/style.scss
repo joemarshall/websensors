@@ -635,6 +635,33 @@ details
 
 };
 
+.replay_box
+{
+  margin-top:.5em;
+  border: 2px solid #000;
+  border-radius: 4px;
+  padding: .5em;
+  background-color:#fff;
+  width:100%;
+}
+
+.replay_filename::before
+{
+  content:"Replay CSV File:";
+  display: inline-block;
+  text-emphasis:bold;
+  font-variant:small-caps;
+}
+
+.python_filename::before
+{
+  content:"Python File:";
+  display: inline-block;
+  text-emphasis:bold;
+  font-variant:small-caps;
+}
+
+
 .pyodide_box
 {
     width:100%;
@@ -983,7 +1010,7 @@ pre code
   overflow-y:scroll;
 }
 
-.files>button,.pyodide_start,.pyodide_stop
+button,
 {
   border-radius:.5ch;
   padding:.5ch;
@@ -992,13 +1019,13 @@ pre code
   color:#fff;
   margin-right:1ch;
 }
-.files>button:hover,.pyodide_start:hover,.pyodide_stop:hover
+button:hover
 {
   background-color: #a66;
   border:.5ch solid #a66;
 }
 
-.files>button:disabled,.pyodide_start:disabled,.pyodide_stop:disabled
+button:disabled
 {
   background-color: #666;
   border:.5ch solid #666;
@@ -1044,6 +1071,12 @@ input[type="checkbox"]:hover
 background-color:#a44;
 }
 
+input[type="checkbox"]:disabled
+{
+background-color:#666;
+}
+
+
 label
 {
   font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, serif;
@@ -1067,6 +1100,64 @@ label
   background-color:white;
   color:black;
 }
+
+.dialogbackground
+{
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */  
+}
+
+.filedialog
+{
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.filedialog::before
+{
+  content:"Choose file name:";
+  text-emphasis:bold;
+  font-variant:small-caps;
+  display:block;
+}
+
+.dialogclose 
+{
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+
+  :hover, :focus
+  {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;  
+  }
+}
+
+.dialogFolderName::before
+{
+  content:"Folder:";
+  margin-right:1ch;
+}
+.dialogFolderName
+{
+  display:block;
+  margin-right:2ch;
+  margin-bottom:.5ch;
+}
+
 
 
 // github code highlighting style because it is nice and clear

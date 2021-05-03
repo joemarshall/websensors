@@ -62,6 +62,7 @@ window.sensor_objects.push(accel_sensor);
 <script>
 // make a pyodide box function
 window.queued_pyodide_boxes=[]
+window.queued_replay_controller=[]
 function makePyodideBox(options)
 {
     if(!options)
@@ -86,10 +87,36 @@ function makePyodideBox(options)
         window.queued_pyodide_boxes.push(options)
     }
 }
+
+function makeReplayController(options)
+{
+    if(!options)
+    {
+        options={}
+    }
+    if(!options.parent)
+    {
+        // no parent, add a div here and pass that in
+        let div=document.createElement("div");
+        let script = document.scripts[document.scripts.length - 1]; // A reference to the currently running script
+
+        div.className="replay_box";
+        script.parentNode.insertBefore(div,script);
+        options.parent=div;
+    }
+    if(window.makeReplayControllerInternal)
+    {
+        window.makeReplayControllerInternal(options);
+    }else
+    {
+        window.queued_replay_controller.push(options)
+    }
+    
+}
 </script>
 <script src="{{ '/assets/js/codemirror.js' | relative_url }}" ></script>
 
-<script type="module">
+<script type="module">    
 import {makeGraphContext} from "{{ '/assets/js/py_graphs.js' || relative_url }}";
 import {Console} from "{{ '/assets/js/console.js' || relative_url }}";
 
@@ -97,6 +124,167 @@ let responseWaiter={};
 let pythonInitPromise;
 
 let box_index=0;
+let replay_text_getter;
+
+async function makeReplayControllerInternal(options)
+{
+    let parent=options.parent;
+    let loginButton=document.createElement("Button");
+    let openButton=document.createElement("Button");
+    let closeButton=document.createElement("Button");
+    let filenameBox=document.createElement("div");
+    filenameBox.className="replay_filename";
+    let box_id="{{page.slug}}"+"REPLAY";
+    let fileHandler=new OneDriveFileRef(box_id);
+    filenameBox.innerText="";
+    loginButton.innerText="Login onedrive";
+    closeButton.innerText="Close replay";
+    openButton.innerText="Load replay csv...";
+    openButton.onclick=function()
+    {
+        closeButton.disabled=true;
+        fileHandler.open().then(
+            function(response)
+        {   
+            if(response.folderName && response.fileName)
+            {                 
+                filenameBox.textContent=response.folderName+"/"+response.fileName;
+                closeButton.disabled=false;
+            }
+        });
+    }
+
+    let getReplay=async function()
+    {
+        closeButton.disabled=true;
+        var response=await fileHandler.reload();
+        if(response.folderName && response.fileName)
+        {                 
+            filenameBox.textContent=response.folderName+"/"+response.fileName;
+            closeButton.disabled=false;
+            // set this as the replayer text
+            return response.fileContents;
+        }
+        return "";
+    };
+
+    closeButton.onclick=async function()
+    {
+        fileHandler.close();
+        filenameBox.textContent="";
+        closeButton.disabled=true;
+    }
+
+    loginButton.onclick=async function()
+    {
+        if(fileHandler.loggedIn())
+        {
+            await fileHandler.logout();
+        }else
+        {
+            await fileHandler.login(true);
+        }
+    };
+    fileHandler.setLoginCallback((active)=>{
+        openButton.disabled=!active;
+        if(active)
+        {
+            loginButton.innerText="Logout onedrive";
+            replay_text_getter=getReplay;
+        }else
+        {
+            loginButton.innerText="Login onedrive";
+            replay_text_getter=undefined;
+        }
+    });
+
+    await fileHandler.login(false);
+    if(fileHandler.loggedIn())
+    {
+        closeButton.disabled=true;
+        fileHandler.reload().then((response)=>{
+            if(response.folderName && response.fileName)
+            {                 
+                filenameBox.textContent=response.folderName+"/"+response.fileName;
+                closeButton.disabled=false;
+            }
+        });
+    }
+
+    parent.appendChild(filenameBox)
+    parent.appendChild(loginButton);
+    parent.appendChild(openButton);
+    parent.appendChild(closeButton);
+
+}
+
+async function saveAsDialog(textContent,initialVal,fileHandler)
+{
+    var modal = document.createElement("div");
+    modal.className="dialogbackground";
+    var modalClose=document.createElement("span");
+    modalClose.innerHTML="&times;";
+    modalClose.className="dialogclose";
+    var modalContent=document.createElement("div");
+    modalContent.className="filedialog";
+    var folderNameOwner=document.createElement("div");
+    var folderName=document.createElement("div");
+    folderNameOwner.className="dialogFolderName";
+    folderName.textContent=await fileHandler.getFolderName();
+
+    var changeFolderButton=document.createElement("button")
+    changeFolderButton.textContent="Change folder...";
+
+    var closeButton=document.createElement("button")
+    closeButton.textContent="Cancel";
+    var okayButton=document.createElement("button")
+    okayButton.textContent="Okay";
+    var fileName=document.createElement("input");
+    fileName.type="text";
+    if(initialVal)
+    {
+        fileName.value=initialVal;
+    }
+    modal.appendChild(modalContent);
+    modalContent.appendChild(modalClose);
+    modalContent.appendChild(folderNameOwner);
+    folderNameOwner.appendChild(folderName);
+    folderNameOwner.appendChild(changeFolderButton);
+    modalContent.appendChild(fileName);
+    modalContent.appendChild(okayButton);
+    modalContent.appendChild(closeButton);
+    document.body.appendChild(modal);
+
+    var donePromise=new Promise(async (resolve,reject)=>
+    {
+        closeButton.onclick=function()
+        {
+            resolve(undefined);
+        }
+        modalClose.onclick=closeButton.onclick;
+        okayButton.onclick=async function()
+        {
+            if(folderName.textContent.length==0)
+            {
+                // force choosing of folder
+                var newName=await fileHandler.chooseFolder();
+                folderName.textContent=newName;
+            }
+            var response=await fileHandler.saveInCurrentFolder(textContent,fileName.value)
+            resolve(response)
+        }
+        changeFolderButton.onclick= async function()
+        {
+            var newName=await fileHandler.chooseFolder();
+            folderName.textContent=newName;
+        }        
+    })
+
+    var returnVal=await donePromise;
+    document.body.removeChild(modal);
+    return returnVal;
+
+}
 
 async function makePyodideBoxInternal(options)
 {    
@@ -113,9 +301,13 @@ async function makePyodideBoxInternal(options)
     let figureCap;
     let figure;
 
+    let curFileName="";
+
     let editorListener;
 
+    let box_id="{{page.slug}}"+"CODE_"+box_index;
 
+    let logSaveHandler;
 
     if(options.caption)
     {
@@ -137,99 +329,114 @@ async function makePyodideBoxInternal(options)
 {% if page.uses_files %}
         if(options.showFileButtons)
         {
+            let fileHandler=new OneDriveFileRef(box_id);
+            logSaveHandler=new OneDriveFileRef(box_id+"log");
             let filesDiv=document.createElement("div");
             filesDiv.className="files";
             let loginButton=document.createElement("Button");
             let openButton=document.createElement("Button");
+            let closeButton=document.createElement("Button");
             let saveButton=document.createElement("Button");
-            let changeFolderButton=document.createElement("Button");
-            let filenameBox=document.createElement("input");
-            let folderBox=document.createElement("div")
-            folderBox.innerText="";
+            let saveAsButton=document.createElement("Button");
+            let filenameBox=document.createElement("div");
             loginButton.innerText="Login onedrive";
-            filenameBox.type="text";
-            filenameBox.value="";
+            filenameBox.className="python_filename"
             openButton.innerText="Open...";
             saveButton.innerText="Save";
-            changeFolderButton.innerText="Change folder...";
-            openButton.onclick=function()
+            saveAsButton.innerText="Save As...";
+            closeButton.innerText="Close";
+            closeButton.onclick=function()
             {
-                oneDriveOpen(function(fileText,filename,foldername)
-                {                    
-                    filenameBox.value=filename;
+                fileHandler.close();
+                var doc=editor.state.doc;
+                let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: ""}})
+                editor.dispatch(transaction);
+                editor.state.values[0].done=[];
+                editor.state.values[0].undone=[];
+                curFileName="";
+                filenameBox.textContent="";
+            }
+            var updateStateFromResponse=function(response)
+            {
+                if(!response)
+                {
+                    return;
+                }
+                if(response.fileName && response.folderName)
+                {
+                    filenameBox.textContent=response.folderName+"/"+response.fileName;
+                    curFileName=response.fileName;
+                }else
+                {
+                    curFileName="";
+                }
+                if(response.fileContents)
+                {
                     var doc=editor.state.doc;
-                    let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: fileText}})
+                    let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: response.fileContents}})
                     editor.dispatch(transaction);
                     editor.state.values[0].done=[];
                     editor.state.values[0].undone=[];
-                    folderBox.innerText=foldername;
-                });
+                }
+            }
+
+
+            openButton.onclick=function()
+            {
+                fileHandler.open().then(updateStateFromResponse);
             }
             saveButton.onclick=function()
             {
-                let filename=filenameBox.value;
-                oneDriveSaveAs(editor.state.doc.toString(),filename);                
+                fileHandler.save(editor.state.doc.toString()).then(updateStateFromResponse);
                 saveButton.innerText="Save";
             };
-            changeFolderButton.onclick=function()
+            saveAsButton.onclick=async function()
             {
-                let filename=filenameBox.value;
-                oneDriveChooseFolder(filename,false).then(function(foldername)
-                {
-                    folderBox.innerText=foldername;
-                });
+                saveAsDialog(editor.state.doc.toString(),curFileName,fileHandler).then(updateStateFromResponse);
             };
+
+
             loginButton.onclick=async function()
             {
-                if(oneDriveLoggedIn())
+                if(fileHandler.loggedIn())
                 {
-                    await msLogout();
+                    await fileHandler.logout();
                 }else
                 {
-                    await msLogin(true);
+                    await fileHandler.login(true);
                 }
-                if(oneDriveLoggedIn())
+            };
+            fileHandler.setLoginCallback((active)=>{
+                openButton.disabled=!active;
+                saveButton.disabled=!active;
+                saveAsButton.disabled=!active;
+                closeButton.disabled=!active;
+                filenameBox.disabled=!active;
+                if(active)
                 {
                     loginButton.innerText="Logout onedrive";
                 }else
                 {
                     loginButton.innerText="Login onedrive";
                 }
-            };
+            });
+            filesDiv.appendChild(filenameBox);
             filesDiv.appendChild(loginButton);
             filesDiv.appendChild(openButton);
             filesDiv.appendChild(saveButton);
-            filesDiv.appendChild(changeFolderButton);
-            filesDiv.appendChild(folderBox);
-            filesDiv.appendChild(filenameBox);
+            filesDiv.appendChild(saveAsButton);
+            filesDiv.appendChild(closeButton);
             parent.appendChild(filesDiv);
             // on reload, load up the previous onedrive file if there is 
             // still one in the session
-            var token=await msLogin(false);
-            if(token)
+            await fileHandler.login(false);
+            if(fileHandler.loggedIn())
             {
-                loginButton.innerText="Logout onedrive";
-                oneDriveReload(function(fileText,filename,foldername,logfolder)
-                {
-                    if(foldername)
+                fileHandler.reload().then(updateStateFromResponse);
+                logSaveHandler.reload().then(function(response){                    
+                    if(response.folderName)
                     {
-                        folderBox.innerText=foldername;
-                    }
-                    if(logfolder)
-                    {
-                        logFolderName.innerText=logfolder;
-                    }
-                    if(fileText)
-                    {
-                        var doc=editor.state.doc;
-                        let transaction = editor.state.update({changes: {from: 0, to: doc.length, insert: fileText}})
-                        editor.dispatch(transaction);
-                        editor.state.values[0].done=[];
-                        editor.state.values[0].undone=[];
-                    }
-                    if(filename)
-                    {
-                        filenameBox.value=filename;
+                        logfolderName.innerText=response.folderName;
                     }
                 });
             }
@@ -390,7 +597,13 @@ async function makePyodideBoxInternal(options)
 
         codeValue=editor.state.doc.toString();
         running=true;
-        sensorCallback("replayer","time,sound,light\n1,2,3\n4,5,6\n")
+        if(replay_text_getter)
+        {
+            sensorCallback("replayer",await replay_text_getter())
+        }else
+        {
+            sensorCallback("replayer","");
+        }
         await asyncRun("run",codeValue);
         running=false;
 {% if page.uses_files %}
@@ -440,13 +653,14 @@ async function makePyodideBoxInternal(options)
     captureText.innerText="Autosave output"
     captureCheck.id="captureCheck_"+box_index;
 
+
     const saveConsoleFn=
-            function(filename,txt){
+            function(fileName,txt){
 
             if(captureCheck.checked)
             {
                 // save output to dated file
-                oneDriveSaveConsoleLog(txt,filename);
+                logSaveHandler.saveInCurrentFolder(txt,fileName);
                 return true;
             }
         };
@@ -455,16 +669,15 @@ async function makePyodideBoxInternal(options)
     captureCheck.addEventListener("change",async function(event){
         if(captureCheck.checked)
         {
-            var captureFolder=await oneDriveFolderName(true);
+            var captureFolder=await logSaveHandler.getFolderName();
             if(!captureFolder)
             {
-                var folderName=await oneDriveChooseFolder("",true);
-                logFolderName.textContent=foldername;            
+                captureFolder=await logSaveHandler.chooseFolder();
             }
+            logfolderName.textContent=captureFolder;            
             consoleObj.save();
         }
     });
-
 
     captureText["htmlFor"]=captureCheck.id;
 
@@ -473,17 +686,31 @@ async function makePyodideBoxInternal(options)
     const chooseOutputFolderButton=document.createElement("button");
     chooseOutputFolderButton.className="pyodide_stop";        
     chooseOutputFolderButton.innerText="Output folder...";
-    const logFolderName=document.createElement("span");
-    logFolderName.textContent="    ";
+    const logfolderName=document.createElement("span");
+    logfolderName.textContent="    ";
     chooseOutputFolderButton.onclick=function()
     {
-        oneDriveChooseFolder("",true).then(function(foldername)
+        logSaveHandler.chooseFolder().then(function(folderName)
         {
-            logFolderName.textContent=foldername;            
+            logfolderName.textContent=folderName;            
         });        
     }
     logs_div.appendChild(chooseOutputFolderButton);
-    logs_div.appendChild(logFolderName);
+    logs_div.appendChild(logfolderName);
+
+    logSaveHandler.setLoginCallback((active)=>{
+                captureCheck.disabled=!active;
+                captureText.disabled=!active;
+                chooseOutputFolderButton.disabled=!active;
+                if(active)
+                {
+                    captureText.innerText="Autosave output";
+                }else
+                {
+                    captureText.innerText="Login to onedrive to save output";
+                }
+            });
+
     parent.appendChild(logs_div);
 {% endif %}
 
@@ -631,7 +858,7 @@ async function initFn()
         let compareJSON=await (await fetch(compareURL)).json();
         for(let i in compareJSON.files)
         {
-            let fname=compareJSON.files[i].filename;
+            let fname=compareJSON.files[i].fileName;
             if(fname.endsWith(".js") || fname.endsWith(".py"))
             {
                 console.log("Updating:",fname);
@@ -667,6 +894,10 @@ async function initFn()
     for(let box in window.queued_pyodide_boxes)
     {
         promiseList.push(makePyodideBoxInternal(queued_pyodide_boxes[box]))        
+    }
+    for(let box in window.queued_replay_controller)
+    {
+        promiseList.push(makeReplayControllerInternal(queued_replay_controller[box]))        
     }
     await Promise.all(promiseList);
     window.dispatchEvent(new Event("pythonboxesmade"));

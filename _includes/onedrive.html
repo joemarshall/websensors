@@ -1,9 +1,7 @@
 <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
 <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.13.0/js/msal-browser.min.js"></script>
 
-
-
-<script type="text/javascript">
+<script type="module">
 
     var redirectUri = "{{ '/filedownload.html' |absolute_url }}";
 
@@ -24,11 +22,22 @@
         return loggedIn;
     }
 
+    var oneDriveAuthCallbacks=[];
+    function fireAuthCallbacks()
+    {
+        oneDriveAuthCallbacks.forEach((x)=>{x(loggedIn)});
+    }
+
+    function addAuthCallback(cb)
+    {
+        oneDriveAuthCallbacks.push(cb);
+    }
 
     async function msLogout() {
         msalInstance.logoutPopup();
         loggedIn = false;
     }
+
 
     async function msLogin(autoLogin = false) {
         loggedIn = false;
@@ -71,255 +80,299 @@
             loggedIn = true;
         }
         return authToken;
-
     }
-    async function oneDriveReload(dataCallback) {
-        // refresh file from onedrive
-        var authToken = await msLogin();//sessionStorage.getItem('onedrive_auth');
-        var authURL = sessionStorage.getItem('onedrive_url');
-        var fileID = sessionStorage.getItem('onedrive_file');
-        var driveID = sessionStorage.getItem('onedrive_drive');
-        var logFolderText = undefined;
-        var thisFolderText=undefined;
-        var thisFileName=undefined;
-        var fileContents=undefined;
-        if (authURL && authToken && driveID) {
 
-            if(fileID)
+    class OneDriveFileRef
+    {
+
+
+        constructor(id)
+        {
+            this.id=id;
+        }
+
+        async login(allowPopup)
+        {
+            await msLogin(allowPopup);
+            fireAuthCallbacks();
+        }
+
+        async logout()
+        {
+            await msLogout();
+            fireAuthCallbacks();
+        }
+
+        loggedIn()
+        {
+            return oneDriveLoggedIn();
+        }
+
+        setLoginCallback(cb)
+        {
+            addAuthCallback(cb);
+        }
+
+        keyName(key)
+        {
+            return key+":["+this.id+"]";
+        }
+
+        async checkAuth(allowPopup)
+        {
+            this.authToken = await msLogin(allowPopup);
+            fireAuthCallbacks();
+            this.authURL = sessionStorage.getItem('onedrive_url');
+            this.fileID = sessionStorage.getItem(this.keyName('onedrive_file'));
+            this.driveID = sessionStorage.getItem(this.keyName('onedrive_drive'));
+            this.folderID = sessionStorage.getItem(this.keyName('onedrive_folder'));
+        }
+
+        async reload()
+        {
+            await this.checkAuth(false);
+            if (this.authURL && this.authToken && this.driveID) 
             {
-                // get a download URL for this file
-                var url = `${authURL}/drives/${driveID}/items/${fileID}`;
-                //        var url=`${authURL}/drives/${driveID}/items/${fileID}?select=id,folder,@microsoft.graph.downloadUrl`;
+                let fileContents;
+                let fileName;
+                let folderName;
+                // if we have a file ID, then return it
+                if(this.fileID)
+                {
+                    // get a download URL for this file
+                    var url = `${this.authURL}/drives/${this.driveID}/items/${this.fileID}`;
+                    //        var url=`${authURL}/drives/${driveID}/items/${fileID}?select=id,folder,@microsoft.graph.downloadUrl`;
+                    var response = await fetch(url, {
+                        headers:
+                        {
+                            'Authorization': "Bearer " + this.authToken
+                        }
+                    });
+                    var json = await response.json();
+                    url = json['@microsoft.graph.downloadUrl'];
+                    sessionStorage.setItem(this.keyName('onedrive_folder'), json.parentReference.id);
+                    fileName=json.name;
+                    // now actually download the file (non-authenticated)
+                    response = await fetch(url);
+                    fileContents = await response.text();
+                }
+                if(this.folderID)
+                {
+                    folderName = await this.getFolderName();
+                }
+                return {fileContents, fileName,folderName};
+            }
+        }
+
+        async save(codeFile,fromSaveAs)
+        {
+            await this.checkAuth(true);
+            if (!this.authToken || !this.fileID) 
+            {
+                if(!fromSaveAs)
+                {
+                    return this.saveAs(codeFile,true)
+                }else
+                {
+                    console.log("Loop in saveas");
+                    return {};
+                }
+                
+            }else
+            {
+                // send to the simple upload URL for drive
+                // PUT /drives/{drive-id}/items/{item-id}/content
+                var url = `${this.authURL}/drives/${this.driveID}/items/${this.fileID}/content`;
                 var response = await fetch(url, {
-                    headers:
+                    method: 'PUT', headers:
                     {
-                        'Authorization': "Bearer " + authToken
-                    }
+                        'Content-Type': 'text/plain',
+                        'Authorization': "Bearer " + this.authToken
+                    },
+                    body: codeFile,
                 });
                 var json = await response.json();
-                url = json['@microsoft.graph.downloadUrl'];
-                sessionStorage.setItem('onedrive_folder', json.parentReference.id);
-                thisFileName=json.name;
-                // now actually download the file (non-authenticated)
-                response = await fetch(url);
-                fileContents = await response.text();
+                console.log(json.name)
+                var fileName=json.name;
+                var folderName = await this.getFolderName();
+                var fileContents=codeFile;
+                return {fileContents,folderName,fileName};
             }
-
-            var logFolderID = sessionStorage.getItem('onedrive_log_folder');
-            if (logFolderID) {
-                logFolderText = await getFolderName(logFolderID);
-            }
-
-            var folderID = sessionStorage.getItem('onedrive_folder');
-            if(folderID)
-            {
-                thisFolderText = await getFolderName(folderID);
-            }
-
-            dataCallback(fileContents, thisFileName, thisFolderText, logFolderText);
-
         }
 
-
-    }
-
-    async function oneDriveSave(codeFile) {
-        // save to the same file we just opened
-        var authToken = await msLogin(true);//sessionStorage.getItem('onedrive_auth');
-        var authURL = sessionStorage.getItem('onedrive_url');
-        var fileID = sessionStorage.getItem('onedrive_file');
-        var driveID = sessionStorage.getItem('onedrive_drive');
-        if (!authToken || !fileID) {
-            oneDriveSaveAs(codeFile)
-        }
-        // send to the simple upload URL for drive
-        // PUT /drives/{drive-id}/items/{item-id}/content
-        var url = `${authURL}/drives/${driveID}/items/${fileID}/content`;
-        var response = await fetch(url, {
-            method: 'PUT', headers:
-            {
-                'Content-Type': 'text/plain',
-                'Authorization': "Bearer " + authToken
-            },
-            body: codeFile,
-        });
-    }
-
-    async function oneDriveSaveAs(codeFile, filename) {
-        var authToken = await msLogin(true);//sessionStorage.getItem('onedrive_auth');
-        var authURL = sessionStorage.getItem('onedrive_url');
-        var folderID = sessionStorage.getItem('onedrive_folder');
-        var driveID = sessionStorage.getItem('onedrive_drive');
-
-        if (!folderID) {
-            // need to choose a folder
-            await oneDriveChooseFolder(filename,false);
-            var authURL = sessionStorage.getItem('onedrive_url');
-            var folderID = sessionStorage.getItem('onedrive_folder');
-            var driveID = sessionStorage.getItem('onedrive_drive');
-        }
-        if (!authToken) {
-            return;// couldn't authenticate
-        }
-        // send to the simple upload URL for drive
-        // PUT /drives/{drive-id}/items/{item-id}/content
-        var url = `${authURL}drives/${driveID}/items/${folderID}:/${filename}:/content`;
-        var response = await fetch(url, {
-            method: 'PUT', headers:
-            {
-                'Content-Type': 'text/plain',
-                'Authorization': "Bearer " + authToken
-            },
-            body: codeFile,
-        });
-        var json = await response.json();
-        // update our session storage to point at 
-        // this new or updated file
-        sessionStorage.setItem('onedrive_file', json.id);
-
-    }
-
-    async function getFolderName(folderID) {
-        var authToken = await msLogin();
-        var authURL = sessionStorage.getItem('onedrive_url');
-        var driveID = sessionStorage.getItem('onedrive_drive');
-
-        var url = `${authURL}drives/${driveID}/items/${folderID}`;
-        var response = await fetch(url, {
-            headers:
-            {
-                'Authorization': "Bearer " + authToken
-            }
-        });
-        var folderJSON = await response.json();
-        var folderName = folderJSON["name"];
-        var fullName = folderJSON.parentReference.path.split(":")[1] + "/" + folderName;
-        return fullName;
-    }
-
-    async function oneDriveFolderName(logFolder) 
-    {
-        var folderID;
-        if(logFolder)
+        async saveInCurrentFolder(codeFile,fileName)
         {
-            folderID = sessionStorage.getItem('onedrive_log_folder');
-        }else
-        {
-            folderID = sessionStorage.getItem('onedrive_folder');
-        }
-        if (!folderID) {
-            // need to choose a folder
-            return undefined;
-        }
-        var fname=await getFolderName(folderID);
-        return fname;
-    }
-
-    async function oneDriveChooseFolder(filename, logFolder) {
-        // change selected folder using file picker
-        // and return name of folder in promise
-
-        var valuePromise = new Promise(
-            (resolve, reject) => {
-                var odOptions =
+            await this.checkAuth(true);
+            if(!this.authToken)
+            {
+                return;
+            }
+            var url = `${this.authURL}drives/${this.driveID}/items/${this.folderID}:/${fileName}:/content`;
+            var response = await fetch(url, {
+                method: 'PUT', headers:
                 {
-                    clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
-                    action: "query",
-                    multiSelect: false,
-                    fileName: filename,
-                    advanced: {
-                        redirectUri: redirectUri,
-                    },
-                    success: async function (files) {
-                        // folder actually
-                        var folder = files.value[0];
+                    'Content-Type': 'text/plain',
+                    'Authorization': "Bearer " + this.authToken
+                },
+                body: codeFile,
+            });
+            var json = await response.json();
+            // update our session storage to point at 
+            // this new or updated file
+            sessionStorage.setItem(this.keyName('onedrive_file'), json.id);
+            var fileName=json.name;
+            var folderName = await this.getFolderName();
+            var fileContents=codeFile;
+            return {fileContents,folderName,fileName};
+        }
 
-                        var authToken = files.accessToken;
-                        var authURL = files.apiEndpoint;
-
-
-                        sessionStorage.setItem('onedrive_url', authURL);
-                        if (logFolder) {
-                            sessionStorage.setItem('onedrive_log_folder', folder.id);
-                        } else {
-                            sessionStorage.setItem('onedrive_folder', folder.id);
-                        }
-                        sessionStorage.removeItem('onedrive_file');
-                        sessionStorage.setItem('onedrive_drive', folder.parentReference.driveId);
-
-                        resolve(await getFolderName(logFolder));
-
-                    },
-                    cancel: function () { reject("cancelled"); },
-                    error: function (error) { reject(error) }
-                };
-                OneDrive.save(odOptions);
-            }
-
-        );
-        return await valuePromise;
-    }
-
-
-    async function oneDriveOpen(dataCallback) {
-        // first check we're logged in
-        // first login to MS
-        await msLogin(true);
-
-        // open file from file picker
-        var odOptions =
+        async saveAs(codeFile)
         {
-            clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
-            action: "query",
-            multiSelect: false,
-            advanced: {
-                redirectUri: redirectUri,
-                scopes: ["files.ReadWrite.All"],
-            },
-            success: function (files) {
-                // save this file id to session storage so we can save changes back
-                file = files.value[0];
-                sessionStorage.setItem('onedrive_auth', files.accessToken);
-                sessionStorage.setItem('onedrive_url', files.apiEndpoint);
-                sessionStorage.setItem('onedrive_file', file.id);
-                sessionStorage.setItem('onedrive_drive', file.parentReference.driveId);
-                // GET /drives/{drive-id}/items/{item-id}/content
-                oneDriveReload(dataCallback);
-            },
-            cancel: function () { /* cancel handler */ },
-            error: function (error) { /* error handler */ }
-        };
-        OneDrive.open(odOptions);
-    }
+            let caller=this;
+            const dataURL="data:text/plain;base64," + btoa(codeFile);
+            await this.checkAuth(true);
+            var valuePromise = new Promise(
+                (resolve, reject) => 
+                {
+                    var odOptions =
+                    {
+                        clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+                        action: "save",
+                        multiSelect: false,
+                        nameConflictBehavior:"replace",
+                        sourceUri:dataURL,
+                        fileName:"test.py",
+                        advanced: {
+                            redirectUri: redirectUri,
+//                            scopes: ["files.ReadWrite.All"],
+                        },
+                        success: async function(files){
+                            // save this file id to session storage so we can save changes back
+                            let file = files.value[0];
+                            sessionStorage.setItem('onedrive_auth', files.accessToken);
+                            sessionStorage.setItem('onedrive_url', files.apiEndpoint);
+                            sessionStorage.setItem(caller.keyName('onedrive_file'), file.id);
+                            sessionStorage.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
+                            var fileName=file.name;
+                            var folderName = await this.getFolderName();
+                            var fileContents=codeFile;
+                            return {fileContents,folderName,fileName};
 
-    async function oneDriveSaveConsoleLog(logData, filename) {
-        var authToken = await msLogin(true);
-        var authURL = sessionStorage.getItem('onedrive_url');
-        var folderID = sessionStorage.getItem('onedrive_log_folder');
-        var driveID = sessionStorage.getItem('onedrive_drive');
+                        },
+                    }
+                    OneDrive.save(odOptions);
+                }
+            );
+            await valuePromise;
+        }
 
-        if (!folderID) {
-            // need to choose a folder
-            await oneDriveChooseFolder(filename, true);
+
+        async open()
+        {
+            let caller=this;
+            await this.checkAuth(true);
+
+            var valuePromise = new Promise(
+                (resolve, reject) => 
+                {
+                    // open file from file picker
+                    var odOptions =
+                    {
+                        clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+                        action: "query",
+                        multiSelect: false,
+                        advanced: {
+                            redirectUri: redirectUri,
+                            scopes: ["files.ReadWrite.All"],
+                        },
+                        success: async function(files){
+                            // save this file id to session storage so we can save changes back
+                            let file = files.value[0];
+                            sessionStorage.setItem('onedrive_auth', files.accessToken);
+                            sessionStorage.setItem('onedrive_url', files.apiEndpoint);
+                            sessionStorage.setItem(caller.keyName('onedrive_file'), file.id);
+                            sessionStorage.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
+                            // GET /drives/{drive-id}/items/{item-id}/content
+                            resolve(await caller.reload());
+                        },
+                        cancel: function () { reject("Cancel"); },
+                        error: function (error) { reject(error); }
+                    };
+                    OneDrive.open(odOptions);
+                }
+            );
+            return await valuePromise;
         }
-        if (!authToken) {
-            return false;
-        }
-        // send to the simple upload URL for drive
-        // PUT /drives/{drive-id}/items/{item-id}/content
-        var url = `${authURL}drives/${driveID}/items/${folderID}:/${filename}:/content`;
-        var response = await fetch(url, {
-            method: 'PUT', headers:
+
+        async getFolderName()
+        {
+            await this.checkAuth(false);
+            if(!this.folderID)
             {
-                'Content-Type': 'text/plain',
-                'Authorization': "Bearer " + authToken
-            },
-            body: logData,
-        });
-        var json = await response.json();
-        if (!json.id) {
-            alert("Couldn't save log file")
+                return;
+            }
+            var url = `${this.authURL}drives/${this.driveID}/items/${this.folderID}`;
+            var response = await fetch(url, {
+                headers:
+                {
+                    'Authorization': "Bearer " + this.authToken
+                }
+            });
+            var folderJSON = await response.json();
+            var folderName = folderJSON["name"];
+            var fullName = folderJSON.parentReference.path.split(":")[1] + "/" + folderName;
+            return fullName;            
+        }
+
+        close()
+        {
+            sessionStorage.removeItem(this.keyName('onedrive_file'));
+        }
+
+        async chooseFolder()
+        {
+            await this.checkAuth(true);
+            let caller=this;
+            // change selected folder using file picker
+            // and return name of folder in promise
+            var valuePromise = new Promise(
+                (resolve, reject) => {
+                    var odOptions =
+                    {
+                        clientId: "bb2de524-1225-4957-a924-f91c5efe963f",
+                        action: "query",
+                        multiSelect: false,
+                        fileName: "",
+                        advanced: {
+                            redirectUri: redirectUri,
+                        },
+                        success: async function (files) {
+                            // folder actually
+                            var folder = files.value[0];
+
+                            var authToken = files.accessToken;
+                            var authURL = files.apiEndpoint;
+
+
+                            sessionStorage.setItem('onedrive_url', authURL);
+                            sessionStorage.setItem(caller.keyName('onedrive_folder'), folder.id);
+                            sessionStorage.removeItem(caller.keyName('onedrive_file'));
+                            sessionStorage.setItem(caller.keyName('onedrive_drive'), folder.parentReference.driveId);
+
+                            resolve(await caller.getFolderName());
+
+                        },
+                        cancel: function () { reject("cancelled"); },
+                        error: function (error) { reject(error) }
+                    };
+                    OneDrive.save(odOptions);
+                }
+            );
+            return await valuePromise;
         }
     }
+
+
+    window.OneDriveFileRef=OneDriveFileRef;
 
 </script>

@@ -65,7 +65,11 @@ class replayer:
     def columns():
         return replayer._replay_columns
     # parse text csv string
-    def _on_lines(lines):        
+    def _on_lines(lines): 
+        if not lines or len(lines)==0:
+            replayer._replay_lines=None
+            replayer._replay_columns=None
+            return
         f=io.StringIO(lines)
         r=csv.reader(f)
         replayer._replay_columns=r.__next__()
