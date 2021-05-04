@@ -12,7 +12,7 @@ if(self.hasOwnProperty('fakeWorkerContext'))
 
 
 // gitcdn is even faster
-languagePluginUrl='https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/';
+window.languagePluginUrl='https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/';
 // serve through jsdelivr for faster loading
 //languagePluginUrl='https://rawcdn.githack.com/joemarshall/websensors/main/pyodide/';
 //languagePluginUrl='https://cdn.jsdelivr.net/gh/joemarshall/websensors/pyodide/';
@@ -31,7 +31,7 @@ async function loadURLAsModule(moduleName,moduleURL)
 
 function loadAsModule(moduleName,modulePython)
 {
-    this._load_as_module_src=modulePython;
+    self._load_as_module_src=modulePython;
 
     // load this code in as a python module
     return pyodide.runPython(`

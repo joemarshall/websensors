@@ -2,6 +2,23 @@
 window.sensor_objects=[];
 </script>
 
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/unthrow.js" as="script">
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/unthrow.data" as="fetch" crossorigin="anonymous">
+
+<link rel="preload" href="{{'/pyodide/pyodide.js' | relative_url}}" as="script" >
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.data" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.wasm" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.js" as="script">
+<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/packages.json" as="fetch" crossorigin="anonymous">
+
+<link rel="preload" href="{{'/assets/js/async_worker.js' | relative_url}}" as="script" >
+<link rel="preload" href="{{'/assets/js/fake_worker.js' | relative_url}}" as="script" >
+<link rel="modulepreload" href="{{'/assets/js/sound_sensor.js' | relative_url}}" as="script" >
+<link rel="modulepreload" href="{{'/assets/js/light_sensor.js' | relative_url}}" as="script" >
+<link rel="modulepreload" href="{{'/assets/js/accel_sensor.js' | relative_url}}" as="script" >
+<link rel="modulepreload" href="{{'/assets/js/sensor.js' | relative_url}}" as="script" >
+
+
 <script src="{{ '/assets/js/fake_worker.js' | relative_url }}"></script>
 
 
