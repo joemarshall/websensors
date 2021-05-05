@@ -163,7 +163,7 @@ async function makeReplayControllerInternal(options)
         fileHandler.open().then(
             function(response)
         {   
-            if(response.folderName && response.fileName)
+            if(response && response.folderName && response.fileName)
             {                 
                 filenameBox.textContent=response.folderName+"/"+response.fileName;
                 closeButton.disabled=false;
@@ -175,7 +175,7 @@ async function makeReplayControllerInternal(options)
     {
         closeButton.disabled=true;
         var response=await fileHandler.reload();
-        if(response.folderName && response.fileName)
+        if(response && response.folderName && response.fileName)
         {                 
             filenameBox.textContent=response.folderName+"/"+response.fileName;
             closeButton.disabled=false;
@@ -220,7 +220,7 @@ async function makeReplayControllerInternal(options)
     {
         closeButton.disabled=true;
         fileHandler.reload().then((response)=>{
-            if(response.folderName && response.fileName)
+            if(response && response.folderName && response.fileName)
             {                 
                 filenameBox.textContent=response.folderName+"/"+response.fileName;
                 closeButton.disabled=false;
@@ -451,7 +451,7 @@ async function makePyodideBoxInternal(options)
             {
                 fileHandler.reload().then(updateStateFromResponse);
                 logSaveHandler.reload().then(function(response){                    
-                    if(response.folderName)
+                    if(response && response.folderName)
                     {
                         logfolderName.innerText=response.folderName;
                     }
