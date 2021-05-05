@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="159.08073mm"
+   height="95.316139mm"
+   viewBox="0 0 159.08073 95.316139"
+   version="1.1"
+   id="svg21890"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="roc_curve.svg">
+  <defs
+     id="defs21884">
+    <rect
+       x="91.673447"
+       y="130.96207"
+       width="65.213768"
+       height="28.063299"
+       id="rect23244" />
+    <marker
+       style="overflow:visible"
+       id="marker23120"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path23118" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker23110"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path23108" />
+    </marker>
+    <clipPath
+       id="clip0">
+      <rect
+         x="452"
+         y="168"
+         width="601"
+         height="360"
+         id="rect22453" />
+    </clipPath>
+    <clipPath
+       id="clip1">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22456" />
+    </clipPath>
+    <clipPath
+       id="clip2">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22459" />
+    </clipPath>
+    <clipPath
+       id="clip3">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22462" />
+    </clipPath>
+    <clipPath
+       id="clip4">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22465" />
+    </clipPath>
+    <clipPath
+       id="clip5">
+      <rect
+         x="531"
+         y="185"
+         width="500"
+         height="269"
+         id="rect22468" />
+    </clipPath>
+    <clipPath
+       id="clip6">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22471" />
+    </clipPath>
+    <clipPath
+       id="clip7">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22474" />
+    </clipPath>
+    <clipPath
+       id="clip8">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22477" />
+    </clipPath>
+    <clipPath
+       id="clip9">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22480" />
+    </clipPath>
+    <clipPath
+       id="clip10">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22483" />
+    </clipPath>
+    <clipPath
+       id="clip11">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22486" />
+    </clipPath>
+    <clipPath
+       id="clip12">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22489" />
+    </clipPath>
+    <clipPath
+       id="clip13">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22492" />
+    </clipPath>
+    <clipPath
+       id="clip14">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22495" />
+    </clipPath>
+    <clipPath
+       id="clip15">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22498" />
+    </clipPath>
+    <clipPath
+       id="clip16">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22501" />
+    </clipPath>
+    <clipPath
+       id="clip17">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22504" />
+    </clipPath>
+    <clipPath
+       id="clip18">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22507" />
+    </clipPath>
+    <clipPath
+       id="clip19">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22510" />
+    </clipPath>
+    <clipPath
+       id="clip20">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22513" />
+    </clipPath>
+    <clipPath
+       id="clip21">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22516" />
+    </clipPath>
+    <clipPath
+       id="clip22">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22519" />
+    </clipPath>
+    <clipPath
+       id="clip23">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22522" />
+    </clipPath>
+    <clipPath
+       id="clip24">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22525" />
+    </clipPath>
+    <clipPath
+       id="clip25">
+      <rect
+         x="452"
+         y="167"
+         width="600"
+         height="360"
+         id="rect22528" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="300.625"
+     inkscape:cy="180.125"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1431"
+     inkscape:window-height="1030"
+     inkscape:window-x="64"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata21887">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-26.292969,-100.50859)">
+    <rect
+       x="26.326044"
+       y="100.54166"
+       width="158.75"
+       height="94.985413"
+       fill="#ffffff"
+       id="rect22533"
+       style="stroke-width:0.264583" />
+    <g
+       clip-path="url(#clip1)"
+       id="g22537"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="m 531.5,426.5 h 498 m -498,-27 h 498 m -498,-26 h 498 m -498,-27 h 498 m -498,-27 h 498 m -498,-27 h 498 m -498,-26 h 498 m -498,-27 h 498 m -498,-27 h 498 m -498,-27 h 498"
+         stroke="#d9d9d9"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="none"
+         id="path22535" />
+    </g>
+    <g
+       clip-path="url(#clip2)"
+       id="g22541"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="m 630.5,185.5 v 268 m 100,-268 v 268 m 100,-268 v 268 m 100,-268 v 268 m 99,-268 v 268"
+         stroke="#d9d9d9"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="none"
+         id="path22539" />
+    </g>
+    <g
+       clip-path="url(#clip3)"
+       id="g22545"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="M 0,0 1.31234e-4,268"
+         stroke="#bfbfbf"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="none"
+         fill-rule="evenodd"
+         transform="matrix(1,0,0,-1,531.5,453.5)"
+         id="path22543" />
+    </g>
+    <g
+       clip-path="url(#clip4)"
+       id="g22549"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="m 531.5,453.5 h 498"
+         stroke="#bfbfbf"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="none"
+         fill-rule="evenodd"
+         id="path22547" />
+    </g>
+    <g
+       clip-path="url(#clip5)"
+       id="g22553"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="m 1029.5,185.5 h -249 -125 l -124,90 v 89 89"
+         stroke="#4472c4"
+         stroke-width="2.5"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="none"
+         id="path22551" />
+    </g>
+    <g
+       clip-path="url(#clip6)"
+       id="g22567"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <path
+         d="m 1032.5,184.5 c 0,1.933 -1.57,3.5 -3.5,3.5 -1.93,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.57,-3.5 3.5,-3.5 1.93,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22555" />
+      <path
+         d="m 783.5,184.5 c 0,1.933 -1.567,3.5 -3.5,3.5 -1.933,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.567,-3.5 3.5,-3.5 1.933,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22557" />
+      <path
+         d="m 658.5,184.5 c 0,1.933 -1.567,3.5 -3.5,3.5 -1.933,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.567,-3.5 3.5,-3.5 1.933,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22559" />
+      <path
+         d="m 534.5,274.5 c 0,1.933 -1.567,3.5 -3.5,3.5 -1.933,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.567,-3.5 3.5,-3.5 1.933,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22561" />
+      <path
+         d="m 534.5,363.5 c 0,1.933 -1.567,3.5 -3.5,3.5 -1.933,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.567,-3.5 3.5,-3.5 1.933,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22563" />
+      <path
+         d="m 534.5,452.5 c 0,1.933 -1.567,3.5 -3.5,3.5 -1.933,0 -3.5,-1.567 -3.5,-3.5 0,-1.933 1.567,-3.5 3.5,-3.5 1.933,0 3.5,1.567 3.5,3.5 z"
+         stroke="#4472c4"
+         stroke-width="1.25"
+         stroke-linejoin="round"
+         stroke-miterlimit="10"
+         fill="#4472c4"
+         id="path22565" />
+    </g>
+    <g
+       clip-path="url(#clip7)"
+       id="g22571"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(509.558,458)"
+         id="text22569">0</text>
+    </g>
+    <g
+       clip-path="url(#clip8)"
+       id="g22575"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,431)"
+         id="text22573">0.1</text>
+    </g>
+    <g
+       clip-path="url(#clip9)"
+       id="g22579"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,404)"
+         id="text22577">0.2</text>
+    </g>
+    <g
+       clip-path="url(#clip10)"
+       id="g22583"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,377)"
+         id="text22581">0.3</text>
+    </g>
+    <g
+       clip-path="url(#clip11)"
+       id="g22587"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,350)"
+         id="text22585">0.4</text>
+    </g>
+    <g
+       clip-path="url(#clip12)"
+       id="g22591"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,324)"
+         id="text22589">0.5</text>
+    </g>
+    <g
+       clip-path="url(#clip13)"
+       id="g22595"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,297)"
+         id="text22593">0.6</text>
+    </g>
+    <g
+       clip-path="url(#clip14)"
+       id="g22599"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,270)"
+         id="text22597">0.7</text>
+    </g>
+    <g
+       clip-path="url(#clip15)"
+       id="g22603"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,243)"
+         id="text22601">0.8</text>
+    </g>
+    <g
+       clip-path="url(#clip16)"
+       id="g22607"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(498.175,217)"
+         id="text22605">0.9</text>
+    </g>
+    <g
+       clip-path="url(#clip17)"
+       id="g22611"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(509.558,190)"
+         id="text22609">1</text>
+    </g>
+    <g
+       clip-path="url(#clip18)"
+       id="g22615"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(527.274,477)"
+         id="text22613">0</text>
+    </g>
+    <g
+       clip-path="url(#clip19)"
+       id="g22619"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(621.341,477)"
+         id="text22617">0.2</text>
+    </g>
+    <g
+       clip-path="url(#clip20)"
+       id="g22623"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(721.099,477)"
+         id="text22621">0.4</text>
+    </g>
+    <g
+       clip-path="url(#clip21)"
+       id="g22627"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(820.858,477)"
+         id="text22625">0.6</text>
+    </g>
+    <g
+       clip-path="url(#clip22)"
+       id="g22631"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(920.616,477)"
+         id="text22629">0.8</text>
+    </g>
+    <g
+       clip-path="url(#clip23)"
+       id="g22635"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="15px"
+         transform="translate(1026.07,477)"
+         id="text22633">1</text>
+    </g>
+    <g
+       clip-path="url(#clip24)"
+       id="g22639"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="17px"
+         transform="rotate(-90,433.9165,-54.9165)"
+         id="text22637">True positive rate</text>
+    </g>
+    <g
+       clip-path="url(#clip25)"
+       id="g22643"
+       transform="matrix(0.26458333,0,0,0.26458333,-93.265622,56.091668)">
+      <text
+         fill="#595959"
+         font-family="Calibri, Calibri_MSFontService, sans-serif"
+         font-weight="400"
+         font-size="17px"
+         transform="translate(719.174,502)"
+         id="text22641">False positive rate</text>
+    </g>
+    <rect
+       x="26.458334"
+       y="100.67396"
+       width="158.75"
+       height="94.985413"
+       stroke="#d9d9d9"
+       stroke-width="0.330729"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       id="rect22645" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.465;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker23120)"
+       d="M 82.586284,135.50565 53.453905,130.42753"
+       id="path22822" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.465;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker23110)"
+       d="M 105.03692,125.08214 86.060787,112.2532"
+       id="path22824" />
+    <text
+       xml:space="preserve"
+       id="text23242"
+       style="font-size:4.23333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23244);"><tspan
+         x="91.673828"
+         y="134.82509"><tspan
+           style="shape-inside:url(#rect23244)">I would choose one of these </tspan></tspan><tspan
+         x="91.673828"
+         y="140.11674"><tspan
+           style="shape-inside:url(#rect23244)">thresholds, depending on </tspan></tspan><tspan
+         x="91.673828"
+         y="145.4084"><tspan
+           style="shape-inside:url(#rect23244)">whether false positives or </tspan></tspan><tspan
+         x="91.673828"
+         y="150.70006"><tspan
+           style="shape-inside:url(#rect23244)">false negatives were more of </tspan></tspan><tspan
+         x="91.673828"
+         y="155.99171"><tspan
+           style="shape-inside:url(#rect23244)">a problem in my use case.</tspan></tspan></text>
+  </g>
+</svg>

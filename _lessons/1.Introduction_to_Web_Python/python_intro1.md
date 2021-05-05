@@ -113,13 +113,9 @@ import time
 # load the graphing module and sensors 
 import graphs
 import sensors
-c=0
 graphs.set_style("sound","rgb(255,255,0)",0,1,subgraph_y=0)
 graphs.set_style("light","rgb(0,255,0)",0,1,subgraph_y=1)
 while True:
-    c=c+0.01
-    if c>1:
-        c=-1    
     sound_level=sensors.sound.get_level()
     light_level=sensors.light.get_level()
     print(sound_level,light_level,sep=",")

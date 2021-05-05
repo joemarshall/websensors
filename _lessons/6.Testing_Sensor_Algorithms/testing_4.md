@@ -4,7 +4,6 @@ uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
 uses_light: true 
-uses_files: true
 uses_maths: true
 ---
 In the introduction, we noted that testing is useful for both for internal improvement of your own sensor algorithms, and also to allow you to benchmark them against other people's algorithms.
@@ -149,6 +148,74 @@ The script itself adds some potential latency; rather than an event occurring wh
 </details>
 
 One good way of getting time accuracy relating to latency is to video everything, so that you can see both the input and the output from the script. This lets you see latency at an accuracy dependent on the frame rate of your camera.
+
+# ROC Curves 
+When we are considering false positives and false negatives, there is always a balance. It is trivial to create an algorithm that has zero false positives, by simply returning no positive results, and similarly false negatives can be eliminated by returning only positive results. However these are not useful. There is typically a balance to be set in our sensor algorithm development between the two types of errors.
+
+Often, the algorithm will have parameters you can choose in order to alter the balance between false positives and negatives, such as by altering a threshold. By systematically altering these parameters, we can explore the full range of possibilities between always positive and always negative. A standard way of representing this exploration is by using a *Receiver Operating Characteristic* (ROC) curve. An ROC curve is a graph which plots true positive rates versus false positive rates (X axis). So as you vary your threshold through the whole range, you can calculate the false positive and true positive rates, and plot them accordingly.
+
+The ROC curve is useful for two reasons - firstly it is useful because it allows you to see the potential choices for performance of your algorithm and appropriately balance false positives vs false negatives depending on the desired behaviour of the final system; secondly, it is often used to compare different algorithms that do the same thing, independent of threshold variables or other parameters, with metrics such as the area under the ROC curve used to compare the permance of two different algorithms whilst not being affected by particular choices of parameters for each.
+
+Let's make an ROC curve for some data...
+
+The code below plays some simple test data along with ground truth. Imagine the test data was produced by some kind of peak detection algorithm which detects a series of peaks, which we then threshold to say whether or not an event happened. In this case we captured some data while noting down whether or not an event occurred. 
+
+So, we want to use this pre-recorded data to calculate how this algorithm performs for a variety of threshold values. So, lets create an ROC curve for it
+
+Do the following
+1. Load up an excel spreadsheet (or whatever your favourite spreadsheet is) with two columns, and put titles at the top of false positive rate and true positive rate,
+2. Repeatedly run the code below and see what the output is if you change the threshold. Increase it by 0.1 multiple times. Each time you change it, put the two values for false positives and true positives into your excel sheet. 
+3. At some point the threshold will get high enough that you see 0 false positives and 0 true positives. Stop there. You're done running code.
+4. Plot this in excel on an x,y chart. This is your ROC curve. 
+5. What threshold value would you choose, and why?
+6. Spoiler alert - if you want to see what the output should look like open up the question at the bottom.
+
+
+<script>
+makePyodideBox({
+    codeString:`
+# try varying this threshold until you reach 0,0 outputs
+THRESHOLD=0
+
+true_positives=0
+false_positives=0
+true_negatives=0
+false_negatives=0
+
+test_peak_data=[.1,.3,.5,.3,.4,.2,.1]
+test_ground_truth_data=[0,1,1,0,1,0,0]
+for test_data_point,ground_truth in zip(test_peak_data,test_ground_truth_data):
+    if test_data_point>THRESHOLD:
+        predicted_value=1
+    else:
+        predicted_value=0
+    if ground_truth==1:
+        if predicted_value==1:
+            true_positives+=1
+        else:
+            false_negatives+=1
+    else:
+        if predicted_value==1:
+            false_positives+=1
+        else:
+            true_negatives+=1
+total_positives=true_positives+false_negatives
+total_negatives=false_positives+true_negatives
+true_positive_rate=true_positives/total_positives
+false_positive_rate=false_positives/total_negatives
+print("True positive rate:",true_positive_rate,"False positive rate:",false_positive_rate)
+`  ,hasConsole:true,hasGraph:false,showCode:true,editable:true,caption:"Calculate false positives vs true positives for test dataset"})
+</script>
+
+<details class="question" markdown=1>
+<summary>
+SPOILER ALERT - if you get to here, you should already have repeatedly run the code above. If not, please go back up before you click this to check your results match. YOU HAVE BEEN WARNED...
+</summary>
+
+My ROC curve looks like the figure below. I would choose either 0.3 or 0.4 as the threshold, depending on whether I was more worried about prioritizing false positives or false negatives in my particular application. If you look at the ROC curve, thresholds outside these values are of little use, as they only decrease the performance of the algorithm.
+
+{%include figure.html url="/images/roc_curve.svg" alt="Example ROC curve" title="Here is an ROC curve for the example above" caption="An ROC curve plots true positive rates against false positive rates, and shows the possible ways one might alter the balance for any particular algorithm. Here is the ROC curve for the example above" %}
+</details>
 
 # References
 
