@@ -65,6 +65,7 @@ DELAY=0.01
 import time
 import sensors
 import speech
+import graphs
 REPLAY=sensors.replayer.has_replay()
 
 bangs_expected=0
@@ -80,6 +81,12 @@ print("time","sound","bangs_detected","bangs_expected",sep=",")
 # run for 1 minute, bangs every 5 seconds after 10 seconds
 last_second=0
 start_time=time.time()
+
+# lets graph everything too
+graphs.set_style("sound","rgb(255,0,0)",0,1)
+graphs.set_style("bangs detected","rgb(0,255,0)",0,10,subgraph_y=1)
+graphs.set_style("bangs expected","rgb(0,0,255)",0,10,subgraph_y=1) 
+
 
 while True:
     # if we are replaying, read sensor value and time from the replayer
@@ -113,6 +120,9 @@ while True:
     # and you can get the results quicker
     time.sleep(DELAY)
     print(this_time,sound,bangs_detected,bangs_expected,sep=',')
+    graphs.on_value("sound",sound)
+    graphs.on_value("bangs detected",bangs_detected)
+    graphs.on_value("bangs expected",bangs_expected)
 
 # this error total is the mean difference between bangs_expected and bangs_detected
 # there are probably better ways to do this error, see next page
