@@ -1,5 +1,5 @@
 ---
-title: Testing Sensor Algorithms
+title: What is sensor testing?
 uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
