@@ -876,7 +876,7 @@ async function initFn()
         for(let i in compareJSON.files)
         {
             let fname=compareJSON.files[i].fileName;
-            if(fname.endsWith(".js") || fname.endsWith(".py"))
+            if(fname && (fname.endsWith(".js") || fname.endsWith(".py")))
             {
                 console.log("Updating:",fname);
                 updatePromiseList.push(fetch(fname,{cache:"no-cache"}));
