@@ -70,6 +70,8 @@ If say, you were doing a coursework report on a sensor algorithm that detected a
 
 The key thing is to present us with a lot of detail at each stage as to how the sensor data informed your work. Good project reports typically have quite a few relevant graphs, clearly annotated to show what they mean, and clear tables showing the performance of the algorithm in testing.
 
+You will want to accompany this with photos of your testing setup. You may find that videos of your tuning and testing may be really useful to allow you to understand what exactly was going on and why the sensors responded how they did.
+
 To get this right, you might want to:
 1. Show that your algorithm development was informed by sensor data; e.g. by showing graphs of raw data captured early on in the process annotated with when events occurred.
 2. Show that you built your algorithm with the help of data, for example by including pre-recorded datasets that you used during the process of algorithm development and tuning.
