@@ -2,6 +2,10 @@
 <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.13.0/js/msal-browser.min.js"></script>
 
 <script type="module">
+    // this could be either local or session storage
+    // set it to local storage so that it persists
+    // across devices in some browsers
+    var storageLocation=localStorage;
 
     var redirectUri = "{{ '/filedownload.html' |absolute_url }}";
 
@@ -10,7 +14,7 @@
             clientId: 'bb2de524-1225-4957-a924-f91c5efe963f'
         },
         cache: {
-            cacheLocation: "sessionStorage", // This configures where your cache will be stored
+            cacheLocation: "localStorage", // This configures where your cache will be stored
             storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
         }
     };
@@ -122,10 +126,10 @@
         {
             this.authToken = await msLogin(allowPopup);
             fireAuthCallbacks();
-            this.authURL = sessionStorage.getItem('onedrive_url');
-            this.fileID = sessionStorage.getItem(this.keyName('onedrive_file'));
-            this.driveID = sessionStorage.getItem(this.keyName('onedrive_drive'));
-            this.folderID = sessionStorage.getItem(this.keyName('onedrive_folder'));
+            this.authURL = storageLocation.getItem('onedrive_url');
+            this.fileID = storageLocation.getItem(this.keyName('onedrive_file'));
+            this.driveID = storageLocation.getItem(this.keyName('onedrive_drive'));
+            this.folderID = storageLocation.getItem(this.keyName('onedrive_folder'));
         }
 
         async reload()
@@ -150,7 +154,7 @@
                     });
                     var json = await response.json();
                     url = json['@microsoft.graph.downloadUrl'];
-                    sessionStorage.setItem(this.keyName('onedrive_folder'), json.parentReference.id);
+                    storageLocation.setItem(this.keyName('onedrive_folder'), json.parentReference.id);
                     fileName=json.name;
                     // now actually download the file (non-authenticated)
                     response = await fetch(url);
@@ -219,7 +223,7 @@
             var json = await response.json();
             // update our session storage to point at 
             // this new or updated file
-            sessionStorage.setItem(this.keyName('onedrive_file'), json.id);
+            storageLocation.setItem(this.keyName('onedrive_file'), json.id);
             var fileName=json.name;
             var folderName = await this.getFolderName();
             var fileContents=codeFile;
@@ -249,10 +253,10 @@
                         success: async function(files){
                             // save this file id to session storage so we can save changes back
                             let file = files.value[0];
-                            sessionStorage.setItem('onedrive_auth', files.accessToken);
-                            sessionStorage.setItem('onedrive_url', files.apiEndpoint);
-                            sessionStorage.setItem(caller.keyName('onedrive_file'), file.id);
-                            sessionStorage.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
+                            storageLocation.setItem('onedrive_auth', files.accessToken);
+                            storageLocation.setItem('onedrive_url', files.apiEndpoint);
+                            storageLocation.setItem(caller.keyName('onedrive_file'), file.id);
+                            storageLocation.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
                             var fileName=file.name;
                             var folderName = await this.getFolderName();
                             var fileContents=codeFile;
@@ -288,10 +292,10 @@
                         success: async function(files){
                             // save this file id to session storage so we can save changes back
                             let file = files.value[0];
-                            sessionStorage.setItem('onedrive_auth', files.accessToken);
-                            sessionStorage.setItem('onedrive_url', files.apiEndpoint);
-                            sessionStorage.setItem(caller.keyName('onedrive_file'), file.id);
-                            sessionStorage.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
+                            storageLocation.setItem('onedrive_auth', files.accessToken);
+                            storageLocation.setItem('onedrive_url', files.apiEndpoint);
+                            storageLocation.setItem(caller.keyName('onedrive_file'), file.id);
+                            storageLocation.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
                             // GET /drives/{drive-id}/items/{item-id}/content
                             resolve(await caller.reload());
                         },
@@ -326,7 +330,7 @@
 
         close()
         {
-            sessionStorage.removeItem(this.keyName('onedrive_file'));
+            storageLocation.removeItem(this.keyName('onedrive_file'));
         }
 
         async chooseFolder()
@@ -354,10 +358,10 @@
                             var authURL = files.apiEndpoint;
 
 
-                            sessionStorage.setItem('onedrive_url', authURL);
-                            sessionStorage.setItem(caller.keyName('onedrive_folder'), folder.id);
-                            sessionStorage.removeItem(caller.keyName('onedrive_file'));
-                            sessionStorage.setItem(caller.keyName('onedrive_drive'), folder.parentReference.driveId);
+                            storageLocation.setItem('onedrive_url', authURL);
+                            storageLocation.setItem(caller.keyName('onedrive_folder'), folder.id);
+                            storageLocation.removeItem(caller.keyName('onedrive_file'));
+                            storageLocation.setItem(caller.keyName('onedrive_drive'), folder.parentReference.driveId);
 
                             resolve(await caller.getFolderName());
 
