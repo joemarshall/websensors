@@ -42,11 +42,11 @@ export class Console
         }
         this.fullText+=msg;
         this.text+=msg;
-/*        var spl=this.text.split("\n")
+        var spl=this.text.split("\n")
         if( spl.length>NUM_CONSOLE_LINES)
         {
             this.text=spl.slice(-NUM_CONSOLE_LINES).join("\n");
-        }*/
+        }
         this.div.innerText=this.text;
         if (needs_rescroll)
         {
