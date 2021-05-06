@@ -145,7 +145,9 @@ Look at the data in the figure above. What do these results mean? Why were there
 
 By looking at the other axes of the accelerometer it became clear that in the two missing chops, I must have rotated the device slightly, so that the X axis was no longer going above the threshold. I annotated the graph accordingly.
 
-n.b. you can either add these graph annotations in Excel, or you can save the output from excel as a picture and add it in another piece of software. I use Inkscape to do this.
+You can also see from the graph with the threshold included on it that whilst it would be possible just to move the threshold down to catch chop number 6 and 7, but the moment you did that, you'd see a false positive as I was picking up the device just before chop 1.
+
+n.b. you can either add these graph annotations in Excel, or you can save the output from excel as a picture and add it in another piece of software. I like to use Inkscape to do this, which is free.
 
 {%include figure.html url="/images/karate2.svg" alt="Annotated chop sensor data, noting that in the two missing chops the device was rotated so no chop was sensed." title="Annotated chop sensor graph" caption="In the chops that weren't sensed, the phone clearly rotated off the correct axis. We can annotate these data points based on our observations" %}
 

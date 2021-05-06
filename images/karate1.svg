@@ -41,7 +41,7 @@
      showgrid="false"
      inkscape:zoom="0.34543769"
      inkscape:cx="921.5"
-     inkscape:cy="1460.3193"
+     inkscape:cy="991.34903"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
@@ -1305,4 +1305,18 @@
        id="tspan1894"
        x="170.79781"
        y="1916.4093" /></text>
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.7;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect1904"
+     width="57.897564"
+     height="674.50659"
+     x="1658.7651"
+     y="-8.6846342" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.7;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect1906"
+     width="81.056587"
+     height="564.50122"
+     x="130.26952"
+     y="891.62244" />
 </svg>
