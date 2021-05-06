@@ -78,6 +78,14 @@ class replayer:
         return replayer._replay_columns
     # parse text csv string
     def _on_lines(lines): 
+        def make_numbers(x):
+            retval=[]
+            for y in x:
+                try:
+                    retval.append(float(y))
+                except ValueError:
+                    retval.append(y)
+            return retval
         if not lines or len(lines)==0:
             replayer._replay_lines=None
             replayer._replay_columns=None
@@ -86,9 +94,10 @@ class replayer:
         r=csv.reader(f)
         replayer._replay_columns=r.__next__()
         # make lookup for columns
-        replayer._replay_columns={x:y for y,x in enumerate(replayer._replay_columns)}
-        # only get rows with the correct amount of data
-        replayer._replay_lines=[x for x in r if len(x)==len(replayer._replay_columns)]
+        replayer._replay_columns={str(x):y for y,x in enumerate(replayer._replay_columns)}
+        # only get rows with the correct amount of data         
+        replayer._replay_lines=[make_numbers(x) for x in r if len(x)==len(replayer._replay_columns)]
+
         replayer.reset()
 
     def has_replay():
