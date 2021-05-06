@@ -92,7 +92,7 @@ while True:
     # if we are replaying, read sensor value and time from the replayer
     # not the actual sensors            
     if REPLAY:
-        sound,this_time=sensors.replayer.get_value("sound","time")
+        sound,this_time=sensors.replayer.get_level("sound","time")
     else:
         sound=sensors.sound.get_level()
         # how long since we started running
