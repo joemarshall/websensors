@@ -668,72 +668,74 @@ async function makePyodideBoxInternal(options)
     stopButton.onclick=onStop;
     parent.appendChild(stopButton);
 {% if page.uses_files %}
-    const logs_div=document.createElement("div");
-    const captureCheck=document.createElement("input");
-    captureCheck.type="checkbox"
-    const captureText=document.createElement("label")
-    captureText.innerText="Autosave output"
-    captureCheck.id="captureCheck_"+box_index;
+    if(logSaveHandler)
+    {
+        const logs_div=document.createElement("div");
+        const captureCheck=document.createElement("input");
+        captureCheck.type="checkbox"
+        const captureText=document.createElement("label")
+        captureText.innerText="Autosave output"
+        captureCheck.id="captureCheck_"+box_index;
 
+        const saveConsoleFn=
+                function(fileName,txt){
 
-    const saveConsoleFn=
-            function(fileName,txt){
+                if(captureCheck.checked)
+                {
+                    // save output to dated file
+                    logSaveHandler.saveInCurrentFolder(txt,fileName);
+                    return true;
+                }
+            };
+        consoleObj.setSaveFn(saveConsoleFn);
 
+        captureCheck.addEventListener("change",async function(event){
             if(captureCheck.checked)
             {
-                // save output to dated file
-                logSaveHandler.saveInCurrentFolder(txt,fileName);
-                return true;
-            }
-        };
-    consoleObj.setSaveFn(saveConsoleFn);
-
-    captureCheck.addEventListener("change",async function(event){
-        if(captureCheck.checked)
-        {
-            var captureFolder=await logSaveHandler.getFolderName();
-            if(!captureFolder)
-            {
-                captureFolder=await logSaveHandler.chooseFolder();
-            }
-            logfolderName.textContent=captureFolder;            
-            consoleObj.save();
-        }
-    });
-
-    captureText["htmlFor"]=captureCheck.id;
-
-    logs_div.appendChild(captureCheck);
-    logs_div.appendChild(captureText)
-    const chooseOutputFolderButton=document.createElement("button");
-    chooseOutputFolderButton.className="pyodide_stop";        
-    chooseOutputFolderButton.innerText="Output folder...";
-    const logfolderName=document.createElement("span");
-    logfolderName.textContent="    ";
-    chooseOutputFolderButton.onclick=function()
-    {
-        logSaveHandler.chooseFolder().then(function(folderName)
-        {
-            logfolderName.textContent=folderName;            
-        });        
-    }
-    logs_div.appendChild(chooseOutputFolderButton);
-    logs_div.appendChild(logfolderName);
-
-    logSaveHandler.setLoginCallback((active)=>{
-                captureCheck.disabled=!active;
-                captureText.disabled=!active;
-                chooseOutputFolderButton.disabled=!active;
-                if(active)
+                var captureFolder=await logSaveHandler.getFolderName();
+                if(!captureFolder)
                 {
-                    captureText.innerText="Autosave output";
-                }else
-                {
-                    captureText.innerText="Login to onedrive to save output";
+                    captureFolder=await logSaveHandler.chooseFolder();
                 }
-            });
+                logfolderName.textContent=captureFolder;            
+                consoleObj.save();
+            }
+        });
 
-    parent.appendChild(logs_div);
+        captureText["htmlFor"]=captureCheck.id;
+
+        logs_div.appendChild(captureCheck);
+        logs_div.appendChild(captureText)
+        const chooseOutputFolderButton=document.createElement("button");
+        chooseOutputFolderButton.className="pyodide_stop";        
+        chooseOutputFolderButton.innerText="Output folder...";
+        const logfolderName=document.createElement("span");
+        logfolderName.textContent="    ";
+        chooseOutputFolderButton.onclick=function()
+        {
+            logSaveHandler.chooseFolder().then(function(folderName)
+            {
+                logfolderName.textContent=folderName;            
+            });        
+        }
+        logs_div.appendChild(chooseOutputFolderButton);
+        logs_div.appendChild(logfolderName);
+
+        logSaveHandler.setLoginCallback((active)=>{
+                    captureCheck.disabled=!active;
+                    captureText.disabled=!active;
+                    chooseOutputFolderButton.disabled=!active;
+                    if(active)
+                    {
+                        captureText.innerText="Autosave output";
+                    }else
+                    {
+                        captureText.innerText="Login to onedrive to save output";
+                    }
+                });
+
+        parent.appendChild(logs_div);
+    }
 {% endif %}
 
 
