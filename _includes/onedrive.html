@@ -204,14 +204,14 @@
             }
         }
 
-        async saveInCurrentFolder(codeFile,fileName)
+        async saveInCurrentFolder(codeFile,saveName)
         {
             await this.checkAuth(true);
             if(!this.authToken)
             {
                 return;
             }
-            var url = `${this.authURL}drives/${this.driveID}/items/${this.folderID}:/${fileName}:/content`;
+            var url = `${this.authURL}drives/${this.driveID}/items/${this.folderID}:/${saveName}:/content`;
             var response = await fetch(url, {
                 method: 'PUT', headers:
                 {
