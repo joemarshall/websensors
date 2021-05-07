@@ -64,7 +64,7 @@ export class Console
     
     save()
     {
-        if(this.saveFn)
+        if(this.saveFn && this.name)
         {
             return this.saveFn(this.name,this.fullText);
         }else
