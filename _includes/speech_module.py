@@ -1,11 +1,10 @@
-"""
-A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
+"""A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
 """
 
 import js
 
 def say(words):
-    """ Say the words 
+    """ Say these words as text-to-speech
 
     They will be spoken on the loudspeaker of your device (or whatever audio output you
     have connected.)

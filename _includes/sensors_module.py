@@ -1,3 +1,7 @@
+""" This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
+"""
+
+
 from math import sqrt
 import io,csv
 def on_sensor_event(event):

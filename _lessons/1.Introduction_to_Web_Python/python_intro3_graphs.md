@@ -9,6 +9,7 @@ import graphs
 
 <div id="graphs" class="moduletarget" markdown=1>
 # Module graphs
+This module allows you to draw nice line graphs in the web interface.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)

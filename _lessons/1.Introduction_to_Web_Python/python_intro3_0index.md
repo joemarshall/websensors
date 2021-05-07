@@ -7,7 +7,8 @@ These pages contain documentation of the various modules. Click on function or c
 
 
 <div id="graphs" class="moduletarget" markdown=1>
-# Module graphs
+# Module [graphs](python_intro3_graphs.html)
+This module allows you to draw nice line graphs in the web interface.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)
@@ -18,7 +19,8 @@ def on_value(graphName,value)
 ```
 </div>
 <div id="sensors" class="moduletarget" markdown=1>
-# Module sensors
+# Module [sensors](python_intro3_sensors.html)
+This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
 ```python
 # Accelerometer sensor
 class accel
@@ -71,7 +73,8 @@ class replayer
 ```
 </div>
 <div id="filters" class="moduletarget" markdown=1>
-# Module filters
+# Module [filters](python_intro3_filters.html)
+This module allows you to filter sensor data using various linear and non-linear filtering techniques.
 ```python
 # A class to perform simple first order high pass filtering on a sensor value
 class HighPassFilter
@@ -151,11 +154,11 @@ class BlockMinFilter
 
 ```
 </div>
-A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
 <div id="speech" class="moduletarget" markdown=1>
-# Module speech
+# Module [speech](python_intro3_speech.html)
+A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
 ```python
-# Say the words 
+# Say these words as text-to-speech
 def say(words)
 
 ```

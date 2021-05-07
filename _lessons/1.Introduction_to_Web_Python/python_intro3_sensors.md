@@ -9,6 +9,7 @@ import sensors
 
 <div id="sensors" class="moduletarget" markdown=1>
 # Module sensors
+This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
 ```python
 # Accelerometer sensor
 class accel

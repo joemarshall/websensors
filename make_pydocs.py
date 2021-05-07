@@ -1,3 +1,5 @@
+BASENAME="python_intro3_%s.md"
+
 import ast
 import glob
 import re
@@ -86,13 +88,14 @@ class MarkdownVisitor(ast.NodeVisitor):
 
     def visit_Module(self, node) :
         docstr=ast.get_docstring(node) 
-        if docstr:
-            docstr=docstr.replace("\\\`","\`")
-            print(docstr)
         if not self.short:
             self.short=True
             print(f'<div id="{"_".join(self.parent_objects)}" class="moduletarget" markdown=1>')
             print(f"# Module {self.parent_objects[0]}")
+            if docstr:
+                docstr=docstr.replace("\\\`","\`")
+                print(docstr)
+
             print("```python")
             self.generic_visit(node)
             print("```")
@@ -102,7 +105,11 @@ class MarkdownVisitor(ast.NodeVisitor):
         else:
             # module summary
             print(f'<div id="{"_".join(self.parent_objects)}" class="moduletarget" markdown=1>')
-            print(f"# Module {self.parent_objects[0]}")
+            targetPage=(BASENAME% self.parent_objects[0]).replace(".md",".html")
+            print(f"# Module [{self.parent_objects[0]}]({targetPage})")
+            if docstr:
+                docstr=docstr.replace("\\\`","\`")
+                print(docstr)
             print("```python")
             self.generic_visit(node)
             print("```")
@@ -185,12 +192,12 @@ class MarkdownVisitor(ast.NodeVisitor):
 
 
 index=0
-basename="python_intro3_%s.md"
+
 files=glob.glob("_includes/*_module.py")
 for file in files:
     moduleName=re.match(".*/(.+)_module.py",file).group(1)
     contents=open(file).read()
-    sys.stdout=open(basename%moduleName,"w")
+    sys.stdout=open(BASENAME%moduleName,"w")
     tree=ast.parse(contents)
     print(f"""---
 title: PyDocs - {moduleName} module
@@ -206,7 +213,7 @@ import {moduleName}
 
 # make index
 index=0
-sys.stdout=open(basename%"0index","w")
+sys.stdout=open(BASENAME%"0index","w")
 print("""---
 title: Extra built in modules
 ---

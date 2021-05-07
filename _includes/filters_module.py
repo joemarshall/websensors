@@ -1,3 +1,6 @@
+"""This module allows you to filter sensor data using various linear and non-linear filtering techniques.
+"""
+
 from math import pi 
 # we use pi for calculation
 # of alpha from cutoff frequency

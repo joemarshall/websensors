@@ -7,11 +7,11 @@ import speech
 
 ```
 
-A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
 <div id="speech" class="moduletarget" markdown=1>
 # Module speech
+A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
 ```python
-# Say the words 
+# Say these words as text-to-speech
 def say(words)
 
 ```
@@ -25,7 +25,7 @@ def say(
     words
 )
 ```
-Say the words 
+Say these words as text-to-speech
 
 They will be spoken on the loudspeaker of your device (or whatever audio output you
 have connected.)

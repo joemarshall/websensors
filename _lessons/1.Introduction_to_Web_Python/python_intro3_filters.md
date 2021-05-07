@@ -9,6 +9,7 @@ import filters
 
 <div id="filters" class="moduletarget" markdown=1>
 # Module filters
+This module allows you to filter sensor data using various linear and non-linear filtering techniques.
 ```python
 # A class to perform simple first order high pass filtering on a sensor value
 class HighPassFilter

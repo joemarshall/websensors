@@ -1,3 +1,6 @@
+""" This module allows you to draw nice line graphs in the web interface.
+"""
+
 import js        
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None):
     """ Set the style of a named graph in the output box.

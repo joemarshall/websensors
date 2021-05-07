@@ -311,6 +311,7 @@ async function saveAsDialog(textContent,initialVal,fileHandler)
 async function makePyodideBoxInternal(options)
 {    
     box_index+=1;
+    let logfolderName;
     let parent=options.parent;
     let consoleDiv;
     let consoleObj;
@@ -709,7 +710,7 @@ async function makePyodideBoxInternal(options)
         const chooseOutputFolderButton=document.createElement("button");
         chooseOutputFolderButton.className="pyodide_stop";        
         chooseOutputFolderButton.innerText="Output folder...";
-        const logfolderName=document.createElement("span");
+        logfolderName=document.createElement("span");
         logfolderName.textContent="    ";
         chooseOutputFolderButton.onclick=function()
         {
