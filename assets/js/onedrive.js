@@ -322,8 +322,14 @@
             });
             var folderJSON = await response.json();
             var folderName = folderJSON["name"];
-            var fullName = folderJSON.parentReference.path.split(":")[1] + "/" + folderName;
-            return fullName;            
+            if(folderJSON.parentReference && folderJSON.parentReference.path && String(folderJSON.parentReference.path).indexOf(":")!=-1)
+            {
+                folderName = folderJSON.parentReference.path.split(":")[1] + "/" + folderName;
+            }else
+            {
+                folderName="/"+folderName;
+            }
+            return folderName;
         }
 
         close()
