@@ -33,6 +33,17 @@ class accel
     def get_magnitude()
 
 
+# Gyroscope sensor
+class gyro
+    # Get the rotation of the device
+    @staticmethod
+    def get_xyz()
+
+    # Get the magnitude of device rotation
+    @staticmethod
+    def get_magnitude()
+
+
 # Sound sensor
 class sound
     # Get the level from the sound sensor. 

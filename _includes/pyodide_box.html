@@ -77,7 +77,21 @@ let accel_sensor={
 };
 
 window.sensor_objects.push(accel_sensor);
+let gyro_sensor={
+    name:"gyro",
+    mod_accel:undefined,
+    init: async function(){this.mod_gyro=await import("{{ 'assets/js/accel_sensor.js' | relative_url }}");},
+    requestPermissions: function(){return this.mod_gyro.requestPermissions()},
+    start: async function(callback){await this.mod_gyro.startGyro(callback)},
+    stop: async function() { await this.mod_gyro.stopGyro();}
+};
+
+window.sensor_objects.push(gyro_sensor);
+
+
 </script>
+
+
 {% endif %}
 
 

@@ -2,6 +2,7 @@ import { Gyroscope, Accelerometer,LinearAccelerationSensor,AbsoluteOrientationSe
 } from "./motion_sensors.js";
 
 var _js_accelerometer;
+var _js_gyro;
 
 export async function requestPermissions()
 {
@@ -73,6 +74,45 @@ export async function startAccelerometer(callback)
         console.log('Accelerometer permission denied');
     }
 }
+
+export async function startGyro(callback)
+{
+    console.log("start gyro")
+    let result;
+    if(navigator.permissions && navigator.permissions.query)
+    {
+        try
+        {
+            result=await navigator.permissions.query({ name: "gyroscope" });
+        }catch(err)
+        {            
+            result=undefined;
+        }
+    }
+    if(!result || result.state=='granted')
+    {
+        _js_gyro = new Gyroscope({ referenceFrame: 'device' ,frequency:'60'});
+        _js_gyro.addEventListener('error', event => {
+            // Handle runtime errors.
+            if (event.error.name === 'NotReadableError' ) {
+                console.log('Cannot connect to gyro.');
+            }
+        });
+        _js_gyro.start();
+        _js_gyro.addEventListener("reading",()=>callback(_js_gyro.x,_js_gyro.y,_js_gyro.z))
+        console.log('Started gyro.');        
+    }else
+    {
+        console.log('Gyro permission denied');
+    }
+}
+
+export async function stopGyro(callback)
+{
+    console.log("Stop gyro");
+    _js_gyro.stop()
+}
+
 
 var _js_abs_ori;
 

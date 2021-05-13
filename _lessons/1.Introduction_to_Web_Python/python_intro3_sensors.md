@@ -22,6 +22,17 @@ class accel
     def get_magnitude()
 
 
+# Gyroscope sensor
+class gyro
+    # Get the rotation of the device
+    @staticmethod
+    def get_xyz()
+
+    # Get the magnitude of device rotation
+    @staticmethod
+    def get_magnitude()
+
+
 # Sound sensor
 class sound
     # Get the level from the sound sensor. 
@@ -120,6 +131,65 @@ If the device is still, this will be 1G (about 9.8 m/s^2)
 ### Returns
 * **mag**(*float)*
 <br>    magnitude of device acceleration (i.e. sqrt(x^2+y^2+z^2))
+
+<div id="sensors_gyro" class="classtarget" markdown=1>
+
+# class sensors.gyro 
+
+```python
+class gyro:
+    # Get the rotation of the device
+    @staticmethod
+    def get_xyz()
+
+    # Get the magnitude of device rotation
+    @staticmethod
+    def get_magnitude()
+
+```
+</div>
+## Description
+Gyroscope sensor
+
+This allows you to get the rotation of a device in radians per second, around three axes, X, Y and Z, which for a phone 
+are typically X,Y axes side to side and top to bottom on the screen, Z coming out of the screen. 
+<a id="sensors_gyro_get_xyz" class="fntarget"></a>
+
+## [*sensors*](#sensors).[*gyro*](#sensors_gyro).get_xyz
+```python
+# sensors.gyro.get_xyz
+@staticmethod
+def get_xyz(
+    
+)
+```
+Get the rotation of the device
+
+This is returned in terms of x,y and z axes
+### Returns
+* **x**(*float)*
+<br>    x axis rotation in radians/s
+* **y**(*float)*
+<br>    y axis rotation in radians/s
+* **z**(*float)*
+<br>    z axis rotation in radians/s
+
+<a id="sensors_gyro_get_magnitude" class="fntarget"></a>
+
+## [*sensors*](#sensors).[*gyro*](#sensors_gyro).get_magnitude
+```python
+# sensors.gyro.get_magnitude
+@staticmethod
+def get_magnitude(
+    
+)
+```
+Get the magnitude of device rotation
+
+If the device is still, this will be 0
+### Returns
+* **mag**(*float)*
+<br>    magnitude of device rotation (i.e. sqrt(x^2+y^2+z^2))
 
 <div id="sensors_sound" class="classtarget" markdown=1>
 

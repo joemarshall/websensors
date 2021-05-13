@@ -7,7 +7,9 @@ import io,csv
 def on_sensor_event(event):
     name=event["name"]
     value=event["args"]
-    if name=="accel":
+    if name=="gyro":
+        gyro._on_rotation(value[0],value[1],value[2])
+    elif name=="accel":
         accel._on_accel(value[0],value[1],value[2])
     elif name=="sound":
         sound._on_level(value[0])
@@ -62,13 +64,62 @@ class accel:
     @staticmethod
     def _on_accel(x,y,z):
         accel._xyz=(x,y,z)
-    
+
+class gyro:
+    """ Gyroscope sensor
+
+    This allows you to get the rotation of a device in radians per second, around three axes, X, Y and Z, which for a phone 
+    are typically X,Y axes side to side and top to bottom on the screen, Z coming out of the screen. 
+    """
+    _xyz=(0,0,0)
+    @staticmethod
+    def get_xyz():
+        """ Get the rotation of the device
+
+        This is returned in terms of x,y and z axes
+
+        Returns
+        -------            
+        x: float
+            x axis rotation in radians/s
+        y: float
+            y axis rotation in radians/s
+        z: float
+            z axis rotation in radians/s
+        """
+        return gyro._xyz
+        
+    @staticmethod
+    def get_magnitude():
+        """ Get the magnitude of device rotation
+        
+        If the device is still, this will be 0
+
+        Returns
+        -------
+        mag: float
+            magnitude of device rotation (i.e. sqrt(x^2+y^2+z^2))
+        """
+        if  gyro._xyz:
+            x,y,z=(gyro._xyz)
+            return sqrt((x*x)+(y*y)+(z*z))
+        else:
+            return None
+        
+    # called from js to set the current acceleration
+    @staticmethod
+    def _on_rotation(x,y,z):
+        gyro._xyz=(x,y,z)
+
+
+
 class sound:
     """ Sound sensor
 
     This returns the rough volume of the sound occurring in the vicinity of the device. On web based systems it is done using the built
     in microphone. The scale is an arbitrary 0-1 scale which is dependent on the microphone on your device, and
     probably a bunch of other hardware and software things.
+
     """
     _level=0
     @staticmethod
