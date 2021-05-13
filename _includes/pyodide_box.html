@@ -589,6 +589,12 @@ async function makePyodideBoxInternal(options)
                 permissionRequesters.push(o.requestPermissions());
             }
         }
+        // say something silently, so that iOS unlocks the speech synthesis api
+        // otherwise speech.say doesn't work on iOS
+        let utterance = new SpeechSynthesisUtterance("silence");
+        utterance.volume=0;
+        speechSynthesis.speak(utterance);            
+
         // now we have done everything that needs to be non-async
         // so we can await promises with wild abandon
         await Promise.all(permissionRequesters);
