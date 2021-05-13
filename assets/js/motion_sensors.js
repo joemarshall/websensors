@@ -381,9 +381,9 @@ class Accelerometer extends DeviceOrientationMixin(Sensor, 'devicemotion') {
 
     this[slot].timestamp = performance.now();
 
-    this[slot].x = event.accelerationIncludingGravity.x;
-    this[slot].y = event.accelerationIncludingGravity.y;
-    this[slot].z = event.accelerationIncludingGravity.z;
+    this[slot].x = -event.accelerationIncludingGravity.x;
+    this[slot].y = -event.accelerationIncludingGravity.y;
+    this[slot].z = -event.accelerationIncludingGravity.z;
 
     this[slot].hasReading = true;
     this.dispatchEvent(new Event('reading'));
@@ -422,9 +422,9 @@ class LinearAccelerationSensor extends DeviceOrientationMixin(Sensor, 'devicemot
 
     this[slot].timestamp = performance.now();
 
-    this[slot].x = event.acceleration.x;
-    this[slot].y = event.acceleration.y;
-    this[slot].z = event.acceleration.z;
+    this[slot].x = -event.acceleration.x;
+    this[slot].y = -event.acceleration.y;
+    this[slot].z = -event.acceleration.z;
 
     this[slot].hasReading = true;
     this.dispatchEvent(new Event('reading'));
