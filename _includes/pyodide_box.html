@@ -199,7 +199,9 @@ async function makeReplayControllerInternal(options)
             filenameBox.textContent=response.folderName+"/"+response.fileName;
             closeButton.disabled=false;
             // set this as the replayer text
-            return response.fileContents;
+            let fileContents=response.fileContents;
+            let fileName=response.fileName;
+            return {fileContents,fileName};
         }
         return "";
     };
@@ -642,7 +644,8 @@ async function makePyodideBoxInternal(options)
         running=true;
         if(replay_text_getter)
         {
-            sensorCallback("replayer",await replay_text_getter())
+            let replayTextAndFilename=await replay_text_getter()
+            sensorCallback("replayer",replayTextAndFilename.fileContents,replayTextAndFilename.fileName)
         }else
         {
             sensorCallback("replayer","");

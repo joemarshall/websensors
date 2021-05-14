@@ -68,6 +68,10 @@ class replayer
     @staticmethod
     def columns()
 
+    # Return the name of the currently loaded replay file
+    @staticmethod
+    def get_replay_name()
+
     # Find out if there is replay data
     @staticmethod
     def has_replay()

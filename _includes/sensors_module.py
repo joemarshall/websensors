@@ -16,7 +16,7 @@ def on_sensor_event(event):
     elif name=="light":
         light._on_level(value[0])
     elif name=="replayer":
-        replayer._on_lines(value[0])            
+        replayer._on_lines(value[0],value[1])            
 
 class accel:
     """ Accelerometer sensor
@@ -183,6 +183,8 @@ class replayer:
     _start_time=None
     _replay_lines=None
     _replay_columns=None
+    _filename=None
+
     @staticmethod
     def reset():
         """Restart the replay of data
@@ -202,7 +204,7 @@ class replayer:
         return replayer._replay_columns
     # parse text csv string
     @staticmethod
-    def _on_lines(lines): 
+    def _on_lines(lines,filename): 
         def make_numbers(x):
             retval=[]
             for y in x:
@@ -214,7 +216,10 @@ class replayer:
         if not lines or len(lines)==0:
             replayer._replay_lines=None
             replayer._replay_columns=None
+            replayer._filename=None
             return
+        replayer._filename=filename
+        print("ON LINES:",replayer._filename)
         f=io.StringIO(lines)
         r=csv.reader(f)
         replayer._replay_columns=r.__next__()
@@ -224,6 +229,15 @@ class replayer:
         replayer._replay_lines=[make_numbers(x) for x in r if len(x)==len(replayer._replay_columns)]
 
         replayer.reset()
+
+    @staticmethod
+    def get_replay_name():
+        """ Return the name of the currently loaded replay file
+            This is useful for example if you want to do different 
+            tests for different types of input data
+        """
+        print("GET FNAME:",replayer._filename)
+        return replayer._filename
 
     @staticmethod
     def has_replay():

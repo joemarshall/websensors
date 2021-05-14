@@ -57,6 +57,10 @@ class replayer
     @staticmethod
     def columns()
 
+    # Return the name of the currently loaded replay file
+    @staticmethod
+    def get_replay_name()
+
     # Find out if there is replay data
     @staticmethod
     def has_replay()
@@ -271,6 +275,10 @@ class replayer:
     @staticmethod
     def columns()
 
+    # Return the name of the currently loaded replay file
+    @staticmethod
+    def get_replay_name()
+
     # Find out if there is replay data
     @staticmethod
     def has_replay()
@@ -327,6 +335,19 @@ Return the mapping of columns in the current CSV file
 * **columns**(*map)*
 <br>    list of column:index pairs
 
+<a id="sensors_replayer_get_replay_name" class="fntarget"></a>
+
+## [*sensors*](#sensors).[*replayer*](#sensors_replayer).get_replay_name
+```python
+# sensors.replayer.get_replay_name
+@staticmethod
+def get_replay_name(
+    
+)
+```
+Return the name of the currently loaded replay file
+This is useful for example if you want to do different 
+tests for different types of input data
 <a id="sensors_replayer_has_replay" class="fntarget"></a>
 
 ## [*sensors*](#sensors).[*replayer*](#sensors_replayer).has_replay
