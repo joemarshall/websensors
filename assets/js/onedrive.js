@@ -103,7 +103,7 @@
         async login(allowPopup)
         {
             let retVal=await msLogin(allowPopup);
-            fireAuthCallbacks;
+            fireAuthCallbacks();
             return retVal;
 
         }
