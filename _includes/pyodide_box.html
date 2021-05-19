@@ -220,7 +220,12 @@ async function makeReplayControllerInternal(options)
             await fileHandler.logout();
         }else
         {
-            await fileHandler.login(true);
+            let loginResult=await fileHandler.login(true);
+            if(!loginResult)
+            {
+                localStorage.clear()
+                alert("Couldn't login to onedrive, clearing local storage, please click login again to retry")
+            }
         }
     };
     fileHandler.setLoginCallback((active)=>{
@@ -442,7 +447,12 @@ async function makePyodideBoxInternal(options)
                     await fileHandler.logout();
                 }else
                 {
-                    await fileHandler.login(true);
+                    let loginResult=await fileHandler.login(true);
+                    if(!loginResult)
+                    {
+                        localStorage.clear()
+                        alert("Couldn't login to onedrive, clearing local storage, click login again to retry")
+                    }
                 }
             };
             fileHandler.setLoginCallback((active)=>{

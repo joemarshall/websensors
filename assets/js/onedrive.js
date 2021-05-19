@@ -47,11 +47,18 @@
         if (currentAccounts === null || currentAccounts.length == 0) {
             if (autoLogin) {
                 try {
-                    const loginResponse = await msalInstance.loginPopup({ redirectUri: redirectUri });
+                    const loginResponse = await msalInstance.loginPopup({ redirectUri: redirectUri });                    
                     currentAccounts = msalInstance.getAllAccounts();
                 } catch (err) {
-                    // handle login error
-                    return undefined;
+                    if(err.errorCode=='user_cancelled')
+                    {
+                        return "cancelled";
+                    }else
+                    {
+                        console.log(err);
+                        // handle login error
+                        return undefined;
+                    }
                 }
             } else {
                 return undefined;
@@ -95,14 +102,17 @@
 
         async login(allowPopup)
         {
-            await msLogin(allowPopup);
-            fireAuthCallbacks();
+            let retVal=await msLogin(allowPopup);
+            fireAuthCallbacks;
+            return retVal;
+
         }
 
         async logout()
         {
-            await msLogout();
+            let retVal=await msLogout();
             fireAuthCallbacks();
+            return retVal;
         }
 
         loggedIn()
@@ -251,7 +261,6 @@
                         success: async function(files){
                             // save this file id to session storage so we can save changes back
                             let file = files.value[0];
-                            storageLocation.setItem('onedrive_auth', files.accessToken);
                             storageLocation.setItem('onedrive_url', files.apiEndpoint);
                             storageLocation.setItem(caller.keyName('onedrive_file'), file.id);
                             storageLocation.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
@@ -290,7 +299,6 @@
                         success: async function(files){
                             // save this file id to session storage so we can save changes back
                             let file = files.value[0];
-                            storageLocation.setItem('onedrive_auth', files.accessToken);
                             storageLocation.setItem('onedrive_url', files.apiEndpoint);
                             storageLocation.setItem(caller.keyName('onedrive_file'), file.id);
                             storageLocation.setItem(caller.keyName('onedrive_drive'), file.parentReference.driveId);
