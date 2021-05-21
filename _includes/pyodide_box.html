@@ -658,7 +658,7 @@ async function makePyodideBoxInternal(options)
             sensorCallback("replayer",replayTextAndFilename.fileContents,replayTextAndFilename.fileName)
         }else
         {
-            sensorCallback("replayer","");
+            sensorCallback("replayer","","");
         }
         await asyncRun("run",codeValue);
         running=false;
