@@ -104,8 +104,14 @@ function setLog(logDiv)
   
     };
     window.console=logger;    
+
+    window.addEventListener('unhandledrejection', function(event) {
+    // the event object has two special properties:
+    console.error("Uncaught in promise:",[event.promise,event.reason]);
+    });    
     // show global errors too
     window.onerror=function(...args){console.error("ERR",args);};
+    window.addEventListener("error",function(...args){console.error("ERR2:",args);});
 
     
 }

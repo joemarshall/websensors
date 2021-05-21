@@ -1,15 +1,36 @@
-<script language="javascript">
-window.sensor_objects=[];
+
+<script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let cdnLink=urlParams.get("cdn") || "{{site.cdn_link}}";    
+    if(cdnLink=="none")
+    {
+        cdnLink="{{'/pyodide/'|absolute_url}}"
+    }
+    const cdnPreloads=[
+        ["pyodide.asm.data","fetch"],
+        ["pyodide.asm.wasm","fetch"],
+        ["pyodide.asm.js","script"],
+        ["packages.json","fetch"],
+        ["unthrow.js","script"],
+        ["unthrow.data","fetch"]
+    ];
+    for(c in cdnPreloads)
+    {
+        var value=cdnPreloads[c];
+        const linkElement=document.createElement("link");
+        linkElement.rel="preload";
+        linkElement.href=cdnLink+value[0];
+        linkElement.as=value[1];
+        if(linkElement.as=="fetch")
+        {
+            linkElement.crossOrigin="anonymous";
+        }
+        document.head.appendChild(linkElement)
+    }    
 </script>
 
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/unthrow.js" as="script">
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/unthrow.data" as="fetch" crossorigin="anonymous">
-
 <link rel="preload" href="{{'/pyodide/pyodide.js' | relative_url}}" as="script" >
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.data" as="fetch" crossorigin="anonymous">
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.wasm" as="fetch" crossorigin="anonymous">
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/pyodide.asm.js" as="script">
-<link rel="preload" href="https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/packages.json" as="fetch" crossorigin="anonymous">
 
 <link rel="preload" href="{{'/assets/js/async_worker.js' | relative_url}}" as="script" >
 <link rel="preload" href="{{'/assets/js/fake_worker.js' | relative_url}}" as="script" >
@@ -17,9 +38,11 @@ window.sensor_objects=[];
 <link rel="modulepreload" href="{{'/assets/js/console.js' | relative_url}}" as="script" >
 <link rel="modulepreload" href="{{'/assets/js/py_graphs.js' | relative_url}}" as="script" >
 
+<script language="javascript">
+    window.sensor_objects=[];
+</script>    
 
 <script src="{{ '/assets/js/fake_worker.js' | relative_url }}"></script>
-
 
 {% if page.uses_files %}
 {% include onedrive.html %}
@@ -940,7 +963,10 @@ async function initFn()
 
     async function initPython()
     {
-        await asyncRun("init","noconsole");
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        let cdnLink=urlParams.get("cdn") || "{{site.cdn_link}}";
+        await asyncRun("init",{type:"noconsole",cdn:cdnLink});
         pythonInited=true;
         window.dispatchEvent(new Event("pythoninited"));
     }

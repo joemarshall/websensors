@@ -13,8 +13,10 @@ class FakeWorker
             importScripts:async function(script){
                 var scriptTag=document.createElement("script");
                 scriptTag.src=script;
+                let loadPromise=new Promise(resolve => scriptTag.onload=resolve);
                 window.fakeWorkerContext=this.workerContext;
-                document.body.appendChild(scriptTag);
+                document.head.appendChild(scriptTag);
+                await loadPromise;
             },
             postMessage:function(obj)
             {

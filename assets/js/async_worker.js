@@ -10,15 +10,12 @@ if(self.hasOwnProperty('fakeWorkerContext'))
     workerContext=self;
 }
 
-
-// gitcdn is even faster
-window.languagePluginUrl='https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/';
+// gitcdn is even faster but unreliable in china
+// window.languagePluginUrl='https://gitcdn.link/repo/joemarshall/websensors/main/pyodide/';
 // serve through jsdelivr for faster loading
 //languagePluginUrl='https://rawcdn.githack.com/joemarshall/websensors/main/pyodide/';
-//languagePluginUrl='https://cdn.jsdelivr.net/gh/joemarshall/websensors/pyodide/';
 //languagePluginUrl="{{'/pyodide/' | relative_url }}";
 
-workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
 
 let sensorModule;
 
@@ -231,41 +228,66 @@ async function runAsyncLoop(id,arg)
 
 async function initPython()
 {
-    // make the filter module (low, high pass, median filter etc.)
-    loadAsModule("filters",`
+    try
+    {
+        // make the filter module (low, high pass, median filter etc.)
+        loadAsModule("filters",`
 {% include filters_module.py %}
 `);    
 
-    loadAsModule("speech",`
+        loadAsModule("speech",`
 {% include speech_module.py %}
 `);
 
-    // make the graph module (calls back to js to display graph values)
-    loadAsModule("graphs",`
+        // make the graph module (calls back to js to display graph values)
+        loadAsModule("graphs",`
 {% include graphs_module.py %}
     `
-        );
+            );
 
-        // make the sensor module - receives sensor data
-        sensorModule=loadAsModule("sensors",`
+            // make the sensor module - receives sensor data
+            sensorModule=loadAsModule("sensors",`
 {% include sensors_module.py %}
 `);
-        await pyodide.runPythonAsync(`
+            await pyodide.runPythonAsync(`
 {% include init_console.py %}
 `);
-        pyConsole=pyodide.globals.get("__pc");
-        pyConsole.stdout_callback = stdout_write
-        pyConsole.stderr_callback = stderr_write
+            pyConsole=pyodide.globals.get("__pc");
+            pyConsole.stdout_callback = stdout_write
+            pyConsole.stderr_callback = stderr_write
+    }catch(err)
+    {
+        console.log("Failed to init python",err);
+        throw(err);
+    }
 
 }
 
 workerContext.onmessage = async function(e) {
-    await languagePluginLoader;
     const {cmd,arg,id} = e.data;
     if(cmd =='init')
     {
-        await initPython();
-        workerContext.postMessage({id:id,type:"response",results:true});
+        self.languagePluginUrl=arg.cdn;
+        if(arg.cdn=='none')
+        {
+            self.languagePluginUrl="{{ '/pyodide/'|absolute_url }}"
+        }
+        console.log(self.languagePluginUrl);
+        try
+        {        
+            await workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
+            await self.languagePluginLoader;
+            await initPython();
+            workerContext.postMessage({id:id,type:"response",results:true});
+        }catch(err)
+        {
+            console.log("Error getting python",err);
+            workerContext.postMessage({id:id,type:"response",results:false});
+        }
+    }else
+    {
+        // make sure that we've loaded before anything else runs
+        await languagePluginLoader;
     }
     if (cmd =='run')
     {
