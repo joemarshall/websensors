@@ -684,11 +684,19 @@ details
 {
     display:block;
     width: 100%;
-    height: 10em;
-    resize: vertical;
+    height: 100%;
     background-color: #eef;
-    overflow-y:hidden;
 }
+
+.pyodide_graph_owner
+{
+  display:block;
+  width:100%;
+  height:10em;
+  resize:vertical;
+  overflow:hidden;
+}
+
 .pyodide_code_readonly
 {
     font-family: monospace;

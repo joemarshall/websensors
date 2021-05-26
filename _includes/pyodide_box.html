@@ -612,11 +612,12 @@ async function makePyodideBoxInternal(options)
     if(options.hasGraph)
     {
         // make a graph canvas
+        let graphParent=document.createElement("div");
+        graphParent.className="pyodide_graph_owner";
         graphCanvas=document.createElement("canvas");
         graphCanvas.className="pyodide_graph";
-//        graphCanvas.width=512;
-//        graphCanvas.height=256;
-        parent.appendChild(graphCanvas);         
+        graphParent.appendChild(graphCanvas)
+        parent.appendChild(graphParent);
         graphContext=makeGraphContext(graphCanvas);
     }
     // add a run button which starts all sensors, sets 

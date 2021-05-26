@@ -265,6 +265,15 @@ export function makeGraphContext(graphCanvas)
 
         draw:function(timeObj)
         {
+            if(graphCanvas.scrollWidth!=this.canvasWidth || graphCanvas.scrollHeight!=this.canvasHeight)
+            {
+                graphCanvas.width==graphCanvas.scrollWidth;
+                graphCanvas.height=graphCanvas.scrollHeight;
+                this.canvasWidth=graphCanvas.width;
+                this.canvasHeight=graphCanvas.height;
+                this.fontSize= graphCanvas.height*0.1;
+                this.drawCtx==graphCanvas.getContext("2d");
+            }
             this.clearCanvas();
             this.drawGraphs();
         },
