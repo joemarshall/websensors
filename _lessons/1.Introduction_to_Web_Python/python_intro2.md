@@ -72,7 +72,7 @@ As the previous paragraphs perhaps made obvious, the final outcome of this work 
 
 ## How do you keep track of code?
 
-You can code in the [{{"/scratchpad.html" |relative_url }}](Python Scratchpad) on this site. This is a webpage which lets you run python scripts with whatever sensors you choose, and importantly, is linked to your onedrive. This means you can load and save scripts from there.
+You can code in the [Python Scratchpad]({{"/scratchpad.html" |relative_url }}) on this site. This is a webpage which lets you run python scripts with whatever sensors you choose, and importantly, is linked to your onedrive. This means you can load and save scripts from there.
 
 ## How do you save output?
 
