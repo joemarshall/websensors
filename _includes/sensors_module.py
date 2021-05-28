@@ -2,6 +2,8 @@
 """
 
 
+from contextlib import contextmanager
+
 from math import sqrt
 import io,csv
 def on_sensor_event(event):
@@ -185,6 +187,15 @@ class replayer:
     _replay_columns=None
     _filename=None
 
+    # do nothing context manager, which forces interrupts to stop
+    @staticmethod
+    @contextmanager
+    def run_fast():
+        try:
+            yield 0
+        finally:
+            return
+
     @staticmethod
     def reset():
         """Restart the replay of data
@@ -284,8 +295,8 @@ class replayer:
 
         Returns
         -------
-        finished_csv: bool
-            True iff the CSV file is finished                
+        columns: tuple
+            The value of each of the requested columns
         """
         if replayer._replay_lines and len(replayer._replay_lines)>replayer._pos:
             ret_val=replayer._replay_lines[replayer._pos]
