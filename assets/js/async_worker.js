@@ -249,9 +249,11 @@ async function initPython()
             sensorModule=loadAsModule("sensors",`
 {% include sensors_module.py %}
 `);
-            await pyodide.runPythonAsync(`
+            const init_code=`
 {% include init_console.py %}
-`);
+`;
+            await pyodide.loadPackagesFromImports(init_code)
+            await pyodide.runPythonAsync(init_code);
             pyConsole=pyodide.globals.get("__pc");
             pyConsole.stdout_callback = stdout_write
             pyConsole.stderr_callback = stderr_write
@@ -267,16 +269,17 @@ workerContext.onmessage = async function(e) {
     const {cmd,arg,id} = e.data;
     if(cmd =='init')
     {
-        self.languagePluginUrl=arg.cdn;
+        var languagePluginUrl=arg.cdn;
         if(arg.cdn=='none')
         {
-            self.languagePluginUrl="{{ '/pyodide/'|absolute_url }}"
+            languagePluginUrl="{{ '/pyodide/'|absolute_url }}"
         }
-        console.log(self.languagePluginUrl);
+        console.log(languagePluginUrl);
         try
         {        
             await workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
-            await self.languagePluginLoader;
+            self.pyodideLoad=loadPyodide({indexURL:languagePluginUrl});
+            globalThis.pyodide=await self.pyodideLoad;
             await initPython();
             workerContext.postMessage({id:id,type:"response",results:true});
         }catch(err)
@@ -287,11 +290,12 @@ workerContext.onmessage = async function(e) {
     }else
     {
         // make sure that we've loaded before anything else runs
-        await languagePluginLoader;
+        await self.pyodideLoad;
     }
     if (cmd =='run')
     {
         // push code directly into console runner
+        await pyodide.loadPackagesFromImports(arg);
         pyConsole.runcode(arg);
         await runAsyncLoop(id,arg);
         return;

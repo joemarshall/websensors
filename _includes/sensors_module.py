@@ -7,8 +7,8 @@ from contextlib import contextmanager
 from math import sqrt
 import io,csv
 def on_sensor_event(event):
-    name=event["name"]
-    value=event["args"]
+    name=event.name
+    value=event.args
     if name=="gyro":
         gyro._on_rotation(value[0],value[1],value[2])
     elif name=="accel":
