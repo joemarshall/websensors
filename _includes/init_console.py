@@ -24,6 +24,7 @@ class PyConsole:
         self.cancelled=False
         self.run_source_obj=None
         self.run_code_obj=None
+        self.locals={}
 
     def clear_cancel(self):
         self.cancelled=False
@@ -42,7 +43,7 @@ class PyConsole:
             return {"done":True,"action":"cancelled"}
         elif self.run_code_obj:
             try:
-                if not self.resumer.run_once(exec,[self.run_code_obj,{}]):
+                if not self.resumer.run_once(exec,[self.run_code_obj,self.locals]):
                     self.resume_args=self.resumer.resume_params
                     self.flush_all()
                     # need to rerun run_once after handling this action
@@ -72,6 +73,7 @@ class PyConsole:
         #  we no longer actually run code in here, 
         # we store it here and then repeatedly run 
         self.run_code_obj=code
+        self.locals={}
 
     def banner(self):
         return f"Welcome to the Pyodide terminal emulator 🐍\\n{super().banner()}"
