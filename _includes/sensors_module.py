@@ -1,8 +1,17 @@
 """ This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
 """
-
-
 from contextlib import contextmanager
+
+def set_pins(sensor_pin_mapping:dict):
+    for (name,pin) in dict.items():
+        sensorName=sensorName.lower()
+        sensorName,sensorNum=re.match(r"(\D+)(\d*)",sensorName).groups()
+        if sensorName not in globals():
+            print(f"Warning: sensor {sensorName} is not supported on websensor platform")
+            print(f"This code will only work to replay a CSV file")
+        elif len(sensorNum)!=0:
+            globals()[sensorName+sensorNum]=globals()[sensorName]
+
 
 from math import sqrt
 import io,csv
