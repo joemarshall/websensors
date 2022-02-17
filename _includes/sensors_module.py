@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 
 def set_pins(sensor_pin_mapping:dict):
-    for (name,pin) in dict.items():
+    for (name,pin) in sensor_pin_mapping.items():
         sensorName=sensorName.lower()
         sensorName,sensorNum=re.match(r"(\D+)(\d*)",sensorName).groups()
         if sensorName not in globals():
