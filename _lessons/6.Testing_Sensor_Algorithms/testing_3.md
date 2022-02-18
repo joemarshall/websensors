@@ -59,7 +59,7 @@ Once you successfully get to step 8, you have basically done the complete workfl
 <script>
 makeReplayController();
 makePyodideBox({codeString:
-`THRESHOLD=.5
+`THRESHOLD=512
 DELAY=0.01
 
 import time
@@ -83,7 +83,7 @@ last_second=0
 start_time=time.time()
 
 # lets graph everything too
-graphs.set_style("sound","rgb(255,0,0)",0,1)
+graphs.set_style("sound","rgb(255,0,0)",0,1024)
 graphs.set_style("bangs detected","rgb(0,255,0)",0,10,subgraph_y=1)
 graphs.set_style("bangs expected","rgb(0,0,255)",0,10,subgraph_y=1) 
 

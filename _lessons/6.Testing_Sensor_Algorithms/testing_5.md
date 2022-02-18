@@ -26,11 +26,11 @@ Here is an example of what happens if you overfit a sensor processing algorithm.
 <script>
 makePyodideBox({
     codeString:`
-THRESHOLD=.4
+THRESHOLD=400
 import time    
 import graphs
 import sensors
-graphs.set_style("light","rgb(0,255,0)",0,1,subgraph_y=1)
+graphs.set_style("light","rgb(0,255,0)",0,1024,subgraph_y=1)
 graphs.set_style("shiny torch on","rgb(255,0,0)",0,1,subgraph_y=0)
 while True:
     light_level=sensors.light.get_level()

@@ -182,7 +182,7 @@ false_positives=0
 true_negatives=0
 false_negatives=0
 
-test_peak_data=[.1,.3,.5,.3,.4,.2,.1]
+test_peak_data=[128,384,512,384,444,256,128]
 test_ground_truth_data=[0,1,1,0,1,0,0]
 for test_data_point,ground_truth in zip(test_peak_data,test_ground_truth_data):
     if test_data_point>THRESHOLD:
