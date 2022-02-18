@@ -7,6 +7,7 @@ def set_pins(sensor_pin_mapping:dict):
     for (sensorName,pin) in sensor_pin_mapping.items():
         sensorName=sensorName.lower()
         sensorName,sensorNum=re.match(r"(\D+)(\d*)",sensorName).groups()
+
         if sensorName not in globals():
             print(f"Warning: sensor {sensorName} is not supported on websensor platform")
             print(f"This code will only work to replay a CSV file")
@@ -181,14 +182,14 @@ class replayer:
     when your script is started, you just need to check if there is any replay data and use it if so. For example you might
     do this with a conditional if statement like this:
 
-    \`\`\`python
+    ```python
     if sensors.replayer.has_replay():
         this_time,x,y,z,sound = sensors.replayer.get_level("time","x","y","z","sound")
     else:
         this_time=time.time()-start_time
         x,y,z=sensors.accel.get_xyz()
         sound=sensors.sound.get_level()
-    \`\`\`
+    ```
 
     """
     _pos=0
@@ -301,7 +302,7 @@ class replayer:
         ----------
         *col_names : tuple
             Pass the list of column names that you want to read, e.g.
-            \`sensors.replayer.get_level("time","sound","light")\`
+            `sensors.replayer.get_level("time","sound","light")`
 
         Returns
         -------

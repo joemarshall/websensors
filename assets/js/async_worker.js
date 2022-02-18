@@ -231,24 +231,15 @@ async function initPython()
     try
     {
         // make the filter module (low, high pass, median filter etc.)
-        loadAsModule("filters",`
-{% include filters_module.py %}
-`);    
+        {% include python_module.js fname='filters_module.py' name='filters' %};
 
-        loadAsModule("speech",`
-{% include speech_module.py %}
-`);
+        {% include python_module.js fname='speech_module.py' name='speech' %};
 
         // make the graph module (calls back to js to display graph values)
-        loadAsModule("graphs",`
-{% include graphs_module.py %}
-    `
-            );
+        {% include python_module.js fname='graphs_module.py' name='graphs' %};
 
             // make the sensor module - receives sensor data
-            sensorModule=loadAsModule("sensors",`
-{% include sensors_module.py %}
-`);
+            sensorModule={% include python_module.js fname='sensors_module.py' name='sensors' %};
             const init_code=`
 {% include init_console.py %}
 `;
