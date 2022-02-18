@@ -261,8 +261,8 @@ class LowPassFilter:
         alpha=(time_between_samples)/(time_constant+time_between_samples)
         return LowPassFilter(alpha)
 
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("lowpassed sound","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("lowpassed sound","rgb(255,0,0)",0,1024,subgraph_y=1)
 
 soundFilter=LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,0.05)
 while True:
@@ -286,8 +286,8 @@ FILTER_TIME_CONSTANT=2
 import graphs, sensors,time
 # The filters module contains my simple high and low pass filters
 import filters
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("lowpassed light","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("lowpassed light","rgb(255,0,0)",0,1024,subgraph_y=1)
 graphs.set_style("light is on","rgb(255,0,0)",0,1,subgraph_y=2)
 
 lightFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,0.05)
@@ -296,7 +296,7 @@ while True:
     light_lowpassed=lightFilter.on_value(light_level)
     graphs.on_value("light",light_level)
     graphs.on_value("lowpassed light",light_lowpassed)
-    graphs.on_value("light is on",light_lowpassed>0.5)
+    graphs.on_value("light is on",light_lowpassed>512)
     time.sleep(0.05)
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Low-pass filter causes delay - try 'turning on and off the light' by covering the light sensor and see how long this takes to detect the changes in light status."})
 </script>
@@ -444,8 +444,8 @@ class HighPassFilter:
         alpha=(time_constant)/(time_constant+time_between_samples)
         return HighPassFilter(alpha)
 
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("highpassed light","rgb(255,0,0)",-1,1,subgraph_y=1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("highpassed light","rgb(255,0,0)",-256,256,subgraph_y=1)
 
 lightFilter=HighPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,0.05)
 while True:
@@ -471,8 +471,8 @@ makePyodideBox({
 HIGH_PASS_CONSTANT=.2
 # very small low pass filter just to remove any jumps around the threshold
 LOW_PASS_CONSTANT=0.01
-# detect jumps of 0.2 from constant level
-THRESHOLD=0.2
+# detect jumps of 150 from constant level
+THRESHOLD=150
 # time between samples
 SAMPLE_TIME=0.005
 import time
@@ -483,9 +483,9 @@ import sensors
 # the code in your work
 import filters
 
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("filtered sound","rgb(255,0,0)",-1,1,subgraph_y=1)
-graphs.set_style("threshold","rgb(0,255,0)",-1,1,subgraph_y=1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("filtered sound","rgb(255,0,0)",-256,256,subgraph_y=1)
+graphs.set_style("threshold","rgb(0,255,0)",-256,256,subgraph_y=1)
 
 hpFilter=filters.HighPassFilter.make_from_time_constant(HIGH_PASS_CONSTANT,SAMPLE_TIME)
 lpFilter=filters.LowPassFilter.make_from_time_constant(LOW_PASS_CONSTANT,SAMPLE_TIME)
@@ -496,7 +496,7 @@ while True:
     sound_level=sensors.sound.get_level()
     sound_highpassed=hpFilter.on_value(sound_level)
     sound_lowpassed=lpFilter.on_value(sound_highpassed)
-    thresholded=1 if sound_level>THRESHOLD else 0
+    thresholded=1 if sound_lowpassed>THRESHOLD else 0
     if thresholded==1 and last_thresholded==0:
         event_count+=1
         print(event_count)
@@ -539,9 +539,9 @@ FILTER_TIME_CONSTANT=BLOCK_SIZE*SAMPLE_TIME
 import graphs, sensors,time
 # The filters module contains sliding average filter
 import filters
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("lowpassed light","rgb(255,0,0)",0,1,subgraph_y=1)
-graphs.set_style("average light","rgb(0,255,0)",0,1,subgraph_y=2)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("lowpassed light","rgb(255,0,0)",0,1024,subgraph_y=1)
+graphs.set_style("average light","rgb(0,255,0)",0,1024,subgraph_y=2)
 
 lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
 avgFilter=filters.SlidingAverageFilter(block_size=BLOCK_SIZE)

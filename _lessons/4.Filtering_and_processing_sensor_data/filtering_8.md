@@ -31,8 +31,8 @@ BLOCK_SIZE=300 # 30 seconds
 import graphs, sensors,time
 # The filters module contains my simple high and low pass filters
 import filters
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("ambient level","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("ambient level","rgb(255,0,0)",0,1024,subgraph_y=1)
 
 medFilter=filters.MedianFilter(BLOCK_SIZE)
 c=0
@@ -66,19 +66,19 @@ BLOCK_SIZE=100 # 10 seconds
 HP_TIME_CONSTANT=5
 
 # thresholds on the high passed value to detect turn on/off changes
-THRESHOLD_OFF = -0.1
-THRESHOLD_ON = 0.1
+THRESHOLD_OFF = -10
+THRESHOLD_ON = 10
 
 # threshold on ambient light level for it 
 # being definitely dark e.g. no light on for sure
-THRESHOLD_DARK=0.1
+THRESHOLD_DARK=100
 
 import graphs, sensors,time
 # The filters module contains my simple high and low pass filters
 import filters
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("ambient level","rgb(255,0,0)",0,1,subgraph_y=1)
-graphs.set_style("high passed light","rgb(0,255,0)",-1,1,subgraph_y=2)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("ambient level","rgb(255,0,0)",0,1024,subgraph_y=1)
+graphs.set_style("high passed light","rgb(0,255,0)",-256,256,subgraph_y=2)
 graphs.set_style("light on","rgb(0,0,255)",0,1,subgraph_y=3)
 
 time.sleep(0.3)

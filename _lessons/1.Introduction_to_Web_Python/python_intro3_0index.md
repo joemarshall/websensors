@@ -8,7 +8,7 @@ These pages contain documentation of the various modules. Click on function or c
 
 <div id="graphs" class="moduletarget" markdown=1>
 # Module [graphs](python_intro3_graphs.html)
-This module allows you to draw nice line graphs in the web interface.
+This module allows you to draw nice line graphs in the web interface or on the grovepi screen.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)

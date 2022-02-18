@@ -39,7 +39,17 @@ The microphone on a computer is an example of a sensor. Lets look at some data f
 
 Click the 'go' button below, and once you have told your web browser to allow access to your microphone you should see a load of numbers come up and the graph should show values. If you make noise, the numbers should get bigger, and the graph should show higher levels. If you don't see that, check that your microphone is working (e.g. with teams or something). If you still can't see anything, [email me](mailto:joe.marshall@nottingham.ac.uk) and ask for help, letting me know what device and web browser you are using because there may be something on the server that doesn't work for your device, and you really really need me to work it out with you so you can do the coursework. It works great in Chrome or Firefox on Windows and should also work on Safari.
 
-<script> makePyodideBox({codeFile:"basic_audio.py",hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
+<script> makePyodideBox({codeString:`
+import time
+import graphs
+import sensors
+graphs.set_style("snd","#000",0,1023)
+while True:
+  level=sensors.sound.get_level()
+  print(level)
+  graphs.on_value("snd",level)
+  time.sleep(0.01)
+`,hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
 
 # Further reading
 

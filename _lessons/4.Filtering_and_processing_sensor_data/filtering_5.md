@@ -68,9 +68,9 @@ FILTER_TIME_CONSTANT=BLOCK_SIZE*SAMPLE_TIME
 import graphs, sensors,time
 # The filters module contains median filter
 import filters
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("lowpassed light","rgb(255,0,0)",0,1,subgraph_y=1)
-graphs.set_style("median light","rgb(0,255,0)",0,1,subgraph_y=2)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("lowpassed light","rgb(255,0,0)",0,1024,subgraph_y=1)
+graphs.set_style("median light","rgb(0,255,0)",0,1024,subgraph_y=2)
 
 lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
 medFilter=filters.MedianFilter(block_size=BLOCK_SIZE)
@@ -133,10 +133,10 @@ BLOCK_SIZE = 20 # 1/5 second / 20 samples median filter size
 import graphs, sensors,time
 # The filters module contains median filter
 import filters
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("block mean","rgb(255,0,0)",0,1,subgraph_x=0,subgraph_y=1)
-graphs.set_style("block max","rgb(0,255,0)",0,1,subgraph_x=1,subgraph_y=0)
-graphs.set_style("block median","rgb(0,0,255)",0,1,subgraph_x=1,subgraph_y=1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("block mean","rgb(255,0,0)",0,1024,subgraph_x=0,subgraph_y=1)
+graphs.set_style("block max","rgb(0,255,0)",0,1024,subgraph_x=1,subgraph_y=0)
+graphs.set_style("block median","rgb(0,0,255)",0,1024,subgraph_x=1,subgraph_y=1)
 
 meanFilter=filters.BlockMeanFilter(block_size=BLOCK_SIZE)
 medFilter=filters.BlockMedianFilter(block_size=BLOCK_SIZE)
@@ -153,7 +153,7 @@ while True:
     graphs.on_value("block median",medVal)
     graphs.on_value("block max",maxVal)
     time.sleep(SAMPLE_TIME)
-`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Comparing median and low-pass filter."})
+`  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,caption:"Block averaging filters"})
 </script>
 
 

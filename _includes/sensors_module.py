@@ -130,7 +130,7 @@ class sound:
     """ Sound sensor
 
     This returns the rough volume of the sound occurring in the vicinity of the device. On web based systems it is done using the built
-    in microphone. The scale is an arbitrary 0-1 scale which is dependent on the microphone on your device, and
+    in microphone. The scale is an arbitrary 0-1023 scale which is dependent on the microphone on your device, and
     probably a bunch of other hardware and software things.
 
     """
@@ -142,21 +142,22 @@ class sound:
         Returns
         -------
         level: float
-            sound level ranging from 0 to 1
+            sound level ranging from 0 to 1023
         """
         return sound._level        
         
     # called from js to set the current level
     @staticmethod
     def _on_level(level):
-        sound._level=level
+        sound._level=int(level*1023)
 
 class light:
     """ Light sensor
 
-    This gets light levels from a camera or light sensor on your device. The scale is an arbitrary one which is dependent 
-    on the camera or sensor on your device, and probably a bunch of other hardware and software things. On non-chrome web browsers and iOS Chrome,
-    this may be extremely innaccurate because they force automatic brightness adjustment.
+    This gets light levels from a camera or light sensor on your device. The scale is an arbitrary 0-1023 one 
+    dependent on the camera or sensor on your device, and probably a bunch of other hardware and software things. 
+    On non-chrome web browsers and iOS Chrome, this may be extremely innaccurate because they force automatic brightness adjustment.
+    
     """
     _level=0
     @staticmethod
@@ -173,7 +174,7 @@ class light:
     # called from js to set the current level
     @staticmethod
     def _on_level(level):
-        light._level=level
+        light._level=int(level*1023.0)
 
 class replayer:
     """ Replay pre-recorded sensor data from CSV files

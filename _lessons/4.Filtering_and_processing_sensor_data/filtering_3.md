@@ -26,12 +26,12 @@ import sensors
 import graphs
 
 
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("threshold","rgb(0,255,0)",0,1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold","rgb(0,255,0)",0,1024)
 graphs.set_style("event counter","rgb(0,0,255)",0,10,subgraph_y=1)
 # try changing this threshold level and see what it does 
 # to the thresholded output
-THRESHOLD_LEVEL=0.3
+THRESHOLD_LEVEL=300
 
 event_count=0
 last_threshold=0
@@ -173,9 +173,9 @@ from collections import deque
 # threshold based on previous 200 readings
 history=deque(maxlen=200)
 
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("threshold up","rgb(255,0,0)",0,1)
-graphs.set_style("threshold down","rgb(0,255,0)",0,1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold up","rgb(255,0,0)",0,1024)
+graphs.set_style("threshold down","rgb(0,255,0)",0,1024)
 graphs.set_style("event counter","rgb(0,0,255)",0,10,subgraph_y=1)
 
 # These multipliers set what fraction of the mean of the previous
@@ -253,9 +253,9 @@ history=deque(maxlen=200)
 THRESHOLD_TRIGGER_COUNT = 30
 
 
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("threshold up","rgb(255,0,0)",0,1)
-graphs.set_style("threshold down","rgb(0,255,0)",0,1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold up","rgb(255,0,0)",0,1024)
+graphs.set_style("threshold down","rgb(0,255,0)",0,1024)
 graphs.set_style("threshold_count","rgb(0,0,255)",0,THRESHOLD_TRIGGER_COUNT,subgraph_y=1)
 
 # These multipliers set what fraction of the mean of the previous
@@ -324,9 +324,9 @@ history=deque(maxlen=200)
 # don't fire an event until at least MIN_TIME_BETWEEN_EVENTS samples have been taken
 MIN_TIME_BETWEEN_EVENTS=50
 
-graphs.set_style("light","rgb(0,0,0)",0,1)
-graphs.set_style("threshold up","rgb(255,0,0)",0,1)
-graphs.set_style("threshold down","rgb(0,255,0)",0,1)
+graphs.set_style("light","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold up","rgb(255,0,0)",0,1024)
+graphs.set_style("threshold down","rgb(0,255,0)",0,1024)
 graphs.set_style("time since last","rgb(0,0,255)",0,MIN_TIME_BETWEEN_EVENTS,subgraph_y=1)
 
 # These multipliers set what fraction of the mean of the previous

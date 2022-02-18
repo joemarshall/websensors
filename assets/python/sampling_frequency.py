@@ -2,7 +2,7 @@ import time
 import sensors
 import graphs
 
-graphs.set_style("snd","rgb(0,0,0)",-.1,1.1)
+graphs.set_style("snd","rgb(0,0,0)",0,1024)
 
 while True:
     level=sensors.sound.get_level()

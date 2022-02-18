@@ -21,8 +21,8 @@ SAMPLE_TIME=0.2
 import graphs, sensors,time
 # The filters module contains my simple high and low pass filters
 import filters
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("noise level","rgb(255,0,0)",0,1,subgraph_y=1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("noise level","rgb(255,0,0)",0,1024,subgraph_y=1)
 
 lpFilter=filters.LowPassFilter.make_from_time_constant(FILTER_TIME_CONSTANT,SAMPLE_TIME)
 c=0
@@ -80,14 +80,14 @@ SILENCE_AFTER=0.1
 
 
 # how loud does a knock need to be
-UP_THRESHOLD=.02
-DOWN_THRESHOLD=-.02
+UP_THRESHOLD=20
+DOWN_THRESHOLD=-20
 
 import graphs, sensors,time
 # The filters module contains my simple high and low pass filters
 import filters
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("hp","rgb(0,255,0)",-.1,.1,subgraph_y=1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("hp","rgb(0,255,0)",-256,256,subgraph_y=1)
 
 hpFilter=filters.HighPassFilter.make_from_time_constant(HP_TIME_CONSTANT,SAMPLE_TIME)
 c=0

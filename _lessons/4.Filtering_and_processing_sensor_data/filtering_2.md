@@ -30,12 +30,12 @@ import sensors
 import graphs
 
 
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("threshold","rgb(0,255,0)",0,1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold","rgb(0,255,0)",0,1024)
 graphs.set_style("output","rgb(0,0,255)",0,1,subgraph_y=1)
 # try changing this threshold level and see what it does 
 # to the thresholded output
-THRESHOLD_LEVEL=0.5
+THRESHOLD_LEVEL=512
 
 while True:
     sound_level=sensors.sound.get_level()
@@ -86,14 +86,14 @@ import sensors
 import graphs
 
 
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("up","rgb(255,0,0)",0,1)
-graphs.set_style("down","rgb(0,255,0)",0,1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("up","rgb(255,0,0)",0,1024)
+graphs.set_style("down","rgb(0,255,0)",0,1024)
 graphs.set_style("output","rgb(0,0,255)",0,1,subgraph_y=1)
 # try changing this threshold level and see what it does 
 # to the thresholded output
-THRESHOLD_UP=0.75
-THRESHOLD_DOWN=0.25
+THRESHOLD_UP=768
+THRESHOLD_DOWN=256
 
 thresholded=0
 while True:
@@ -128,12 +128,11 @@ import graphs
 # we use the double ended queue from python collections to store a history buffer
 from collections import deque
 
-HISTORY_LEN=50
+HISTORY_LEN=500 # five seconds
 
-graphs.set_style("sound","rgb(0,0,0)",0,1)
-graphs.set_style("threshold","rgb(255,0,0)",0,1)
+graphs.set_style("sound","rgb(0,0,0)",0,1024)
+graphs.set_style("threshold","rgb(255,0,0)",0,1024)
 graphs.set_style("output","rgb(0,0,255)",0,1,subgraph_y=1)
-THRESHOLD=0.5
 history=deque(maxlen=HISTORY_LEN)
 
 thresholded=0
@@ -141,9 +140,9 @@ while True:
     sound_level=sensors.sound.get_level()
     history.append(sound_level)
     # we set our threshold value to be double the mean of the history
-    # buffer, plus 0.1 to ignore noise
-    THRESHOLD=2.0*sum(history)/len(history)+0.1
-    THRESHOLD=min(THRESHOLD,0.9) # set a maximum on threshold to 0.9
+    # buffer, plus 100 to ignore noise
+    THRESHOLD=2.0*sum(history)/len(history)+100
+    THRESHOLD=min(THRESHOLD,968) # set a maximum on threshold to 968
     if sound_level>THRESHOLD:
         thresholded=1
     else:

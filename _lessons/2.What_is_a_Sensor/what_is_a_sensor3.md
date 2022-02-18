@@ -38,7 +38,16 @@ Check out the example again of a sound level sensor which uses your webcam or co
 - Make a really quiet sound, can you see it?
 - Make a really loud sound right near the microphone, what happens? How different is it to if you make a really loud noise slightly further back? What is happening to the level meter?
 
-<script> makePyodideBox({codeFile:"basic_audio.py",hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
+<script> makePyodideBox({codeString:`import time
+import graphs
+import sensors
+graphs.set_style("snd","#000",0,1023)
+while True:
+  level=sensors.sound.get_level()
+  print(level)
+  graphs.on_value("snd",level)
+  time.sleep(0.01)
+`,hasConsole:true,showCode:true,editable:true,hasGraph:true})</script>
 
 In the second section of these exercises, we will look at how to process and clean up data from individual sensors to get a better idea of the aspects of the sensed stimulus which we are interested in. 
 

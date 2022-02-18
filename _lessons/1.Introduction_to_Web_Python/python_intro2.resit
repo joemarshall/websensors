@@ -6,12 +6,9 @@ uses_accelerometer: true
 uses_light: true 
 ---
 
-The second coursework is all about using sensors to interpret the state of
-the world around the sensing device.
+The second coursework is all about sensing people who are doing repetitive physical activities. Things like using the sensors on your phone to count how many push-ups you are doing.
 
-In your coursework you will build a system which uses at least two sensors. You may wish to prototype elements of your sensing using the web sensor platform. 
-
-As an example of a sensing algorithm, here is a repetitive activity being sensed - click start below, and if you are quiet, you should be able to clap, and the number of claps being printed out should go up.
+Here is a repetitive activity being sensed - click start below, and if you are quiet, you should be able to clap, and the number of claps being printed out should go up.
 
 <script>
 makePyodideBox({
@@ -61,12 +58,22 @@ To understand how this code works, work through the exercises in this website, w
 
 # Coursework doings
 
-For the coursework, you will submit a proposal for a sensing system to build.
+For the coursework, you will choose a repetitive physical activity, which may be anything you want. Then you will design a system which senses this activity. 
 
 You will then prototype *only* the sensor processing aspect of this, i.e. the part which interprets the sensor data. You will not prototype the user interface, the server backend, physical hardware or anything else. These aspects of the system may be described in the design section of your report, but are not part of the practical work.
 
-For the practical work, you  will develop a sensing algorithm, a python script like the one above which takes in sensor data, processes that data, and outputs some kind of interpretation of the data. This will use the methods in the sections on sensor filtering and combination. We will expect your algorithm to run on the grovepi boards which are available in the lab unless you have already discussed something different with us.
+For the practical work, you  will develop a sensing algorithm, a python script like the one above which takes in sensor data, processes that data, and outputs some kind of interpretation of the data. This will use the methods in the sections on sensor filtering and combination. 
 
-Once the algorithm is built, you will use the methods in the section on testing of algorithms to quantify how well your system works, and in what circumstances it fails and why. This is an important part of the final report which is highly weighted, so don't leave this till the last minute. 
+Once the algorithm is built, you will use the methods in the section on testing of algorithms to quantify how well your system works, and in what circumstances it fails and why. This is an important part of the final report which is highly weighted, so don't leave this till the last minute...
 
 As the previous paragraphs perhaps made obvious, the final outcome of this work is a written report. You must also submit all code for your sensor algorithm, which we will run during marking so we can understand how your system works. Please make sure all code you submit does run, as we cannot mark non-running code.
+
+# The coursework workflow 
+
+## How do you keep track of code?
+
+You can code in the [Python Scratchpad]({{"/scratchpad.html" |relative_url }}) on this site. This is a webpage which lets you run python scripts with whatever sensors you choose, and importantly, is linked to your onedrive. This means you can load and save scripts from there.
+
+## How do you save output?
+
+In the scratchpad, you can capture output from your scripts to your onedrive. This allows you to do things like process the data offline on your own computer, or save data for testing runs.
