@@ -1,6 +1,7 @@
 """ This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
 """
 from contextlib import contextmanager
+import re
 
 def set_pins(sensor_pin_mapping:dict):
     for (sensorName,pin) in sensor_pin_mapping.items():
