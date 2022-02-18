@@ -4,6 +4,7 @@ uses_pyodide: true
 uses_audio: true
 uses_accelerometer: true
 uses_light: true 
+published: false
 ---
 
 The second coursework is all about sensing people who are doing repetitive physical activities. Things like using the sensors on your phone to count how many push-ups you are doing.
