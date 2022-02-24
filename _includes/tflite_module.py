@@ -10,7 +10,7 @@
 #   locate WASM module files from their default location (dist/).
 # -->
 # <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite/dist/tf-tflite.min.js"></script>
-
+# comes in as  tflite_runtime.interpreter
 #from tflite_runtime.interpreter import Interpreter
 import js
 import numpy as np
@@ -55,8 +55,13 @@ class Interpreter:
         def invokeFn(**args):
             for x in inputs:
                 self.set_tensor(x['index'],args[x['name']])
-            self.invoke
-            # return the tensors in a named doodad
+            self.invoke()
+            outputs=self.get_output_details()
+            retval={}
+            for x in outputs:
+                retval[x['name']]=self.get_tensor(x['index'])
+            # return the tensors in a dict
+            return retval
 
     def invoke(self):
         dataMap={}
@@ -80,6 +85,9 @@ class Interpreter:
         self.tensors={}
 
     def resize_tensor_input(self,input_index,tensor_size,strict=False):
+        # I think we can ignore this - tensors for input should be 
+        # able to be passed in whatever size and should sort out
+        # in the tflite-js code
         pass
 
     def set_tensor(self,tensor_index,value):
