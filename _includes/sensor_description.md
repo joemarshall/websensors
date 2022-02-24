@@ -1,7 +1,7 @@
 # {{include.name}} 
 
+<a href="#list-of-sensors">Back to sensor list</a><br/>
 
-<a href="#list-of-sensors">Back to sensor list</a>
 {{include.description}}
 
 {% capture title_link %}
