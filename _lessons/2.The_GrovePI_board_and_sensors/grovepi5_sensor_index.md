@@ -37,14 +37,14 @@ One detail of this sensor is that there is a little 'jumper' on the board which 
 {%include sensor_description.md name="Accelerometer and Gyro" pin="0" pintype="i2c" description="There are two different accelerometer boards in our kits. If you only want to read from the accelerometer, then either board will work fine for you. The accelerometer tells you how much acceleration the board is undergoing, measured in m/s^2; because the accelerometer senses all acceleration, including  constant acceleration due to gravity of 9.8m/s^2 downwards, you can use this sensor to tell which way up the board is by looking at which way the gravity vector is pointing. You can also detect freefall by looking at the magnitude of the sensor; when a sensor is being dropped, it will have an accelerometer magnitude of roughly zero.
 
 The accelerometer/gyro board also has a gyroscope sensor, which tells you how fast it is rotating around each axis. If you want to know which axis (x,y,z) is which on the board, there's a little diagram marked on each sensor board." shortdesc="Measures acceleration and rotation" examplecode='# accelerometer and gyro on any i2c pin
-sensor_pins={ "accelerometer":0,
+sensor_pins={ "accel":0,
 "gyro":0}
 sensors.set_pins(sensor_pins)
 while True:
     # acceleration in x,y,z axes
-    ax,ay,az=sensors.accelerometer.get_xyz() 
+    ax,ay,az=sensors.accel.get_xyz() 
     # magnitude of acceleration
-    am = sensors.accelerometer.get_magnitude() 
+    am = sensors.accel.get_magnitude() 
     # rotation around x,y,z axes
     rx,ry,rz=sensors.gyro.get_xyz() 
     # magnitude of rotation
@@ -53,14 +53,14 @@ while True:
 %}
 
 {%include sensor_description.md name="Accelerometer and Magnetometer" pin="0" pintype="i2c" description="The accelerometer/magnetometer board has an accelerometer as described above. It also has a magnetometer, which detects the orientation and strength of the earth's magnetic field. This can be used as a compass, to tell which way the board is pointing in the world." shortdesc="Measures acceleration and magnetic field" examplecode=' # accelerometer and magnetometer on any i2c pin
-sensor_pins={ "accelerometer":0,
+sensor_pins={ "accel":0,
 "magnetometer":0}
 sensors.set_pins(sensor_pins)
 while True:
     # acceleration in x,y,z axes
-    ax,ay,az=sensors.accelerometer.get_xyz()
+    ax,ay,az=sensors.accel.get_xyz()
     # magnitude of acceleration
-    am = sensors.accelerometer.get_magnitude()
+    am = sensors.accel.get_magnitude()
     # magnetic field strength in x,y,z axes
     mx,my,mz=sensors.magnetometer.get_xyz() 
     # magnitude of magnetic field
