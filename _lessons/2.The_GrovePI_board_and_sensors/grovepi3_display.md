@@ -6,6 +6,8 @@ uses_light: true
 
 ---
 
+**Plug the display into an I2C port on the grovepi**
+
 The Grove LCD Display that we use is a 16x2 character LCD screen. It has a backlight which can be set to any RGB colour, which can be useful for an easy to spot output from your algorithms when an event is sensed or something.
 
 It also provides a small and poor quality implementation of the graph API  from the websensor platforms, to display small line graphs.
