@@ -10,6 +10,8 @@ uses_light: true
 
 The Grove LCD Display that we use is a 16x2 character LCD screen. It has a backlight which can be set to any RGB colour, which can be useful for an easy to spot output from your algorithms when an event is sensed or something.
 
+When you start up the Pi, the LCD shows the ip address. If you overwrite this and want to reset the display to see the ip address again, then run `python showIP.py` in the terminal
+
 It also provides a small and poor quality implementation of the graph API  from the websensor platforms, to display small line graphs.
 
 We provide a bunch of functions to use this display.
