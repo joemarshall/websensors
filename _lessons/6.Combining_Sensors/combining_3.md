@@ -298,3 +298,6 @@ The advantages of this kind of machine learning approach is that it can often be
 
 For a really quick run through a load of machine learning examples, have a look here:
 [Tensorflow & Keras deep learning tutorial](https://machinelearningmastery.com/tensorflow-tutorial-deep-learning-with-tf-keras/)
+
+Or for a more in depth online course 
+[Google tensorflow crash course](https://developers.google.com/machine-learning/crash-course/)

@@ -71,6 +71,16 @@ export class Console
         {
             return true;
         }
+    }
 
+    download()
+    {
+        var blob = new Blob([this.fullText], {
+            type: "text/plain;charset=utf-8;",
+        });
+        var a=document.createElement('a')
+        a.href = URL.createObjectURL(blob);
+        a.download='output.csv';
+        a.click();
     }
 };

@@ -235,6 +235,8 @@ async function initPython()
 
         {% include python_module.js fname='speech_module.py' name='speech' %};
 
+        {% include python_module.js fname='tflite_module.py' name='tflite_runtime' %};
+
         // make the graph module (calls back to js to display graph values)
         {% include python_module.js fname='graphs_module.py' name='graphs' %};
 

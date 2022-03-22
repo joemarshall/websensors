@@ -42,11 +42,18 @@
     window.sensor_objects=[];
 </script>    
 
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-cpu"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite/dist/tf-tflite.min.js"></script>
+
+
 <script src="{{ '/assets/js/fake_worker.js' | relative_url }}"></script>
 
 {% if page.uses_files %}
 {% include onedrive.html %}
 {% endif %}
+
 
 {% if page.uses_audio %}
 <link rel="modulepreload" href="{{'/assets/js/sound_sensor.js' | relative_url}}" as="script" >
@@ -352,6 +359,47 @@ async function saveAsDialog(textContent,initialVal,fileHandler)
 
 }
 
+async function addFileFromStream(stream,targetName)
+{
+    const reader=stream.getReader();
+    const file=pyodide.runPython(`open("${targetName}","wb")`);
+    while(true)
+    {
+        const readResult=await reader.read();
+        if(readResult.done)
+        {
+            break;
+        }
+        file.write(pyodide.toPy(readResult.value));
+    }
+    file.close();
+}
+
+// add files from drag and drop to pyodide
+function addPyodideFiles(ev,drop_div)
+{
+    if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        addFileFromStream(file.stream(),file.name)
+        console.log('... file[' + i + '].name = ' + file.name);
+        drop_div.innerHTML=`<p>Uploaded file: ${file.name}</p>`
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+    var file=ev.dataTransfer.files[i];
+      console.log('... file[' + i + '].name = ' + file.name);
+      addFileFromStream(file.stream(),file.name);
+      drop_div.innerHTML=`<p>Uploaded file: ${file.name}</p>`
+    }
+  }    
+}
+
 async function makePyodideBoxInternal(options)
 {    
     box_index+=1;
@@ -620,6 +668,37 @@ async function makePyodideBoxInternal(options)
         parent.appendChild(graphParent);
         graphContext=makeGraphContext(graphCanvas);
     }
+    if(options.hasUploadBox)
+    {
+        const drop_div=document.createElement("div");
+        drop_div.className="pyodide_dropzone"
+        drop_div.onclick=function(ev){
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = e => { 
+                for (var i = 0; i < e.target.files.length; i++) {
+                    var file = e.target.files[i]; 
+                    addFileFromStream(file.stream(),file.name)
+                    drop_div.innerHTML=`<p>Uploaded file: ${file.name}</p>`
+                }
+            }
+            input.click();
+        };
+
+        drop_div.ondrop=function(ev){
+            ev.preventDefault();
+            drop_div.className="pyodide_dropzone"
+            addPyodideFiles(ev,drop_div);};
+        drop_div.ondragover=(ev)=>{
+            ev.preventDefault()
+            drop_div.className="pyodide_dropzoneactive";
+        };
+        drop_div.ondragleave=(ev)=>{
+            drop_div.className="pyodide_dropzone"        
+        };
+        drop_div.innerHTML="<p>Drag files here or click to upload</p>";
+        parent.appendChild(drop_div);
+    }
     // add a run button which starts all sensors, sets 
     // correct console div and graph canvas and runs the 
     // python code
@@ -725,6 +804,13 @@ async function makePyodideBoxInternal(options)
     stopButton.disabled=true;
     stopButton.onclick=onStop;
     parent.appendChild(stopButton);
+    const downloadButton=document.createElement("button");
+    downloadButton.className="pyodide_download";        
+    downloadButton.innerText="Download output as csv file";
+    downloadButton.disabled=false;
+    downloadButton.onclick=function(){consoleObj.download()};
+    parent.appendChild(downloadButton);
+
 {% if page.uses_files %}
     if(logSaveHandler)
     {
@@ -767,6 +853,7 @@ async function makePyodideBoxInternal(options)
         const chooseOutputFolderButton=document.createElement("button");
         chooseOutputFolderButton.className="pyodide_stop";        
         chooseOutputFolderButton.innerText="Output folder...";
+        
         logfolderName=document.createElement("span");
         logfolderName.textContent="    ";
         chooseOutputFolderButton.onclick=function()
@@ -805,6 +892,8 @@ async function makePyodideBoxInternal(options)
     {
         consoleDiv.innerText="Python loading";
     }
+
+
     // only allow starting code once pyodide is actually running
     pythonInitPromise.then( function(){
         if(consoleDiv)
@@ -812,7 +901,7 @@ async function makePyodideBoxInternal(options)
             consoleDiv.innerText="Python ready, press start button to run code";
         }
         startButton.disabled=false;
-    });        
+    });
 }
 
 window.makePyodideBoxInternal=makePyodideBoxInternal;
@@ -1013,6 +1102,9 @@ async function initFn()
 
 }
 
+
+
 window.addEventListener('load',initFn);
 
 </script>
+

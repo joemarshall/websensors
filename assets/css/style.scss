@@ -710,6 +710,21 @@ details
     
 };
 
+.pyodide_dropzone
+{
+    width:100%;
+    border: 2px solid #000;
+};
+
+.pyodide_dropzoneactive
+{
+    width:100%;
+    border: 2px solid #00f;
+    background-color: #bbf
+};
+
+
+
 .cm-editor.cm-focused { outline: 2px solid red }
 .cm-editor { background-color:white;max-height: 80vh; border: 1px solid silver; font-size: 14px }
 .cm-scroller {     resize: vertical;
@@ -718,6 +733,8 @@ details
  .cm-activeLine{background-color:#fee;}
 .pyodide_code {background-color:#fff;}
 .cm-selectionLayer .cm-selectionBackground ::selection {background:#f00;}
+
+
 
 summary
 {
