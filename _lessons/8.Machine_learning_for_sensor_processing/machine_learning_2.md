@@ -5,7 +5,10 @@ uses_audio: true
 uses_tensorflow: true
 uses_files: true
 ---
+This section assumes you know about machine learning already. If you don't, there are a bunch of concepts which you may find hard to grasp, particularly within the colab notebook. Check out the tutorials on the previous page if you want to know the deal about tensorflow and machine learning. Specifically here, the models I'm building are *supervised* learning models, trained with ground truth data, which use convolutional neural network models to process time-series data.
+
 In this page I will discuss a couple of examples of machine learning. For executing the machine learning models, you will use the tflite interpreter built into the websensors platform or installed on the raspberry Pis in the lab. To train the models, we will use [Google Colaboratory](https://colab.research.google.com/?utm_source=scs-index).This is a platform that allows you to run python scripts from a 'notebook' on the web. These scripts execute remotely on a virtual machine owned by google, which has a full desktop installation of python, with tensorflow and many other useful libraries pre-installed. This allows you to train simple models at reasonable speeds.
+
 
 # Classifier example - knock knock lock
 
@@ -224,7 +227,7 @@ def get_tempo(sensor_data):
     result=r(x=sensor_np.tolist())
     # get the first result no matter what the name of the output is
     first_key=next(iter(result.keys()))
-    result=result[first_key][0]
+    result=result[first_key][0][0]
     return result
 
 graphs.set_style("sound","rgb(0,0,0)",0,1024)
