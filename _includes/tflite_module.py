@@ -38,7 +38,6 @@ class interpreter(ModuleType):
             return name
 
         def on_loaded(self,interp):
-            print("Loaded model",self)
             self.tflite=interp
             self.js_inputs=self.tflite.inputs.to_py()
             for x in range(len(self.js_inputs)):
@@ -49,7 +48,6 @@ class interpreter(ModuleType):
             for x in range(len(self.js_outputs)):
                 self.js_outputs[x]["index"]=x+tensor_base_index
             self.tensors={}
-            print(self,self.js_inputs)
 
         def allocate_tensors(self):
             # make tensors for model - we actually keep everything in here until invoke
@@ -73,7 +71,6 @@ class interpreter(ModuleType):
             inputs=self.get_input_details()
             def invokeFn(**args):
                 for x in inputs:
-                    print(x)
                     self.set_tensor(x['index'],args[x['friendlyname']])
                 self.invoke()
                 outputs=self.get_output_details()
@@ -93,7 +90,6 @@ class interpreter(ModuleType):
             else:
                 for c in self.js_inputs:
                     dataMap[c["name"]]=self.tensors[c["index"]]
-                print(list(dataMap.keys()),"!!!")
                 output_vals=self.tflite.predict(pyodide.to_js(dataMap)).to_py()
             if type(output_vals)==list:
                 # list of tensors
