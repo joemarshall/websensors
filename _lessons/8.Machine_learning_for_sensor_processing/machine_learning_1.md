@@ -32,6 +32,14 @@ Interestingly, the use of machine learning models in many fields (most notably c
 | Performance | Machine learning usually requires more processor power for inference than simpler hand-coded models. A lot of processor power is required for training of machine learning models.|
 | Sensor data| Machine learning is very good at performing inferences using poor quality data, such as that from simpler sensors or sampled using lower data rates. This can reduce power requirements or system cost. |
 | Training | Training and tuning of machine learning algorithms is typically done offline, on systems with high powered processors and graphics cards or specialised machine learning accelerator chips.
-
+| Clarity | The behaviour of hand-coded algorithms is typically clear to the developer, and can be explained to users. Many machine learning algorithms are opaque and give little information as to why they work and how.|
 <figcaption>Machine learning and hand-coded algorithms compared.</figcaption>
 </figure>
+
+# Some tutorials on machine learning
+
+For a really quick run through a load of machine learning examples, have a look here:
+[Tensorflow & Keras deep learning tutorial](https://machinelearningmastery.com/tensorflow-tutorial-deep-learning-with-tf-keras/)
+
+Or for a more in depth online course 
+[Google tensorflow crash course](https://developers.google.com/machine-learning/crash-course/)
