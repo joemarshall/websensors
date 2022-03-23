@@ -190,11 +190,9 @@ while True:
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,showFileButtons:true,caption:"Capture ground truth datasets using this script"})
 </script>
 
-We can similarly load this ground truth data in a colab notebook, and train an almost identical neural network to do the regression.
+We can similarly load this ground truth data in another [Colab notebook](https://colab.research.google.com/github/joemarshall/websensors/blob/main/assets/python/Tempo_tapper.ipynb), and train an almost identical neural network to do the regression.
 
-Load your ground truth into the [colab notebook](https://colab.research.google.com/github/joemarshall/websensors/blob/main/assets/python/TempoTap.ipynb)
-
-You should get out tempomodel.tflite, which goes into the script below to run it.
+Load your ground truth into the colab notebook and run it as before. It takes quite a time to train the model. You should get out tempomodel.tflite, which goes into the script below to run it.
 
 <script>
 makePyodideBox({
@@ -246,12 +244,3 @@ while True:
     time.sleep(0.01) # 100th of a second
 `  ,hasConsole:true,hasGraph:true,showCode:true,editable:true,showFileButtons:true,hasUploadBox:true,caption:"This script does the tempo tap implementation by using the pretrained model you created above."})
 </script>
-
-
-{% comment %}
-# TODO: 1) colab workbook for the ground truth files
-# TODO: 2) work out how to load files from colab back to pyodide
-#       - i.e. allow an upload to script filesystem on the pyodide box
-# todo: 3) train and test it
-# todo  4) make body sensing page
-{% endcomment %}
