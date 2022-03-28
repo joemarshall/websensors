@@ -15,8 +15,6 @@ Some physiological processes happen deep within the body - implanted technologie
 
 
 
-[todo eeg hat pic, ecg, emg, pill]
-
 # Other wearable physiological sensing 
 
 Electrical physiological sensors are very powerful; however in many situations they lack practicality; for example EEG headsets and ECG based heart monitoring often require the application of medical electrode pads and wires, which can both be an invasive process in itself, and can be limited by factors such as thick hair. There are a range of other worn sensors which can be used to detect the body's physiological signals. These include: breathing sensing using stretch sensors across the user's chest; photoplethysmography based heart rate sensing, which uses a small LED placed close to the user's wrist or finger so it shines into the skin, along with photodetectors which detect how much light is shining back, this allows the sensing of blood moving under the skin, which allows estimation of heart rate and blood oxygen levels. Functional-near-infrared-spectroscopy does a similar thing for the brain, using infrared light to allow identification of near-surface brain activity in a less invasive way than electrical sensing methods.
@@ -31,7 +29,7 @@ Electrical physiological sensors are very powerful; however in many situations t
 
 Physiological processes can also be sensed using sensors that are not worn by the user. For example work has been done to demonstrate that cameras can be used to measure heart and breathing rates <a href="#Procházka">(Procházka et al. 2016)</a>, and microphones have been used for breath sensing. There are also more specialised external physiological sensors such as radars which can be used to sense heart and breathing activity - see e.g. <a href="#xu">Xu et al (2021)</a>.
 
-# Examples of physiological sensing systems
+# Two sensor-based systems using physiological sensors
 
 The Broncomatic ([Marshall et al. 2011](#Marshall)) is a sensor driven amusement ride. We made it by repurposing a rodeo bull ride. In Broncomatic, rather than the rotating  ride being controlled by an operator or a preset program, the ride instead responds to rider breathing, rotating one way on inhalation and the other way as they exhale. As the ride goes on, this response becomes more forceful. This creates an interesting and fun dynamic where the rider must control their breath to stay on the ride, but the spinning of the ride makes it difficult for them to control their breathing.
 
