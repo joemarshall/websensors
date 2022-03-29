@@ -1,5 +1,5 @@
 ---
-title: The responding body
+title: The Responding Body
 ---
 When we refer to sensors which are used to study the *responding body*, we mean the use of sensors to respond to the body's internal processes. These can be sensed by using what are called *physiological sensors*. 
 
@@ -36,11 +36,11 @@ The Broncomatic ([Marshall et al. 2011](#Marshall)) is a sensor driven amusement
 
 The Guts Game ([Li et al. 2020](#Li)) is a game where players eat an ingestible core body temperature sensing pill. During the several hours that the pill remains in their body, they must compete to perform tasks which alter their body temperature in particular ways. For example when told to raise their core body temperature, they could exercise, or drink extremely hot drinks, or go somewhere hot. What is most effective changes depending on how far through the body the sensor pill is. This creates a fun game which focuses players on understanding how their body works, and what affects their core temperature.
 
-{%include figure.html url="/images/games.jpg" alt="Sensor based games" title="The Guts Game and Broncomatic" caption="The Guts Game is driven by an ingestible pill. Broncomatic uses breath sensing to drive a spinning amusement ride." %}
+{%include figure.html url="/images/games.jpg" alt="Sensor based games" title="The Guts Game and Broncomatic" caption="The Guts Game (left) is driven by an ingestible pill. Broncomatic (right) uses breath sensing to drive a spinning amusement ride." %}
 
 # References
 
 1. <a id="#Xu"></a>Xu, H., Ebrahim, M.P., Hasan, K., Heydari, F., Howley, P. and Yuce, M.R., 2021. Accurate Heart Rate and Respiration Rate Detection Based on a Higher-Order Harmonics Peak Selection Method Using Radar Non-Contact Sensors. <a href="https://doi.org/10.3390/s22010083">Sensors, 22(1), p.83.</a>
 2. <a id="Procházka"></a>Procházka, A., Schätz, M., Vyšata, O. and Vališ, M., 2016. Microsoft kinect visual and depth sensors for breathing and heart rate analysis. <a href="https://dx.doi.org/10.3390/s16070996">Sensors, 16(7), p.996.</a>
-3. <a id="Li"></a>Li, Z., Wang, Y., Greuter, S. and Mueller, F.F., 2020, April. Ingestible sensors as design material for bodily play. In Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-8). (https://doi.org/10.1145/3334480.3382975)
-4. <a id="Marshall"></a>Marshall, J., Rowland, D., Rennick Egglestone, S., Benford, S., Walker, B. and McAuley, D., 2011, May. Breath control of amusement rides. In Proceedings of the SIGCHI conference on Human Factors in computing systems (pp. 73-82).
+3. <a id="Li"></a>Li, Z., Wang, Y., Greuter, S. and Mueller, F.F., 2020, April. Ingestible sensors as design material for bodily play. In <a href="https://doi.org/10.1145/3334480.3382975">Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-8).</a> 
+4. <a id="Marshall"></a>Marshall, J., Rowland, D., Rennick Egglestone, S., Benford, S., Walker, B. and McAuley, D., 2011, May. Breath control of amusement rides. In <a href="https://doi.org/10.1145/1978942.1978955">Proceedings of the SIGCHI conference on Human Factors in computing systems (pp. 73-82).</a>
