@@ -33,6 +33,7 @@ Interestingly, the use of machine learning models in many fields (most notably c
 | Sensor data| Machine learning is very good at performing inferences using poor quality data, such as that from simpler sensors or sampled using lower data rates. This can reduce power requirements or system cost. |
 | Training | Training and tuning of machine learning algorithms is typically done offline, on systems with high powered processors and graphics cards or specialised machine learning accelerator chips.
 | Clarity | The behaviour of hand-coded algorithms is typically clear to the developer, and can be explained to users. Many machine learning algorithms are opaque and give little information as to why they work and how.|
+
 <figcaption>Machine learning and hand-coded algorithms compared.</figcaption>
 </figure>
 
