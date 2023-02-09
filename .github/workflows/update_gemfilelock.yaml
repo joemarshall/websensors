@@ -1,0 +1,24 @@
+name: Update gemfile lock
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+  # Build job
+  update_gemfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📂 setup
+        uses: actions/checkout@v2
+      - run: git remote -v
+      - name: 💎 setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - name: update bundle
+        run: bundle install
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
