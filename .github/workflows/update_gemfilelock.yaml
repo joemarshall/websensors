@@ -16,7 +16,7 @@ jobs:
         with:
           ruby-version: 3.1
       - name: update bundle
-        run: bundle install
+        run: bundle update --all
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
