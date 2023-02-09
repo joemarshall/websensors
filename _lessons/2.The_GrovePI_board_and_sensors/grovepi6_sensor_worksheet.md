@@ -157,9 +157,22 @@ Now for the cool bit - using your secure copy program, copy the .csv file back f
 At this point, try capturing some sensor data of you doing something, e.g. waving your hand in front of the light sensor, or making a loud noise next to the sound sensor. Copy it back off, open it up in a spreadsheet, and make a graph of the sensor values. See if you can see in the graph when you did the action.
 
 # Part 6 - Run code on GrovePi Emulator
+
+The GrovePi emulator allows you to run python code on your computer. You can get it from https://github.com/joemarshall/grovepi-emulator/releases if you want a pre-built version for Mac or Windows. Unzip the zip file and put it somewhere on your computer, and run `grovepiemu.exe`(Windows) or 'grovepiemu'(Mac). If you are running linux, clone the https://github.com/joemarshall/grovepi-emulator/ git repository and run using `python grovepiemu.py`.
+
+When the emulator starts up, it shows three columns representing the digital, analog and I2C pins on a Grove board. Find D4 and right click on it and choose button. Then find A0 and select 'generic analog sensor' or 'light sensor'. You should then see a button widget for the button and a slider for the analog sensor. 
+
+Below the sensors is a section titled 'Run python scripts'. Click the button that says 'Python load', and select the `my_lovely_sensors.py` file that you saved above. Now hit 'python start'. You should see the output from the python script in the 'GrovePI Python output' window. However the sensor values here are not captured from real sensors, they represent the current value set on the main emulator window. Try clicking the button in the D4 section, and you should see the values in the emulator output window changing. Move the slider in the A0 section and again it will change. This is running your python code against an emulated grovepi board. Try changing the python code - to reload the code you can just click 'Python start' and it will reload the same file and start running it again.
+
+The emulator has another couple of other cool features that you need to know about - firstly, you can replay the real sensor values that you recorded in the previous section through the emulated grovepi. You do this using the "CSV Playback of sensor data" part of the main window. Click on 'file...' and select the CSV file you copied off previously, and then you can choose which column to map to what input. For this to work, you must **always** have a time column so that the replayer knows when to change the sensor values. Once you have done this, you can click the 'CSV Start' button to replay the sensor data through the emulated sensors. You should see things changing in the main window, and the python output window should show the replayed sensor values. Secondly, you can automatically capture output from the python script by clicking `capture script to file`, so you don't have to do anything cunning if you want to save the output.
+
 <a id="part6"></a>
 # Part 7 - Use GrovePi emulator to run code on your Pi
 <a id="part7"></a>
+
+As well as allowing you to emulate a Raspberry Pi + GrovePi on your computer, the emulator has one other super-handy feature, which is that it can run scripts remotely on the real raspberry pi, saving you the hassle of using SCP and SSH manually. To do this, select 'run on real Pi via SSH', and enter `dss@<adddress>`, where `<address>` is the address shown on the raspberry Pi screen at startup, e.g. `192.168.1.2`. This will automatically copy the python script to the Raspberry Pi, start it running, and show the output in the python output window. You can even automatically capture the script output to a CSV by clicking the `capture script to file` button.
+
+When using the GrovePi emulator the workflow is much simpler than the manual copy script / run / copy data back cycle. With GrovePi emulator, all you need to do is connect it to the Pi, point it at your script and hit 'python start' (and optionally `capture script to file`). If you update your python code, you can just press `python start` and it will be copied over again and restarted once more.
 
 # Part 8 - Run code on Websensors platform
 <a id="part8"></a>
