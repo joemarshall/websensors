@@ -5,14 +5,14 @@ title: Lab Worksheet - Introduction to Grovepi
 In this worksheet you will learn the basics of using the grovepi boards and sensors.
 
 The worksheet is split into multiple parts:
-- [Connect sensors, power and display to the grovepi board and start it up](#part1)
-- [Connect to the raspberry pi to run code using secure shell (SSH)](#part2)
-- [Copy code to the raspberry pi using secure file copy (SFTP / SCP) and run it.](#part3)
-- [Write code to view the data from some sensors.](#part4)
-- [Save the data from sensors to a data file and copy it back to your computer for analysis.](#part5)
-- [Run code against the grovepi emulator for testing purposes.](#part6)
-- [Use the grovepi emulator to automatically run code on the raspberry pi and capture output.](#part7)
-- [Run code on the websensors sensor emulation platform.](#part8)
+1. [Connect sensors, power and display to the grovepi board and start it up](#part1)
+1. [Connect to the raspberry pi to run code using secure shell (SSH)](#part2)
+1. [Copy code to the raspberry pi using secure file copy (SFTP / SCP) and run it.](#part3)
+1. [Write code to view the data from some sensors.](#part4)
+1. [Save the data from sensors to a data file and copy it back to your computer for analysis.](#part5)
+1. [Run code against the grovepi emulator for testing purposes.](#part6)
+1. [Use the grovepi emulator to automatically run code on the raspberry pi and capture output.](#part7)
+1. [Run code on the websensors sensor emulation platform.](#part8)
 
 Follow through the worksheet in order; if you have any problems please ask me for help. Each section consists of an introductory exercise, followed by a knowledge check exercise in which you are asked to put the knowledge you've learnt in the section to use.
 
