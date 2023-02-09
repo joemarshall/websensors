@@ -7,12 +7,12 @@ In this worksheet you will learn the basics of using the grovepi boards and sens
 By the end of the worksheet you should be able to
 - Connect sensors, power and display to the grovepi board and start it up.
 - Connect to the raspberry pi to run code using secure shell (SSH)
-- Copy code to the raspberry pi using secure file copy (SFTP / SCP)
-- View the data from some sensors
-- Save the data from sensors to a data file and copy it back to your computer for analysis
-- Run code against the grovepi emulator for testing purposes
-- Use the grovepi emulator to automatically run code on the raspberry pi and capture output
-- Run code on the websensors sensor emulation platform
+- Copy code to the raspberry pi using secure file copy (SFTP / SCP) and run it.
+- Write code to view the data from some sensors.
+- Save the data from sensors to a data file and copy it back to your computer for analysis.
+- Run code against the grovepi emulator for testing purposes.
+- Use the grovepi emulator to automatically run code on the raspberry pi and capture output.
+- Run code on the websensors sensor emulation platform.
 
 Follow through the worksheet in order; if you have any problems please ask me for help.
 
@@ -81,3 +81,44 @@ Copy the file to the Raspberry Pi, either using WinSCP/Cyberduck, or by typing `
 
 If everything works, hooray, you've written a program on your computer, transferred it to the Raspberry Pi, and run it.
 
+# Part 4 - Let's read from some sensors
+
+At this point, you will want to grab yourself a sensor or two. I suggest you grab a button to start with, because they're easy to change the value of, and maybe a rotary angle sensor (also known as a potentiometer). The button is a *digital* sensor, which outputs either 0 or 1 depending on whether it is pressed. The rotary sensor is an *analog* sensor, which outputs a number between 0 and 1023 depending on where it is twisted to.
+
+Use grove cables to plug the rotary sensor into the first analog pin, labelled `A0` and plug the button into digital pin 4, labelled `D4`. Note: the cable ports on the grove board are typically referred to as *pins* because they connect to chip pins on the underlying board.
+
+In your text editor, open a new python file (e.g. `my_lovely_sensors.py`) and enter some code into it.
+
+First - we need to import the modules to read from sensors, and the time module, which allows us to pause python between sensor readings.
+```
+import sensors
+import time
+```
+
+Then, we need to add some code to tell python which sensors we are using, and what we have connected them to.
+```
+# tell the sensor module which sensors
+# we have attached to which pins
+sensor_pins={ "button":4, # button on digital pin 4
+          "rotary_angle":0} # rotary angle sensor on analog pin 0
+sensors.set_pins(sensor_pins)
+```
+Next, we will write a loop which outputs the sensor values to the terminal every tenth of a second, continuing forever. You can press CTRL+C to stop the program running.
+```
+# print a nice header line so we know what each column of output is
+print("time,button,rotary angle")
+while True:    
+    #read from the button
+    b=sensors.button.get_level()
+    #read from the angle sensor
+    l= sensors.rotary_angle.get_level()
+    # output everything to the terminal
+    # sep=',' means to put commas between each value
+    print(time.time(),b,l,sep=',')
+    # read roughly ten times a second
+    time.sleep(0.1)
+```
+
+Copy the program across to the Pi using scp / winscp / cyberduck, and connect to the Pi using secure shell. 
+
+Run the program (`python my_lovely_sensors.py`). If you've done everything right, you should see numbers scrolling down the screen showing the current values of the sensors. If everything is working nicely, one of the numbers should change if you press the button, and the other should respond to changes of the rotary angle sensor. If the numbers aren't changing, check you've put the sensors into the correct ports on the GrovePi board.
