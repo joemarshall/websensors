@@ -19,8 +19,8 @@ Follow through the worksheet in order; if you have any problems please ask me fo
 You might want to keep the [sensor reference](grovepi5_sensor_index.html) open in another tab for quick reference while you work through this. 
 
 
-# Part 1 - Go and get a Raspberry Pi 
 <a id="part1"></a>
+# Part 1 - Go and get a Raspberry Pi 
 Before we can do anything at all, we need to get three things 
 1. A raspberry pi (with attached grovepi board)
 2. An LCD display with a grovepi cable
@@ -47,8 +47,8 @@ If you swap out a Raspberry Pi, display, or power supply, and that fixes the pro
 
 If you've got here, you basically know what the deal is, but maybe have a think about what each part is doing in this process - what is the USB cable doing? What is the purpose of the display? 
 
-# Part 2 - Connect to the Raspberry Pi to run code
 <a id="part2"></a>
+# Part 2 - Connect to the Raspberry Pi to run code
 
 
 In order to run python code on your Raspberry Pi, you need to connect to it. Because we use the Raspberry Pis without a screen, you have to connect to them over the network. We do this using a secure shell (SSH) program.
@@ -76,8 +76,8 @@ Type `exit()` to leave python.
 
 Try to run some different python code, e.g. output 'hello world' somehow.
 
-# Part 3 - Copy code to the Raspberry Pi
 <a id="part3"></a>
+# Part 3 - Copy code to the Raspberry Pi
 
 Okay, so you can now run python code on the Raspberry Pi. But you don't want to have to type your code in every time, so you need some way to get code files across to the Pi. To do this, we us a secure file copy program (SCP / SFTP). On Windows, I use [winscp](https://winscp.net/eng/index.php). On Mac, you can use [cyberduck](https://cyberduck.io/), or alternatively if you're happy with using the terminal, you can type `scp <source file> dss@<address>`, e.g. `scp test.py dss@10.154.10.23`. So, make sure you have access to something to do secure file copy. You also need a text editor. On Windows I use [notepad++](https://notepad-plus-plus.org/downloads/). 
 
@@ -97,8 +97,8 @@ If everything works, hooray, you've written a program on your computer, transfer
 
 Change your program (e.g. make it output something, or use different colour values or something), re-copy it to the Pi and run it again.
 
-# Part 4 - Let's read from some sensors
 <a id="part4"></a>
+# Part 4 - Let's read from some sensors
 
 At this point, you will want to grab yourself a sensor or two. I suggest you grab a button to start with, because they're easy to change the value of, and maybe a rotary angle sensor (also known as a potentiometer). The button is a *digital* sensor, which outputs either 0 or 1 depending on whether it is pressed. The rotary sensor is an *analog* sensor, which outputs a number between 0 and 1023 depending on where it is twisted to.
 
@@ -145,8 +145,8 @@ Run the program (`python my_lovely_sensors.py`). If you've done everything right
 If that worked, try a different sensor - e.g. a light sensor. You will need to change the sensor_pins bit, and the sensors.<sensor_name> in the loop. Check out the 
 [sensor reference](grovepi5_sensor_index.html) for names of sensors which we have and how to connect and access them.
 
-# Part 5 - Capture and Analyse some Sensor Data
 <a id="part5"></a>
+# Part 5 - Capture and Analyse some Sensor Data
 
 You might have noticed in the previous step that sensor data goes quite quickly, and you can't necessarily see what it is doing in real-time. Often we want to capture sensor data and look at what it did and when. To do this, we need to be able to capture the output from our python program.
 
@@ -172,8 +172,8 @@ Now for the cool bit - using your secure copy program, copy the .csv file back f
 
 At this point, try capturing some sensor data of you doing something, e.g. waving your hand in front of the light sensor, or making a loud noise next to the sound sensor. Copy it back off, open it up in a spreadsheet, and make a graph of the sensor values. See if you can see in the graph when you did the action. This kind of analysis is very common in initial development of sensor processing algorithms.
 
-# Part 6 - Run code on GrovePi Emulator
 <a id="part6"></a>
+# Part 6 - Run code on GrovePi Emulator
 
 The GrovePi emulator allows you to run python code on your computer. You can get it from https://github.com/joemarshall/grovepi-emulator/releases if you want a pre-built version for Mac or Windows. Unzip the zip file and put it somewhere on your computer, and run `grovepiemu.exe`(Windows) or 'grovepiemu'(Mac). If you are running linux, clone the https://github.com/joemarshall/grovepi-emulator/ git repository and run using `python grovepiemu.py`.
 
@@ -187,8 +187,8 @@ The emulator has another couple of other cool features that you need to know abo
 
 Run the emulator and capture your output whilst messing around with the sensors. Open up the CSV file you wrote in excel and graph it.
 
-# Part 7 - Use GrovePi emulator to run code on your Pi
 <a id="part7"></a>
+# Part 7 - Use GrovePi emulator to run code on your Pi
 
 As well as allowing you to emulate a Raspberry Pi + GrovePi on your computer, the emulator has one other super-handy feature, which is that it can run scripts remotely on the real raspberry pi, saving you the hassle of using SCP and SSH manually. To do this, select 'run on real Pi via SSH', and enter `dss@<adddress>`, where `<address>` is the address shown on the raspberry Pi screen at startup, e.g. `192.168.1.2`. This will automatically copy the python script to the Raspberry Pi, start it running, and show the output in the python output window. You can even automatically capture the script output to a CSV by clicking the `capture script to file` button.
 
@@ -199,8 +199,8 @@ When using the GrovePi emulator the workflow is much simpler than the manual cop
 Alter your previous script to use a different sensor, run it on real Pi, and capture the data whilst you do an action near the sensor. Graph it and look and see what you can identify about the activity from the sensor data.
 
 
-# Part 8 - Run code on Websensors platform
 <a id="part8"></a>
+# Part 8 - Run code on Websensors platform
 The web-sensors platform is what makes all the little python boxes on this webpage work. It supports a subset of the functionality of the grovepi boards, but runs entirely in your web-browser. You can use it on the (scratchpad)[/scratchpad.md]
 
 It supports a subset of sensors, specifically: light (emulated using camera), sound (emulated via microphone), accelerometer and gyroscope (on mobile devices only, using built in sensors).
@@ -234,9 +234,9 @@ while True:
 
 Go the the websensors scratchpad, and try running the code above and capture its output. Try the same using the emulator to run it on a real GrovePi.
 
-# Final knowledge check - To infinity and beyond....
+# Final knowledge check
 
 Now you know how to write python code and run it on Raspberry Pi, on your computer, or on the web, here are a few final knowledge check activities:
 
-1) Get one of the more complicated sensors, e.g. digital humidity and temperature (DHT), or accelerometer. Read the documentation on the [sensor reference](grovepi5_sensor_index.html) and try and write a script to output the data from the sensor.
-2) The `graphs` module, (documented at [grovepi display](grovepi5_sensor_index.html)) lets you show little line graphs on the display (or in the browser in websensors). Try and use this to show a graph of some sensor data on your Raspberry Pi screen.
+1. Get one of the more complicated sensors, e.g. digital humidity and temperature (DHT), or accelerometer. Read the documentation on the [sensor reference](grovepi5_sensor_index.html) and try and write a script to output the data from the sensor.
+2. The `graphs` module, (documented at [grovepi display](grovepi5_sensor_index.html)) lets you show little line graphs on the display (or in the browser in websensors). Try and use this to show a graph of some sensor data on your Raspberry Pi screen.
