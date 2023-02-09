@@ -16,7 +16,7 @@ By the end of the worksheet you should be able to
 
 Follow through the worksheet in order; if you have any problems please ask me for help.
 
-You might want to keep the (sensor reference)[grovepi5_sensor_index.html] open in another tab for quick reference while you work through this. 
+You might want to keep the [sensor reference](grovepi5_sensor_index.html) open in another tab for quick reference while you work through this. 
 
 # Part 1 - Go and get a Raspberry Pi
 
@@ -42,3 +42,14 @@ This is a hardware course, using lots of components which are quite exposed, so 
 
 
 If you swap out a Raspberry Pi, display, or power supply, and that fixes the problem, please give us the non-working hardware to look at.
+
+# Part 2 - Connect to the Raspberry Pi to run code and copy files
+
+In order to run python code on your Raspberry Pi, you need to connect to it. Because we use the Raspberry Pis without a screen, you have to connect to them over the network. We do this using a secure shell (SSH) program.
+
+Firstly, make sure you have a secure shell program. If you're on Windows, you need something like [putty](https://www.putty.org/), which should be installed on the university computers, and is a free download for your own computer. If you're on Mac, you can either use command line `ssh` if you're happy with command line programs, or you can 
+
+note the network address on the screen of the raspberry Pi, it will be something like `10.154.1.222`.
+
+Then, use a secure shell program to connect to it.
+
