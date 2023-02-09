@@ -26,6 +26,7 @@ jobs:
     steps:
       - name: 📂 setup
         uses: actions/checkout@v2
+      - run: git remote -v
       - name: 💎 setup ruby
         uses: ruby/setup-ruby@v1
         with:
