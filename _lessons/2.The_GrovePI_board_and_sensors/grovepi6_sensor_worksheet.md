@@ -119,6 +119,33 @@ while True:
     time.sleep(0.1)
 ```
 
-Copy the program across to the Pi using scp / winscp / cyberduck, and connect to the Pi using secure shell. 
+That's all the code you need right now. Copy the program across to the Pi using scp / winscp / cyberduck, and connect to the Pi using secure shell. 
 
 Run the program (`python my_lovely_sensors.py`). If you've done everything right, you should see numbers scrolling down the screen showing the current values of the sensors. If everything is working nicely, one of the numbers should change if you press the button, and the other should respond to changes of the rotary angle sensor. If the numbers aren't changing, check you've put the sensors into the correct ports on the GrovePi board.
+
+If that worked, try a different sensor - e.g. light sensor. You will need to change the sensor_pins bit, and the sensors.<sensor_name> in the loop. Check out the 
+[sensor reference](grovepi5_sensor_index.html) for names of sensors which we have and how to access them.
+
+# Part 5 - Capture and Analyse some Sensor Data
+
+You might have noticed in the previous step that sensor data goes quite quickly, and you can't necessarily see what it is doing in real-time. Often we want to capture sensor data and look at what it did and when. To do this, we need to be able to capture the output from our python program.
+
+To do this, we need to *redirect* the output of the python to a file. We can do this using shell commands. The simplest way is by using the > operator. > tells the shell to take the output of a command and send it to a file. So, for example, if we want to send the output of our lovely sensor program to a file, we can do it like this:
+```
+python my_lovely_sensors.py > sensor_data.csv
+```
+If you run this, you will see nothing, because the output is redirected to the file, but it will keep running until you press CTRL+C to stop it. Press CTRL+C and type `ls`, and you should see a file called `sensor_data.csv`. If you type `cat sensor_data.csv`, you can see that it is packed full of lovely sensor data. 
+
+By using a more advanced way of redirecting output, you can send the output to a file, whilst also seeing it on screen. to do this, you need to use a tool called `tee`, and the *pipe* operator `|`. The pipe operator takes the output of a program and sends it as input to another program. `tee` takes whatever is input to it, and both outputs it to screen, and writes it at the same time. 
+
+Type the following into the secure shell:
+```
+python -u my_lovely_sensors.py | tee sensor_data2.csv
+```
+You should see sensor data coming down the screen until you press CTRL+C. When you stop, you should be able to see `sensor_data2.csv` has filled up with sensor data.
+
+Note: the `-u` in the command above is needed, because when python sees it is writing to a pipe, by default it *buffers* output into big chunks, so you will only see sensor data after a whole load has been written. Adding `-u` forces python into *unbuffered* mode, where things are written to screen as soon as they are printed in python.
+
+Now for the cool bit - using your secure copy program, copy the .csv file back from the Raspberry Pi to the computer. Then open a spreadsheet program such as Excel, and open the .csv file. Because we outputted our data separated by commas up above, we should be able to see the sensor data arranged neatly in columns in our spreadsheet. 
+
+At this point, try capturing some sensor data of you doing something, e.g. waving your hand in front of the light sensor, or making a loud noise next to the sound sensor. Copy it back off, open it up in a spreadsheet, and make a graph of the sensor values. See if you can see in the graph when you did the action.
