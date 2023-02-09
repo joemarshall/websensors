@@ -7,8 +7,8 @@ source "https://rubygems.org"
 #
 # This will help ensure the proper Jekyll version is running.
 # Happy Jekylling!
-#gem "jekyll", "~> 4.1.1"
-gem "github-pages", "~> 	212", group: :jekyll_plugins
+gem "jekyll", "~> 4.3.2"
+gem "github-pages", "~> 	228", group: :jekyll_plugins
 
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
 gem 'jekyll-theme-tactile', '~> 0.1.1'
