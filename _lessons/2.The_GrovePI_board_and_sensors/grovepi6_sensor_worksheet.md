@@ -57,7 +57,7 @@ Firstly, make sure you have a secure shell program. If you're on Windows, you ne
 
 Note the network address on the screen of the raspberry Pi, it will be something like `10.154.1.222`, followed by `:w`. Ignore the `:w` bit, that just says that it is connected via WiFi.
 
-Use your secure shell program to connect to it (either through the graphical interface you have installed, or if you're in a command shell type `ssh 10.154.1.222`. If you are asked about whether to accept the device certificate or something similar, click yes. When you are asked for a login, enter the username `dss` and the password `dss`. This should get you to a command prompt which ends in a `$`. You can run commands by typing the command followed by enter. 
+Use your secure shell program to connect to it (either through the graphical interface you have installed, or if you're in a command shell type `ssh dss@10.154.1.222`. If you are asked about whether to accept the device certificate or something similar, click yes. When you are asked for a login, enter the username `dss` and the password `dss`. This should get you to a command prompt which ends in a `$`. You can run commands by typing the command followed by enter. 
 
 Now try running the python interpreter by typing `python` and hitting enter.
 
@@ -79,7 +79,8 @@ Try to run some different python code, e.g. output 'hello world' somehow.
 <a id="part3"></a>
 # Part 3 - Copy code to the Raspberry Pi
 
-Okay, so you can now run python code on the Raspberry Pi. But you don't want to have to type your code in every time, so you need some way to get code files across to the Pi. To do this, we us a secure file copy program (SCP / SFTP). On Windows, I use [winscp](https://winscp.net/eng/index.php). On Mac, you can use [cyberduck](https://cyberduck.io/), or alternatively if you're happy with using the terminal, you can type `scp <source file> dss@<address>`, e.g. `scp test.py dss@10.154.10.23`. So, make sure you have access to something to do secure file copy. You also need a text editor. On Windows I use [notepad++](https://notepad-plus-plus.org/downloads/). 
+Okay, so you can now run python code on the Raspberry Pi. But you don't want to have to type your code in every time, so you need some way to get code files across to the Pi. To do this, we us a secure file copy program (
+/ SFTP). On Windows, I use [winscp](https://winscp.net/eng/index.php). On Mac, you can use [cyberduck](https://cyberduck.io/), or alternatively if you're happy with using the terminal, you can type `scp <source file> dss@<address>:`, e.g. `scp test.py dss@10.154.10.23:`. The **:** is important, because it tells scp that you're copying to a remote device. So, make sure you have access to something to do secure file copy. You also need a text editor. On Windows I use [notepad++](https://notepad-plus-plus.org/downloads/). 
 
 In your text editor, make a file called `test.py`, and enter the following into it:
 ```
@@ -89,7 +90,7 @@ grovelcd.setRGB(0,255,255)
 
 **IMPORTANT NOTE ABOUT LINE ENDINGS ON WINDOWS** - You need to make sure that your text file is saved in unix compatible format, because Windows by default uses a different character code to end lines compared to Unix. In Notepad++, select `Edit`,`EOL Conversion` and `Unix` from the menu. On Mac you can ignore this because it uses Unix line endings anyway. Make sure you save the file after changing the line endings.
 
-Copy the file to the Raspberry Pi, either using WinSCP/Cyberduck, or by typing `scp test.py dss@address` in a terminal, then connect to the Pi using ssh as described above. At the prompt you see after logging in via ssh, type `python test.py`. With any luck the LCD screen should turn cyan (greeny-blue). If it doesn't look at the ssh window to see if any error messages have been printed.
+Copy the file to the Raspberry Pi, either using WinSCP/Cyberduck, or by typing `scp test.py dss@address:` in a terminal, then connect to the Pi using ssh as described above. At the prompt you see after logging in via ssh, type `python test.py`. With any luck the LCD screen should turn cyan (greeny-blue). If it doesn't look at the ssh window to see if any error messages have been printed.
 
 If everything works, hooray, you've written a program on your computer, transferred it to the Raspberry Pi, and run it.
 
