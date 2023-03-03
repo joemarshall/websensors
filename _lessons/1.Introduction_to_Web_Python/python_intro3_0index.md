@@ -8,7 +8,7 @@ These pages contain documentation of the various modules. Click on function or c
 
 <div id="graphs" class="moduletarget" markdown=1>
 # Module [graphs](python_intro3_graphs.html)
-This module allows you to draw nice line graphs in the web interface or on the grovepi screen.
+This module allows you to draw nice line graphs in the web interface.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)
@@ -67,6 +67,10 @@ class replayer
     # Return the mapping of columns in the current CSV file
     @staticmethod
     def columns()
+
+    # Load replay data from file. The replay data should be a CSV file which has a column for each sensor you are recording from.
+    @staticmethod
+    def init_replay(filename)
 
     # Return the name of the currently loaded replay file
     @staticmethod
@@ -167,6 +171,11 @@ class BlockMinFilter
     def on_value(self,new_value)
 
 
+```
+</div>
+<div id="tflite" class="moduletarget" markdown=1>
+# Module [tflite](python_intro3_tflite.html)
+```python
 ```
 </div>
 <div id="speech" class="moduletarget" markdown=1>

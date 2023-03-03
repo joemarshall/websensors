@@ -57,6 +57,10 @@ class replayer
     @staticmethod
     def columns()
 
+    # Load replay data from file. The replay data should be a CSV file which has a column for each sensor you are recording from.
+    @staticmethod
+    def init_replay(filename)
+
     # Return the name of the currently loaded replay file
     @staticmethod
     def get_replay_name()
@@ -211,7 +215,7 @@ class sound:
 Sound sensor
 
 This returns the rough volume of the sound occurring in the vicinity of the device. On web based systems it is done using the built
-in microphone. The scale is an arbitrary 0-1 scale which is dependent on the microphone on your device, and
+in microphone. The scale is an arbitrary 0-1023 scale which is dependent on the microphone on your device, and
 probably a bunch of other hardware and software things.
 <a id="sensors_sound_get_level" class="fntarget"></a>
 
@@ -226,7 +230,7 @@ def get_level(
 Get the level from the sound sensor. 
 ### Returns
 * **level**(*float)*
-<br>    sound level ranging from 0 to 1
+<br>    sound level ranging from 0 to 1023
 
 <div id="sensors_light" class="classtarget" markdown=1>
 
@@ -243,9 +247,9 @@ class light:
 ## Description
 Light sensor
 
-This gets light levels from a camera or light sensor on your device. The scale is an arbitrary one which is dependent 
-on the camera or sensor on your device, and probably a bunch of other hardware and software things. On non-chrome web browsers and iOS Chrome,
-this may be extremely innaccurate because they force automatic brightness adjustment.
+This gets light levels from a camera or light sensor on your device. The scale is an arbitrary 0-1023 one 
+dependent on the camera or sensor on your device, and probably a bunch of other hardware and software things. 
+On non-chrome web browsers and iOS Chrome, this may be extremely innaccurate because they force automatic brightness adjustment.
 <a id="sensors_light_get_level" class="fntarget"></a>
 
 ## [*sensors*](#sensors).[*light*](#sensors_light).get_level
@@ -275,6 +279,10 @@ class replayer:
     @staticmethod
     def columns()
 
+    # Load replay data from file. The replay data should be a CSV file which has a column for each sensor you are recording from.
+    @staticmethod
+    def init_replay(filename)
+
     # Return the name of the currently loaded replay file
     @staticmethod
     def get_replay_name()
@@ -300,14 +308,14 @@ This class supports loading of CSV files into your code and replaying them. The 
 when your script is started, you just need to check if there is any replay data and use it if so. For example you might
 do this with a conditional if statement like this:
 
-\`\`\`python
+```python
 if sensors.replayer.has_replay():
     this_time,x,y,z,sound = sensors.replayer.get_level("time","x","y","z","sound")
 else:
     this_time=time.time()-start_time
     x,y,z=sensors.accel.get_xyz()
     sound=sensors.sound.get_level()
-\`\`\`
+```
 <a id="sensors_replayer_reset" class="fntarget"></a>
 
 ## [*sensors*](#sensors).[*replayer*](#sensors_replayer).reset
@@ -335,6 +343,18 @@ Return the mapping of columns in the current CSV file
 * **columns**(*map)*
 <br>    list of column:index pairs
 
+<a id="sensors_replayer_init_replay" class="fntarget"></a>
+
+## [*sensors*](#sensors).[*replayer*](#sensors_replayer).init_replay
+```python
+# sensors.replayer.init_replay
+@staticmethod
+def init_replay(
+    filename
+)
+```
+Load replay data from file. The replay data should be a CSV file which has a column for each sensor you are recording from.
+        
 <a id="sensors_replayer_get_replay_name" class="fntarget"></a>
 
 ## [*sensors*](#sensors).[*replayer*](#sensors_replayer).get_replay_name
@@ -401,10 +421,10 @@ if you want to read multiple columns, you have to do it in one call.
 ### Parameters
 * ***col_names**(*tuple)*
 <br>    Pass the list of column names that you want to read, e.g.
-    \`sensors.replayer.get_level("time","sound","light")\`
+    `sensors.replayer.get_level("time","sound","light")`
 
 ### Returns
-* **finished_csv**(*bool)*
-<br>    True iff the CSV file is finished                
+* **columns**(*tuple)*
+<br>    The value of each of the requested columns
 
 <script src="{{'/assets/js/pydoclink.js'|relative_url}}"></script>

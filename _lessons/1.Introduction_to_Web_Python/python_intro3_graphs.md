@@ -64,7 +64,7 @@ Add a value to a named graph in the output box
 <br>    The name of the graph, which should be the same as passed to set_graph_style
 * **value**(*float)*
 <br>    The value you want to add to the graph. If you add None, it doesn't change the graph, 
-    this allows you to directly pass in the output of a \`BlockAverageFilter\` or similar 
+    this allows you to directly pass in the output of a `BlockAverageFilter` or similar 
     which return None when there is no new value.
 
 <script src="{{'/assets/js/pydoclink.js'|relative_url}}"></script>

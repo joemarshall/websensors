@@ -128,7 +128,7 @@ Create a high pass filter object with a given alpha.
 
 You may want to calculate alpha based on cutoff frequency 
 or time constant, in that case, you can use the static methods
-\`make_from_cutoff\` and \`make_from_time_constant\` to make the filter
+`make_from_cutoff` and `make_from_time_constant` to make the filter
 instead of using the constructor.
 ### Parameters
 * **alpha**(*float)*
@@ -239,7 +239,7 @@ Create a low pass filter object with a given alpha.
 
 You may want to calculate alpha based on cutoff frequency 
 or time constant, in that case, you can use the static methods
-\`make_from_cutoff\` and \`make_from_time_constant\` to make the filter
+`make_from_cutoff` and `make_from_time_constant` to make the filter
 instead of using the constructor.
 ### Parameters
 * **alpha**(*float)*
