@@ -19,6 +19,9 @@ def delay_sample_time(delay)
 
 # Ultrasonic sensor
 class UltrasonicSensor
+    # Return the sensed distance in centimetres 
+    def get_level(self)
+
     # Begin an ultrasonic read. Until you call the matching end_read, *DO NOT* get values from
     def begin_read(self)
 
@@ -136,6 +139,9 @@ from your sensors takes some time.
 
 ```python
 class UltrasonicSensor:
+    # Return the sensed distance in centimetres 
+    def get_level(self)
+
     # Begin an ultrasonic read. Until you call the matching end_read, *DO NOT* get values from
     def begin_read(self)
 
@@ -158,6 +164,16 @@ it hasn't, or the value otherwise. In between calls to begin_read and end_read, 
 *except* read from other sensors connected to the digital or analog pins on the grovepi board. Note, this 
 means it is okay to read from sensors connected to the i2c ports, such as the accelerometer, gyro, 
 magnetometer boards etc.
+<a id="sensors_UltrasonicSensor_get_level" class="fntarget"></a>
+
+## [*sensors*](#sensors).[*UltrasonicSensor*](#sensors_UltrasonicSensor).get_level
+```python
+# sensors.UltrasonicSensor.get_level
+def get_level(
+    self
+)
+```
+Return the sensed distance in centimetres 
 <a id="sensors_UltrasonicSensor_begin_read" class="fntarget"></a>
 
 ## [*sensors*](#sensors).[*UltrasonicSensor*](#sensors_UltrasonicSensor).begin_read

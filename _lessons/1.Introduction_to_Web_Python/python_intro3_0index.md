@@ -40,6 +40,9 @@ def delay_sample_time(delay)
 
 # Ultrasonic sensor
 class UltrasonicSensor
+    # Return the sensed distance in centimetres 
+    def get_level(self)
+
     # Begin an ultrasonic read. Until you call the matching end_read, *DO NOT* get values from
     def begin_read(self)
 
