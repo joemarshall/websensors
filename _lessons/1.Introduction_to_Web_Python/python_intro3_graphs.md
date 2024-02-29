@@ -9,7 +9,8 @@ import graphs
 
 <div id="graphs" class="moduletarget" markdown=1>
 # Module graphs
-This module allows you to draw nice line graphs in the web interface.
+This module allows you to draw basic line graphs on the LCD screen, or on the web graph
+if you are running inside websensors.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)
@@ -64,7 +65,7 @@ Add a value to a named graph in the output box
 <br>    The name of the graph, which should be the same as passed to set_graph_style
 * **value**(*float)*
 <br>    The value you want to add to the graph. If you add None, it doesn't change the graph, 
-    this allows you to directly pass in the output of a `BlockAverageFilter` or similar 
+    this allows you to directly pass in the output of a \`BlockAverageFilter\` or similar 
     which return None when there is no new value.
 
 <script src="{{'/assets/js/pydoclink.js'|relative_url}}"></script>

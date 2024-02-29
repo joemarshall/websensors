@@ -2,13 +2,23 @@
 title: Extra built in modules
 ---
 The web python we use here has a bunch of useful built in modules for doing things like capturing, replaying and filtering sensor data.
+These are also included on the Raspberry Pis we use in the lab sessions.
 
 These pages contain documentation of the various modules. Click on function or class names for details of them.
 
 
+<div id="speech" class="moduletarget" markdown=1>
+# Module [speech](python_intro3_speech.html)
+```python
+# Say these words as text-to-speech
+def say(words)
+
+```
+</div>
 <div id="graphs" class="moduletarget" markdown=1>
 # Module [graphs](python_intro3_graphs.html)
-This module allows you to draw nice line graphs in the web interface.
+This module allows you to draw basic line graphs on the LCD screen, or on the web graph
+if you are running inside websensors.
 ```python
 # Set the style of a named graph in the output box.
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None)
@@ -22,40 +32,46 @@ def on_value(graphName,value)
 # Module [sensors](python_intro3_sensors.html)
 This module allows you to get data from sensors, and also to replay sensor data from pre-recorded csv files.
 ```python
+# Set the mapping between grove board pins and sensor objects. On the web sensor platform this does nothing.
+def set_pins(sensor_pin_mapping)
+
+# Sleep until *delay* seconds after the last time this was called. 
+def delay_sample_time(delay)
+
+# Ultrasonic sensor
+class UltrasonicSensor
+    # Begin an ultrasonic read. Until you call the matching end_read, *DO NOT* get values from
+    def begin_read(self)
+
+    # Get the value of an ultrasonic read. Only call this after a begin_read call. If there is no
+    def end_read(self)
+
+
 # Accelerometer sensor
-class accel
+class AccelSensor
     # Get the acceleration of the device
-    @staticmethod
-    def get_xyz()
+    def get_xyz(self)
 
     # Get the magnitude of device acceleration.
-    @staticmethod
-    def get_magnitude()
+    def get_magnitude(self)
+
+
+# Magnetometer sensor
+class MagnetometerSensor
+    # Get the magnetic field strength from the device
+    def get_xyz(self)
+
+    # Get the magnitude of magnetic field strength
+    def get_magnitude(self)
 
 
 # Gyroscope sensor
-class gyro
+class GyroSensor
     # Get the rotation of the device
-    @staticmethod
-    def get_xyz()
+    def get_xyz(self)
 
     # Get the magnitude of device rotation
-    @staticmethod
-    def get_magnitude()
-
-
-# Sound sensor
-class sound
-    # Get the level from the sound sensor. 
-    @staticmethod
-    def get_level()
-
-
-# Light sensor
-class light
-    # Get the level from the light sensor
-    @staticmethod
-    def get_level()
+    def get_magnitude(self)
 
 
 # Replay pre-recorded sensor data from CSV files
@@ -88,6 +104,17 @@ class replayer
     @staticmethod
     def get_level()
 
+
+```
+</div>
+<div id="led" class="moduletarget" markdown=1>
+# Module [led](python_intro3_led.html)
+```python
+# Turn an LED connected to digital pin number *pin* on
+def on(pin)
+
+# Turn an LED connected to digital pin number *pin* off
+def off(pin)
 
 ```
 </div>
@@ -170,20 +197,6 @@ class BlockMinFilter
     # Process a new value with this filter object and return the output value
     def on_value(self,new_value)
 
-
-```
-</div>
-<div id="tflite" class="moduletarget" markdown=1>
-# Module [tflite](python_intro3_tflite.html)
-```python
-```
-</div>
-<div id="speech" class="moduletarget" markdown=1>
-# Module [speech](python_intro3_speech.html)
-A module for making your computer (or phone) talk. Useful for getting output when you can't see the screen well.
-```python
-# Say these words as text-to-speech
-def say(words)
 
 ```
 </div>
