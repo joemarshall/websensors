@@ -15,6 +15,17 @@ def say(words)
 
 ```
 </div>
+<div id="kbread" class="moduletarget" markdown=1>
+# Module [kbread](python_intro3_kbread.html)
+Simple keyboard reading module - for reading from keyboard on the python terminal. 
+
+Useful for e.g. getting ground truth values to go with sensors
+```python
+# Read a single keypress. Returns empty string if no key is pressed 
+def read_key()
+
+```
+</div>
 <div id="graphs" class="moduletarget" markdown=1>
 # Module [graphs](python_intro3_graphs.html)
 This module allows you to draw basic line graphs on the LCD screen, or on the web graph
