@@ -70,3 +70,19 @@ For the practical work, you  will develop a sensing algorithm, a python script l
 Once the algorithm is built, you will use the methods in the section on testing of algorithms to quantify how well your system works, and in what circumstances it fails and why. This is an important part of the final report which is highly weighted, so don't leave this till the last minute. 
 
 As the previous paragraphs perhaps made obvious, the final outcome of this work is a written report. You must also submit all code for your sensor algorithm, which we will run during marking so we can understand how your system works. Please make sure all code you submit does run, as we cannot mark non-running code.
+
+# Stuff for you to use in the labs
+
+During the coursework, you will want to prototype things - often this involves sticking stuff together with tape, strapping raspberry pis or sensors onto objects. We have a bunch of stuff around in the lab, including foam, gaffa tape, cardboard, an empty cupboard if you want to prototype something inside a cupboard, a small trolley for prototyping moving projects etc. You can also take the raspberry pis out during the lab time, around the building, or even outside. You can also bring your own stuff to the lab sessions.
+
+{%include figure.html url="/images/labstuff.jpg" alt="Stuff we have that you can use in the lab sessions - foam, cardboard, a trolley, doors, a cupboard, gaffa tape etc." title="Some stuff we have access to during the lab sessions" caption="During the lab sessions there is a bunch of prototyping bits and pieces available to you. You can also go outside or around the building with the sensors." %}
+
+# Here are some I made earlier...
+
+Some prototypes made by students on the course:
+
+{%include figure.html url="/images/shoetracker.jpg" alt="Sensors attached to a shoe" title="Shoe tracker" caption="Tracking foot motion by attaching sensors to a shoe." %}
+
+{%include figure.html url="/images/doorsensor.jpg" alt="Sensors attached to a door frame" title="Door sensing" caption="Counting people going through a door using sensors attached to the frame." %}
+
+{%include figure.html url="/images/goal.jpg" alt="Sensors attached to a toy football goal" title="Goal tracker" caption="Tracking shots on goal using ultrasound sensors, prototyped using a scale model goal (and a tiny ball)." %}

@@ -141,6 +141,34 @@ That's all the code you need right now. Copy the program across to the Pi using 
 
 Run the program (`python my_lovely_sensors.py`). If you've done everything right, you should see numbers scrolling down the screen showing the current values of the sensors. If everything is working nicely, one of the numbers should change if you press the button, and the other should respond to changes of the rotary angle sensor. If the numbers aren't changing, check you've put the sensors into the correct ports on the GrovePi board.
 
+## Reading from multiple of the same sensor
+
+If you want to read from multiple of the same sensor, you can put a number after the sensor in the pin definition, and also in the reading code. See below:
+
+```
+# tell the sensor module which sensors
+# we have attached to which pins
+sensor_pins={ "button":4, # button on digital pin 4
+              "button2":5, # button on digital pin 5
+}
+sensors.set_pins(sensor_pins)
+
+# print a nice header line so we know what each column of output is
+print("time,button,another_button")
+while True:    
+    #read from the button on pin 4
+    b=sensors.button.get_level()
+    #read from the button on pin 5
+    b2=sensors.button2.get_level()
+    # output everything to the terminal
+    # sep=',' means to put commas between each value
+    print(time.time(),b,b2,sep=',')
+    # read roughly ten times a second
+    time.sleep(0.1)
+```
+
+Note - this works for digital and analog sensors, but MAY NOT WORK for accelerometers. Accelerometer boards are I2C devices, which have a fixed address on the i2c bus. This means that you cannot use two of the same accelerometer boards. If you use an accelerometer and gyro board, along with an accelerometer and compass board, two accelerometers should work. Talk to Joe if you are having any problems using two accelerometers.
+
 ## Knowledge Check
 
 If that worked, try a different sensor - e.g. a light sensor. You will need to change the sensor_pins bit, and the sensors.<sensor_name> in the loop. Check out the 
