@@ -53,7 +53,7 @@ If you've got here, you basically know what the deal is, but maybe have a think 
 
 In order to run python code on your Raspberry Pi, you need to connect to it. Because we use the Raspberry Pis without a screen, you have to connect to them over the network. We do this using a secure shell (SSH) program.
 
-Firstly, make sure you have a secure shell program. If you're on Windows, you need something like [putty](https://www.putty.org/), which should be installed on the university computers, and is a free download for your own computer. If you're on Mac, you can use command line `ssh` in the terminal.
+Firstly, make sure you have a secure shell program. On Windows, Linux or Mac, you can use the command line `ssh` program in the terminal / command prompt. Or if you prefer a graphical interface, you can use something like [putty](https://www.putty.org/), which is a free download Windows. 
 
 Note the network address on the screen of the raspberry Pi, it will be something like `10.154.1.222`, followed by `:w`. Ignore the `:w` bit, that just says that it is connected via WiFi.
 
@@ -79,8 +79,7 @@ Try to run some different python code, e.g. output 'hello world' somehow.
 <a id="part3"></a>
 # Part 3 - Copy code to the Raspberry Pi
 
-Okay, so you can now run python code on the Raspberry Pi. But you don't want to have to type your code in every time, so you need some way to get code files across to the Pi. To do this, we us a secure file copy program (
-/ SFTP). On Windows, I use [winscp](https://winscp.net/eng/index.php). On Mac, you can use [cyberduck](https://cyberduck.io/), or alternatively if you're happy with using the terminal, you can type `scp <source file> dss@<address>:`, e.g. `scp test.py dss@10.154.10.23:`. The **:** is important, because it tells scp that you're copying to a remote device. So, make sure you have access to something to do secure file copy. You also need a text editor. On Windows I use [notepad++](https://notepad-plus-plus.org/downloads/). 
+Okay, so you can now run python code on the Raspberry Pi. But you don't want to have to type your code in every time, so you need some way to get code files across to the Pi. To do this, we us a secure file copy program ( SCP or SFTP). On Windows, I use [winscp](https://winscp.net/eng/index.php). On Mac, you can use [cyberduck](https://cyberduck.io/), or alternatively if you're happy with using the terminal, you can type `scp <source file> dss@<address>:`, e.g. `scp test.py dss@10.154.10.23:`. The **:** is important, because it tells scp that you're copying to a remote device. So, make sure you have access to something to do secure file copy. You also need a text editor. On Windows I use [notepad++](https://notepad-plus-plus.org/downloads/). 
 
 In your text editor, make a file called `test.py`, and enter the following into it:
 ```
@@ -98,6 +97,8 @@ If everything works, hooray, you've written a program on your computer, transfer
 
 Change your program (e.g. make it output something, or use different colour values or something), re-copy it to the Pi and run it again.
 
+If you're using a graphical SCP program, try and work out how to make it automatically copy files to the Pi when you save them on your computer. This can save a lot of time when you're testing code later on.
+
 <a id="part4"></a>
 # Part 4 - Let's read from some sensors
 
@@ -110,7 +111,6 @@ In your text editor, open a new python file (e.g. `my_lovely_sensors.py`) and en
 First - we need to import the modules to read from sensors, and the time module, which allows us to pause python between sensor readings.
 ```
 import sensors
-import time
 ```
 
 Then, we need to add some code to tell python which sensors we are using, and what we have connected them to.
@@ -141,11 +141,66 @@ That's all the code you need right now. Copy the program across to the Pi using 
 
 Run the program (`python my_lovely_sensors.py`). If you've done everything right, you should see numbers scrolling down the screen showing the current values of the sensors. If everything is working nicely, one of the numbers should change if you press the button, and the other should respond to changes of the rotary angle sensor. If the numbers aren't changing, check you've put the sensors into the correct ports on the GrovePi board.
 
+## Timing of sensor data
+
+<details class="question" markdown=1>
+<summary markdown=1>
+Try getting an ultrasonic distance sensor, and plugging it into digital port 3 (D3). Create another python file to read from the `ultrasonic` sensor instead of the button and rotary angle sensor. Try and work out how to do it from the code above and the sensor reference page ( [grovepi5_sensor_index.html](grovepi5_sensor_index.html) ). 
+
+If you can't work it out, click to open a suggestion:
+</summary>
+
+```
+import sensors
+import time
+sensor_pins={ "ultrasonic":3} # ultrasonic on digital pin 3
+
+# print a nice header line so we know what each column of output is
+print("time,ultrasonic")
+
+while True:    
+    d=sensors.ultrasonic.get_level()
+    print(time.time(),d,sep=',')
+    time.sleep(0.1) # read roughly ten times a second
+```
+</details>
+
+<details class="question" markdown=1>
+<summary markdown=1>
+Run this code again and check it is reading from the ultrasonic sensor okay. Try waving your hand in front of it to see the distance change.
+
+Look at how fast the readings are scrolling down the screen. Think about the following questions before you open up the answer:
+
+* Is it as fast as the previous code? Are the sensor readings coming in evenly spaced in time?
+
+* If not, why not?
+
+* Why might we care?
+</summary>
+
+**Why is timing slower here?**:
+Sensors are electrical devices, which take time to measure things. Some sensors take longer than others. Ultrasonic sensors send out a pulse and wait for the echo, which means they are limited by the speed of sound, so they are typically slower than other sensors. They also change in how fast they respond depending on how quickly the echo comes back. 
+
+**Why might we care about timing of sensor readings?**:
+If we want to do anything clever with sensor data, we often need to smooth it, apply filters to it, calculate statistics over it. All of this becomes much harder if sensor readings aren't neatly spaced in time.
+
+</details>
+
+Fortunately for you, the sensors library we are using in this course has a handy function `delay_sample_time(delay):` which takes a delay in seconds, and returns at that delay time after the previous call. 
+
+Try editing your ultrasonic reading code and your other code to add `sensors.delay_sample_time(0.1)` instead of `time.sleep(0.1)`. Hopefully if you compare both programs, you should now see that both output at the same rate consistently.
+
+There's obviously a fundamental limit to this, if you can't read a sensor as fast as you want, `delay_sample_time` will output a warning. Try messing with it and see how fast you can sample each of the sensors you have plugged in.
+
+
+
 ## Reading from multiple of the same sensor
 
 If you want to read from multiple of the same sensor, you can put a number after the sensor in the pin definition, and also in the reading code. See below:
 
 ```
+import sensors 
+
 # tell the sensor module which sensors
 # we have attached to which pins
 sensor_pins={ "button":4, # button on digital pin 4
@@ -164,7 +219,7 @@ while True:
     # sep=',' means to put commas between each value
     print(time.time(),b,b2,sep=',')
     # read roughly ten times a second
-    time.sleep(0.1)
+    sensors.delay_sample_time(0.1)
 ```
 
 Note - this works for digital and analog sensors, but MAY NOT WORK for accelerometers. Accelerometer boards are I2C devices, which have a fixed address on the i2c bus. This means that you cannot use two of the same accelerometer boards. If you use an accelerometer and gyro board, along with an accelerometer and compass board, two accelerometers should work. Talk to Joe if you are having any problems using two accelerometers.
