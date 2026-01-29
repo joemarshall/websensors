@@ -65,7 +65,7 @@ while True:
     mx,my,mz=sensors.magnetometer.get_xyz() 
     # magnitude of magnetic field
     mm = sensors.magnetometer.get_magnitude()
-    print(x,y,z,am,mx,my,mz,mm) '
+    print(ax,ay,az,am,mx,my,mz,mm,sep=",") '
 %}
 
 {% endcapture %}
