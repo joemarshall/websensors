@@ -236,6 +236,7 @@ async function initPython()
         {% include python_module.js fname='speech_module.py' name='speech' %};
 
         {% include python_module.js fname='tflite_module.py' name='tflite_runtime' %};
+        {% include python_module.js fname='ai_edge_litert_module.py' name='ai_edge_litert' %};
 
         // make the graph module (calls back to js to display graph values)
         {% include python_module.js fname='graphs_module.py' name='graphs' %};
@@ -245,7 +246,7 @@ async function initPython()
             const init_code=`
 {% include init_console.py %}
 `;
-            await pyodide.loadPackagesFromImports(init_code)
+            await pyodide.loadPackagesFromImports(init_code);
             await pyodide.runPythonAsync(init_code);
             pyConsole=pyodide.globals.get("__pc");
             pyConsole.stdout_callback = stdout_write
@@ -273,6 +274,7 @@ workerContext.onmessage = async function(e) {
             await workerContext.importScripts("{{'/pyodide/pyodide.js' | relative_url }}")
             self.pyodideLoad=loadPyodide({indexURL:languagePluginUrl});
             globalThis.pyodide=await self.pyodideLoad;
+            await pyodide.loadPackage('numpy');
             await initPython();
             workerContext.postMessage({id:id,type:"response",results:true});
         }catch(err)

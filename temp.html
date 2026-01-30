@@ -1,0 +1,51 @@
+<html>
+    <body>
+
+<script type="importmap">
+{
+  "imports": {
+    "@litertjs/wasm-utils": "https://cdn.jsdelivr.net/npm/@litertjs/wasm-utils@2.0.0/dist/index.js",
+    "@litertjs/core": "https://cdn.jsdelivr.net/npm/@litertjs/core@2.0.0/dist/index.js"
+    
+  }
+}
+</script>
+        <script type="module src="https://cdn.jsdelivr.net/npm/@litertjs/core@2.0.0/dist/index.js" >  </script>
+        <script type="module">
+            import { loadLiteRt,loadAndCompile, Tensor } from '@litertjs/core';
+            await loadLiteRt('https://cdn.jsdelivr.net/npm/@litertjs/core/wasm/')
+
+
+                /// make model from 
+                //https://ai.google.dev/edge/litert/conversion/tensorflow/convert_tf
+            // 1. Initialize the runtime
+            // Ensure you host the 'wasm' folder from node_modules on your server
+            const model = await loadAndCompile('model.tflite', {
+            accelerator: 'webgpu', // Force WebGPU for max speed
+            });
+
+            console.log('Model:', model);
+
+            // 2. Prepare Input Data
+            // Imagine this comes from an HTMLCanvasElement or Video stream
+            const rawData = new Float32Array(512 * 1).fill(0); 
+
+            // 3. Create Tensor & Move to GPU Memory
+            const inputTensor = await new Tensor(rawData, [1, 512, 1]).moveTo('webgpu');
+
+            // 4. Inference
+            const outputs = await model.run(inputTensor);
+
+            // 5. Retrieve Results
+            // Move memory back to CPU only when you need to read it
+            const resultTensor = outputs[0];
+            const resultData = await resultTensor.data();
+            console.log('Inference Result:', resultData);
+
+            // 6. Cleanup (Crucial for long-running apps!)
+            inputTensor.delete();
+            resultTensor.delete();
+
+        </script>
+    </body>
+</html>
