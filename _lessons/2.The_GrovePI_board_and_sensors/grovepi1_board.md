@@ -73,3 +73,9 @@ python mylovelyscript.py >> all_output.csv
 ```
 
 Bear in mind that this script is run every time the pi boots, so if your script writes to a file, you might want to make sure either you append to a file (the `>>` in the script above), or you put the time in the name of your output file. Otherwise you risk overwriting any output if you accidentally reboot the pi.
+
+For safety's sake, and to stop people annoying everyone by installing scripts which wipe out the display on the pis so they can't boot, there are two safeguards which you need to know about:
+
+1) There's a 20 second delay from startup to running your script.
+
+2) It will only run a script which is less than 1 day old. This means that if you install a script in one lab session, you will need to edit it in another lab session before it will auto-run. You can use the `touch` command like this: `touch startup.sh` to update the modification time and make the script run again.
