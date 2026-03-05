@@ -52,6 +52,24 @@ This will output from the script to the terminal. A lot of the time you will wan
 
 The only downside of redirection to a file is that it redirects *all* output to the file, you do not see the output at all, and have to just trust that it is running okay. There is a useful tool called **tee** installed on the Raspberry Pis which allows you to get around this limitation, to use tee, you pipe the command output through it like this: `python -u script.py | tee output.csv`. Note the **-u**, this is important because without it, python will see that it is being piped through something, and buffer the output, so you will only see it in chunks with a large delay.
 
+# Advanced stuff
 
+## Running off network / disconnected
 
+Sometimes you will want to run your script without it shutting down when you disconnect your laptop from the pi or the pi goes out of network range. 
 
+We support two ways of doing it:
+
+1) Using the `nohup` tool, which is short for 'no hangup'. If you run your script with nohup, it will not get killed when you close the shell window. You need to run it like this: `**nohup** python script.py **>** output.csv **&**'
+
+2) Use the `screen` tool. If you run screen, it launches a new terminal. If you run something in that terminal, you can then detach from the terminal by pressing `CTRL+A` then `CTRL+D`. At this point whatever is running is still happily running away in the background, you can disconnect the network, do whatever you want. When you reconnect an ssh session, you can run `screen -r` and it will come back on.
+
+## Auto-startup script
+
+Sometimes you want to be really really sure that your script is going to keep running, and/or start it up without a laptop after power-loss or something. For these purposes, we provide support for an auto-startup script. To use this, make a bash script called `startup.sh` in the home folder for the dss user. This script will get run every time the pi starts up. Any output from the script will go to `startup.output.txt`. So if for example you want to run your python script on startup, it might look like this:
+
+```
+python mylovelyscript.py >> all_output.csv
+```
+
+Bear in mind that this script is run every time the pi boots, so if your script writes to a file, you might want to make sure either you append to a file (the `>>` in the script above), or you put the time in the name of your output file. Otherwise you risk overwriting any output if you accidentally reboot the pi.
